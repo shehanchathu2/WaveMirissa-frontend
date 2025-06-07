@@ -54,8 +54,8 @@ const Navbar = () => {
                 end={link.exact}
                 className={({ isActive }) =>
                   isActive
-                    ? 'relative text-teal-700 font-semibold'
-                    : 'relative text-gray-700 hover:text-blue-600'
+                    ? 'relative text-teal-700 font-bold'
+                    : 'relative text-gray-700 hover:text-[#1b4765]'
                 }
               >
                 {({ isActive }) => (

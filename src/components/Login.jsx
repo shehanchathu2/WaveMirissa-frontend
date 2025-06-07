@@ -43,7 +43,7 @@ const Login = ({ open, onClose, onSwitchToSignup }) => {
             </button>
 
             {/* Title */}
-            <h2 className="text-2xl font-bold text-center mb-2">Login</h2>
+            <h2 className="text-4xl font-bold text-center mb-2">Login</h2>
             <p className="text-center text-gray-600 mb-6">
               Sign in to continue your jewelry journey
             </p>

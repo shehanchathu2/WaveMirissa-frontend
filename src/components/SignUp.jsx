@@ -36,14 +36,14 @@ const SignUp = ({ open, onClose, onSwitchToLogin }) => {
           >
             {/* Close Button */}
             <button
-              className="absolute top-3 right-4 text-black text-xl font-bold"
+              className="absolute top-3 right-4 text-black text-4xl font-bold"
               onClick={onClose}
             >
               &times;
             </button>
 
             {/* Title */}
-            <h2 className="text-2xl font-bold text-center mb-2">Create Account</h2>
+            <h2 className="text-4xl font-bold text-center mb-2">Create Account</h2>
             <p className="text-center text-gray-600 mb-6">
               Join our exclusive jewelry collection
             </p>

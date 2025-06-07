@@ -12,6 +12,10 @@ import { FaTools } from 'react-icons/fa';
 import { FaSlidersH, FaPalette } from 'react-icons/fa';
 import { Recommend } from '@mui/icons-material';
 
+import { FaArrowRight } from 'react-icons/fa';
+
+
+
 const Home = () => {
 
 
@@ -258,9 +262,9 @@ const Home = () => {
                 className="w-full h-56 object-cover transition-transform duration-300 hover:scale-105 cursor-pointer"
               />
 
-              <span className="absolute top-3 left-3 bg-[#1B4965] text-white text-xs px-2 py-0.5 rounded-[4px]">
+              {/* <span className="absolute top-3 left-3 bg-[#1B4965] text-white text-xs px-2 py-0.5 rounded-[4px]">
                 Bestsellers
-              </span>
+              </span> */}
 
               <button
                 onClick={() => toggleLike(product.id)}
@@ -352,7 +356,7 @@ const Home = () => {
                   transition={{ delay: 0.3 + idx * 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <div className="bg-[#94b5d1] text-[#1b4965] p-2 rounded-full text-xl">
+                  <div className="bg-[#e7e7e7] text-[#1b4965] p-2 rounded-full text-xl">
                     {point.icon}
                   </div>
                   <div>
@@ -413,7 +417,7 @@ const Home = () => {
                   transition={{ delay: 0.3 + idx * 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <div className="bg-[#c7c4c3] text-[#1b4965] p-2 rounded-full text-xl">
+                  <div className="bg-[#d1e9da] text-[#1b4965] p-2 rounded-full text-xl">
                     {item.icon}
                   </div>
                   <div>
@@ -490,6 +494,83 @@ const Home = () => {
 
         </div>
       </motion.section>
+
+
+      {/* collections Section */}
+
+      <section className="py-16 bg-gray-50">
+  {/* Section Title */}
+  <motion.div
+    className="text-center mb-12 px-4"
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.8, ease: 'easeOut' }}
+    viewport={{ once: true }}
+  >
+    <h2 className="text-3xl font-semibold text-[#1B4965] mb-2">Our Collections</h2>
+    <div className="w-20 h-[3px] mx-auto bg-[#1B4965] rounded mb-3"></div>
+    <p className="text-gray-600 max-w-xl mx-auto">
+      Explore our carefully curated collection of handmade jewelry, each designed with passion and attention to detail.
+    </p>
+  </motion.div>
+
+  {/* Cards Grid */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-6 max-w-7xl mx-auto">
+    {[img1, img2, img3, img4].map((img, index) => (
+      <motion.div
+        key={index}
+        className="relative group overflow-hidden rounded-lg shadow-lg"
+        initial={{ opacity: 0, scale: 0.9, y: 30 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: index * 0.2, ease: 'easeOut' }}
+        viewport={{ once: true }}
+        whileHover={{ scale: 1.03 }}
+      >
+        {/* Image */}
+        <img
+          src={img}
+          alt={`Collection ${index + 1}`}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+
+        {/* Overlay Content */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 translate-y-6 group-hover:translate-y-0 transition-all duration-700 ease-in-out">
+
+          <h3 className="text-white text-2xl font-semibold mb-2">
+            {index === 0
+              ? 'Earth Elements'
+              : index === 1
+                ? 'Elegant Bracelets'
+                : index === 2
+                  ? 'Timeless Necklaces'
+                  : 'Colorful Bracelets'}
+          </h3>
+          <p className="text-gray-200 text-sm mb-4">
+            {index === 0
+              ? 'Discover our handcrafted pieces designed for everyday elegance.'
+              : index === 1
+                ? 'Perfectly crafted bracelets for all occasions.'
+                : index === 2
+                  ? 'A collection of timeless and elegant necklaces.'
+                  : 'Vibrant and colorful bracelets to match your style.'}
+          </p>
+          <motion.button
+            whileHover={{
+              scale: 1.05,
+              backgroundColor: '#1b4765',
+              boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.1)',
+            }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="flex items-center justify-center bg-white text-black font-semibold px-5 py-2 rounded-full shadow-md hover:bg-gray-100 transition-colors duration-300"
+          >
+            Explore
+          </motion.button>
+        </div>
+      </motion.div>
+    ))}
+  </div>
+</section>
 
     </div>
   );
