@@ -39,7 +39,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo and Tagline */}
           <div className="flex items-center space-x-2">
-            <span className="text-blue-900 text-lg font-bold">Wave Mirrissa</span>
+            <span className="text-blue-900 text-xl font-bold">Wave Mirrissa</span>
             <span className="text-gray-500 text-xs tracking-widest">
               | HANDCRAFTED JEWELRY
             </span>
@@ -54,8 +54,8 @@ const Navbar = () => {
                 end={link.exact}
                 className={({ isActive }) =>
                   isActive
-                    ? 'relative text-teal-700 font-semibold'
-                    : 'relative text-gray-700 hover:text-blue-600'
+                    ? 'relative text-[#1b4765] font-semibold'
+                    : 'relative text-[#1b4765] hover:text-[#044068]'
                 }
               >
                 {({ isActive }) => (
