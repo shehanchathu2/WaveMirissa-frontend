@@ -417,7 +417,7 @@ const Home = () => {
                   transition={{ delay: 0.3 + idx * 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <div className="bg-[#d1e9da] text-[#1b4965] p-2 rounded-full text-xl">
+                  <div className="bg-[#d6eee0] text-[#1b4965] p-2 rounded-full text-xl">
                     {item.icon}
                   </div>
                   <div>
