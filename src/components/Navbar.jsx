@@ -78,7 +78,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             <button
               onClick={openLogin}
-              className="text-gray-700 hover:text-blue-600 focus:outline-none"
+              className="text-gray-700 hover:text-[#1b4765] focus:outline-none"
             >
               Login
             </button>
