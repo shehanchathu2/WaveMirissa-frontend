@@ -148,12 +148,12 @@ const HeroCarousel = () => {
             {/* Left text and buttons */}
             <div className="absolute z-20 left-40 top-1/2 transform -translate-y-1/2 text-left max-w-xl p-6">
 
-                <p className="text-sm text-gray-500 italic mb-1">Solaé Crafted</p>
+                <p className="text-sm  text-gray-500 italic mb-1">Solaé Crafted</p>
 
                 <AnimatePresence mode="wait">
                     <motion.h1
                         key={HeroImages[currentIndex].title}
-                        className="text-4xl font-lily font-semibold text-[#0A3D62] leading-tight mb-3 font-serif"
+                        className="text-4xl font-lily  text-[#0A3D62] leading-tight mb-3 "
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}

@@ -5,7 +5,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        lily: ['"Lily Script One"', 'cursive'], // add this line
+      },
+    },
   },
   plugins: [],
 }

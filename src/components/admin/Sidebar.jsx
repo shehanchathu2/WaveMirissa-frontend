@@ -1,47 +1,120 @@
-// src/components/Sidebar.jsx
+// src/components/admin/Sidebar.jsx
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { FaTachometerAlt, FaBoxOpen, FaShoppingCart, FaUsers, FaCog, FaSignOutAlt, FaChevronRight } from 'react-icons/fa';
 
 const Sidebar = () => {
   const links = [
-    { to: '/admin', label: 'Dashboard', exact: true },
-    { to: '/admin/products', label: 'Products' },
-    { to: '/admin/orders', label: 'Orders' },
-    { to: '/admin/users', label: 'Users' },
-    { to: '/admin/settings', label: 'Settings' },
+    { to: '/admin', label: 'Dashboard', exact: true, icon: <FaTachometerAlt /> },
+    { to: '/admin/products', label: 'Products', icon: <FaBoxOpen /> },
+    { to: '/admin/orders', label: 'Orders', icon: <FaShoppingCart /> },
+    { to: '/admin/users', label: 'Users', icon: <FaUsers /> },
+    { to: '/admin/settings', label: 'Settings', icon: <FaCog /> },
   ];
 
   return (
-    <aside className="h-screen w-64 bg-[#111827] text-white flex flex-col justify-between px-6 py-8 shadow-md">
-      <div>
-        <h2 className="text-2xl font-bold mb-8">AdminPanel.IO</h2>
-        <nav className="space-y-4">
-          {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.exact}
-              className={({ isActive }) =>
-                `block px-4 py-2 rounded-lg transition-all ${
-                  isActive ? 'bg-[#10B981] text-white' : 'hover:bg-gray-700 text-gray-300'
-                }`
-              }
-            >
-              {link.label}
-            </NavLink>
-          ))}
-        </nav>
-      </div>
-      <div className="border-t border-gray-700 pt-6">
-        <button className="w-full text-left text-gray-400 hover:text-white">Logout</button>
-        <div className="mt-4 flex items-center gap-3">
-          <div className="w-10 h-10 bg-gray-600 rounded-full" />
+    <aside className="relative flex-shrink-0 h-screen w-72 bg-gradient-to-br from-[#1b4765] via-[#1a4461] to-[#163b54] text-white flex flex-col shadow-2xl border-r border-[#2d5a7b]/30">
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+      <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-[#10B981]/20 to-transparent rounded-full blur-xl" />
+      
+      {/* Header Section */}
+      <div className="px-8 py-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-lg">W</span>
+          </div>
           <div>
-            <p className="text-sm font-semibold">Tanzir Rahman</p>
-            <p className="text-xs text-gray-400">View profile</p>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+              Wave Mirrissa
+            </h2>
+            <p className="text-xs text-[#8bb5d1] font-medium">Admin Panel</p>
+          </div>
+        </div>
+        
+        {/* Elegant divider */}
+        <div className="mt-6 relative">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-[#3d6b8a] to-transparent" />
+          <div className="absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-[#10B981] rounded-full shadow-lg shadow-[#10B981]/50" />
+        </div>
+      </div>
+
+      {/* Navigation Section */}
+      <nav className="flex-1 px-6 space-y-2">
+        {links.map((link, index) => (
+          <NavLink
+            key={link.to}
+            to={link.to}
+            end={link.exact}
+            className={({ isActive }) =>
+              `group relative flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 ease-out transform hover:scale-[1.02] ${
+                isActive 
+                  ? 'bg-gradient-to-r from-[#10B981] to-[#059669] text-white ' 
+                  : 'hover:bg-white/10 text-[#b8d4e6] hover:text-white backdrop-blur-sm'
+              }`
+            }
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
+            {/* Active indicator */}
+            <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-white rounded-r-full transition-all duration-300 ${
+              ({ isActive }) => isActive ? 'opacity-100 ' : 'opacity-0 '
+            }`} />
+            
+            {/* Icon container */}
+            <div className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 ${
+              ({ isActive }) => isActive 
+                ? 'bg-white/20 shadow-inner' 
+                : 'group-hover:bg-white/10'
+            }`}>
+              <span className="text-lg transition-transform duration-300 group-hover:scale-110">
+                {link.icon}
+              </span>
+            </div>
+            
+            {/* Label */}
+            <span className="font-medium flex-1 transition-all duration-300">
+              {link.label}
+            </span>
+            
+            {/* Arrow indicator */}
+            <FaChevronRight className={`text-xs transition-all duration-300 ${
+              ({ isActive }) => isActive 
+                ? 'opacity-100 transform translate-x-0' 
+                : 'opacity-0 transform -translate-x-2 group-hover:opacity-70 group-hover:translate-x-0'
+            }`} />
+          </NavLink>
+        ))}
+      </nav>
+
+      {/* Footer Section */}
+      <div className="px-6 py-8 border-t border-[#2d5a7b]/50 bg-gradient-to-t from-black/10 to-transparent">
+        {/* Logout Button */}
+        <button className="group w-full flex items-center gap-3 px-4 py-3 mb-6 text-[#b8d4e6] hover:text-white transition-all duration-300 hover:bg-white/10 rounded-xl">
+          <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-red-500/20 group-hover:bg-red-500/30 transition-colors duration-300">
+            <FaSignOutAlt className="text-sm text-red-400" />
+          </div>
+          <span className="font-medium">Logout</span>
+        </button>
+        
+        {/* User Profile */}
+        <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 cursor-pointer group">
+          <div className="relative">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-2xl flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-lg">TR</span>
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-[#1b4765] rounded-full" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-white truncate">Tanzir Rahman</p>
+            <p className="text-xs text-[#8bb5d1] group-hover:text-[#10B981] transition-colors duration-300">
+              View profile →
+            </p>
           </div>
         </div>
       </div>
+      
+      {/* Bottom decorative element */}
+      <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
     </aside>
   );
 };
