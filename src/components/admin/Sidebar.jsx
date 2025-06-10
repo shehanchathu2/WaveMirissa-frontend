@@ -8,12 +8,18 @@ const Sidebar = () => {
     { to: '/admin', label: 'Dashboard', exact: true, icon: <FaTachometerAlt /> },
     { to: '/admin/products', label: 'Products', icon: <FaBoxOpen /> },
     { to: '/admin/orders', label: 'Orders', icon: <FaShoppingCart /> },
+    { to: '/admin/customization', label: 'Customization', icon: <FaShoppingCart /> },
+    { to: '/admin/delivery', label: 'Delivery&Tracking', icon: <FaShoppingCart /> },
+    { to: '/admin/payment', label: 'Payment', icon: <FaShoppingCart /> },
+    { to: '/admin/Reports', label: 'Reports&Analytics', icon: <FaShoppingCart /> },
+    { to: '/admin/Content', label: 'Content', icon: <FaShoppingCart /> },
     { to: '/admin/users', label: 'Users', icon: <FaUsers /> },
     { to: '/admin/settings', label: 'Settings', icon: <FaCog /> },
   ];
 
   return (
-    <aside className="relative flex-shrink-0 h-screen w-72 bg-gradient-to-br from-[#1b4765] via-[#1a4461] to-[#163b54] text-white flex flex-col shadow-2xl border-r border-[#2d5a7b]/30">
+
+    <aside className="relative flex-shrink-0 h-screen w-72 bg-gradient-to-br from-[#1b4765] via-[#1a4461] to-[#163b54] text-white flex flex-col shadow-2xl border-r border-[#2d5a7b]/30 overflow-scroll scrollbar-hide">
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
       <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-[#10B981]/20 to-transparent rounded-full blur-xl" />
@@ -40,7 +46,7 @@ const Sidebar = () => {
       </div>
 
       {/* Navigation Section */}
-      <nav className="flex-1 px-6 space-y-2">
+      <nav className="flex-1 px-6 space-y-1">
         {links.map((link, index) => (
           <NavLink
             key={link.to}
@@ -61,7 +67,7 @@ const Sidebar = () => {
             }`} />
             
             {/* Icon container */}
-            <div className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 ${
+            <div className={`flex items-center justify-center w-10 h-4 rounded-xl transition-all duration-300 ${
               ({ isActive }) => isActive 
                 ? 'bg-white/20 shadow-inner' 
                 : 'group-hover:bg-white/10'
@@ -100,12 +106,12 @@ const Sidebar = () => {
         <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 cursor-pointer group">
           <div className="relative">
             <div className="w-12 h-12 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">TR</span>
+              <span className="text-white font-bold text-lg">SC</span>
             </div>
             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-[#1b4765] rounded-full" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-semibold text-white truncate">Tanzir Rahman</p>
+            <p className="font-semibold text-white truncate">Shehan</p>
             <p className="text-xs text-[#8bb5d1] group-hover:text-[#10B981] transition-colors duration-300">
               View profile →
             </p>
@@ -114,7 +120,7 @@ const Sidebar = () => {
       </div>
       
       {/* Bottom decorative element */}
-      <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+      {/* <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" /> */}
     </aside>
   );
 };
