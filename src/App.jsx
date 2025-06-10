@@ -12,6 +12,13 @@ import Shop from './pages/Shop';
 import AI_Suggetion from './pages/AI_Suggetion';
 import VirtualTryOn from './pages/VirtualTryOn';
 import Cart from './pages/Cart';
+import Customization from './pages/admin/Customization';
+import Delivery from './pages/admin/Delivery';
+import Payment from './pages/admin/Payment';
+import Reports from './pages/admin/Reports';
+import Content from './pages/admin/Content';
+import ScrollToTopButton from './components/ScrollToTopButton';
+import ProductDetail from './pages/ProductDetail';
 
 const App = () => {
   const location = useLocation();
@@ -27,6 +34,7 @@ const App = () => {
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/shop/product/:productId" element={<ProductDetail />} />
         <Route path="/ai_suggetions" element={<AI_Suggetion />} />
         <Route path="/virtual_try_on" element={<VirtualTryOn />} />
         <Route path="/cart" element={<Cart />} />
@@ -35,11 +43,18 @@ const App = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
+          <Route path="customization" element={<Customization/>} />
+          <Route path="delivery" element={<Delivery/>} />
+          <Route path="payment" element={<Payment/>} />
+          <Route path="Reports" element={<Reports/>} />
+          <Route path="Content" element={<Content/>} />
           <Route path="orders" element={<Orders />} />
           <Route path="users" element={<Users />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
+
+       {!isAdminRoute && <ScrollToTopButton />}
     </>
   );
 };

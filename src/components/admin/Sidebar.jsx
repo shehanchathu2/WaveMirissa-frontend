@@ -11,8 +11,8 @@ const Sidebar = () => {
     { to: '/admin/customization', label: 'Customization', icon: <FaShoppingCart /> },
     { to: '/admin/delivery', label: 'Delivery&Tracking', icon: <FaShoppingCart /> },
     { to: '/admin/payment', label: 'Payment', icon: <FaShoppingCart /> },
-    { to: '/admin/Reports', label: 'Reports&Analytics', icon: <FaShoppingCart /> },
-    { to: '/admin/Content', label: 'Content', icon: <FaShoppingCart /> },
+    { to: '/admin/reports', label: 'Reports&Analytics', icon: <FaShoppingCart /> },
+    { to: '/admin/content', label: 'Content', icon: <FaShoppingCart /> },
     { to: '/admin/users', label: 'Users', icon: <FaUsers /> },
     { to: '/admin/settings', label: 'Settings', icon: <FaCog /> },
   ];

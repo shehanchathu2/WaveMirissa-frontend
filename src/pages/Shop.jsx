@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from "framer-motion";
 import { FiHeart, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { FaFilter } from "react-icons/fa";
+import { Link } from 'react-router-dom';
+
 import { AiFillStar } from 'react-icons/ai';
 import img2 from '../assets/bestSeller/img2.jpg';
 
@@ -33,14 +35,14 @@ const itemVariants = {
 const Shop = () => {
   return (
     <motion.div
-      className="h-screen overflow-hidden px-10 bg-gray-50 flex flex-col"
+      className="h-screen overflow-hidden px-8 bg-gray-50 flex flex-col"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
       {/* Page Header */}
       <motion.div
-        className="px-10 py-4 bg-white shadow rounded-md w-full sticky top-2 z-10"
+        className="px-10 py-4 bg-white shadow rounded-md w-full top-2 z-10 border-t border-gray-200 mb-4"
         variants={itemVariants}
       >
         <h1 className="text-3xl text-center font-bold text-gray-800 mb-1">Shop All Jewelry</h1>
@@ -50,12 +52,18 @@ const Shop = () => {
         <p className="text-gray-600 max-w-2xl m-auto text-center">Home / Shop</p>
       </motion.div>
 
+      {/* <div className='bg-white shadow rounded-md w-full mt-2 top-2 z-10 px-10 py-4'>
+        <h1 className="text-md text-gray-800 mb-1">Shop All Jewelry</h1>
+      </div> */}
+
+
+
       {/* Main Layout */}
       <div className="flex flex-1 overflow-hidden">
 
         {/* Sidebar Filters */}
         <motion.aside
-          className="hidden mt-8 lg:block flex-shrink-0 w-72 bg-gradient-to-br from-[#e0f2f1] via-[#f1f8e9] to-[#fff] p-6 shadow-inner sticky top-[100px] h-[calc(100vh-100px)] overflow-y-auto scrollbar-hide"
+          className="hidden mt-8 lg:block flex-shrink-0 w-72 bg-gradient-to-br from-[#ffffff] via-[#ffffff] to-[#fff] p-6 shadow-inner sticky top-[100px] h-[calc(100vh-100px)] overflow-y-auto scrollbar-hide"
           variants={itemVariants}
         >
           <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2 text-[#1B4965]">
@@ -122,58 +130,61 @@ const Shop = () => {
           {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 mt-4 md:grid-cols-3 xl:grid-cols-4 gap-8">
             {products.map((product, index) => (
-              <motion.div
-                key={index}
-                className="bg-white rounded-xl shadow-xl overflow-hidden group cursor-pointer hover:shadow-2xl transition-shadow duration-300"
-                variants={itemVariants}
-                whileHover={{ scale: 1.03 }}
-              >
-                {/* Image */}
-                <div className="relative h-56 overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
+              <Link to={`/shop/product/${index}`}>
+                <motion.div
+                  key={index}
+                  className="bg-white rounded-xl shadow-xl overflow-hidden group cursor-pointer hover:shadow-2xl transition-shadow duration-300"
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.03 }}
+                >
+                  {/* Image */}
+                  <div className="relative h-56 overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
 
-                  {/* Wishlist Button */}
-                  <button className="absolute top-3 right-3 text-gray-600 hover:text-red-500 bg-white p-2 rounded-full shadow transition-colors">
-                    <FiHeart size={18} />
-                  </button>
-                </div>
-
-                {/* Product Info */}
-                <div className="p-5">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    {product.title}
-                  </h3>
-
-                  {/* Ratings */}
-                  <div className="flex items-center text-yellow-400 text-base mb-2">
-                    {[...Array(5)].map((_, i) => (
-                      <AiFillStar
-                        key={i}
-                        className={i < product.rating ? '' : 'text-gray-300'}
-                      />
-                    ))}
-                    <span className="ml-2 text-gray-500 text-sm">
-                      ({product.reviews} reviews)
-                    </span>
+                    {/* Wishlist Button */}
+                    <button className="absolute top-3 right-3 text-gray-600 hover:text-red-500 bg-white p-2 rounded-full shadow transition-colors">
+                      <FiHeart size={18} />
+                    </button>
                   </div>
 
-                  {/* Price */}
-                  <p className="text-xl font-bold text-[#1B4965] mb-2">
-                    {product.price}
-                  </p>
+                  {/* Product Info */}
+                  <div className="p-5">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                      {product.title}
+                    </h3>
 
-                  {/* Stock Badge */}
-                  {product.inStock && (
-                    <span className="inline-block bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded-full">
-                      In Stock
-                    </span>
-                  )}
-                </div>
-              </motion.div>
+                    {/* Ratings */}
+                    <div className="flex items-center text-yellow-400 text-base mb-2">
+                      {[...Array(5)].map((_, i) => (
+                        <AiFillStar
+                          key={i}
+                          className={i < product.rating ? '' : 'text-gray-300'}
+                        />
+                      ))}
+                      <span className="ml-2 text-gray-500 text-sm">
+                        ({product.reviews} reviews)
+                      </span>
+                    </div>
+
+                    {/* Price */}
+                    <p className="text-xl font-bold text-[#1B4965] mb-2">
+                      {product.price}
+                    </p>
+
+                    {/* Stock Badge */}
+                    {product.inStock && (
+                      <span className="inline-block bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded-full">
+                        In Stock
+                      </span>
+                    )}
+                  </div>
+                </motion.div>
+              </Link>
+
             ))}
           </div>
 
