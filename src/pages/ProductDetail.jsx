@@ -1,33 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaHeart, FaTruck, FaMoneyBillWave, FaUndo, FaStar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { SiShell } from "react-icons/si";
 import { GiHeartNecklace } from "react-icons/gi";
-import { FaRegThumbsUp } from "react-icons/fa";
-import { FaHandHoldingHeart, FaMagic, FaShieldAlt, FaGift } from 'react-icons/fa';
-import { FaRegUserCircle } from "react-icons/fa";
+import { FaRegThumbsUp, FaHandHoldingHeart, FaMagic, FaShieldAlt, FaGift, FaRegUserCircle } from 'react-icons/fa';
 import { BiCreditCard } from "react-icons/bi";
+import img1 from '../assets/bestSeller/img1.jpg';
+import img2 from '../assets/bestSeller/img2.jpg';
+import img3 from '../assets/bestSeller/img3.jpg';
+import img4 from '../assets/bestSeller/img4.jpg';
+
+
 
 
 
 const ProductDetail = () => {
     const { productId } = useParams();
 
+    const imageList = [
+        img1,
+        img2,
+        img3,
+        img4
+    ];
+
+    const [selectedImage, setSelectedImage] = useState(imageList[0]);
+
     return (
         <div className="p-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
             {/* Product Images */}
             <div className="space-y-4">
-                <img
-                    src="https://i.etsystatic.com/22631453/r/il/2bc218/4515072246/il_794xN.4515072246_r92b.jpg"
-                    alt="Product"
-                    className="w-full rounded-2xl shadow-md"
-                />
-                <div className="flex gap-2">
-                    {[1, 2, 3, 4].map((img) => (
-                        <div key={img} className="w-16 h-16 bg-gray-200 rounded-lg" />
-                    ))}
+                <div className='flex'>
+                   
+                    <div className="flex flex-col space-y-2 mr-4">
+                        {imageList.map((img, idx) => (
+                            <img
+                                key={idx}
+                                src={img}
+                                alt={`Thumbnail ${idx}`}
+                                className={`w-16 h-16 object-cover rounded-lg cursor-pointer border-2 ${selectedImage === img ? 'border-teal-500' : 'border-transparent'
+                                    }`}
+                                onClick={() => setSelectedImage(img)}
+                            />
+                        ))}
+                    </div>
+                     <img
+                        src={selectedImage}
+                        alt="Product"
+                        className="w-3/4 h-[450px] rounded-2xl shadow-md"
+                    />
                 </div>
+
+                {/* Reviews */}
                 <div className="text-gray-800 max-w-2xl mx-auto px-4">
                     <h3 className="text-xl font-semibold mb-2 text-teal-700">Product Reviews</h3>
 
@@ -92,12 +117,9 @@ const ProductDetail = () => {
                         <FaRegThumbsUp />
                         <p><strong> Best for:</strong> Women</p>
                     </div>
-
                 </div>
 
                 <div className='border-t border-gray-300 pt-6 mb-8'>
-
-                    {/* Customize and Add to Cart buttons */}
                     <div className="flex flex-col sm:flex-row gap-4 mb-6">
                         <button className="flex-2 bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300">
                             Customize
@@ -107,56 +129,36 @@ const ProductDetail = () => {
                         </button>
                     </div>
 
-                    {/* Buy Now button */}
                     <div>
                         <button className="w-[290px] bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300">
                             Buy Now
                         </button>
                     </div>
-
                 </div>
 
                 <div className="bg-white p-6 rounded-lg shadow text-[#1B4D3E]">
                     <h2 className="text-md font-semibold mb-4">Wave Mirissa’s Highlights</h2>
                     <ul className="space-y-3 text-base text-[#1B4D3E]">
-                        <li className="flex items-center gap-3 text-xm">
-                            <FaHandHoldingHeart size={15} />
-                            Handmade with Love
-                        </li>
-                        <li className="flex items-center gap-3">
-                            <FaTruck size={15} />
-                            Island wide Delivery
-                        </li>
-                        <li className="flex items-center gap-3">
-                            <FaMagic size={15} />
-                            Can be Customized
-                        </li>
-                        <li className="flex items-center gap-3">
-                            <FaShieldAlt size={15} />
-                            Safe Payments
-                        </li>
-                        <li className="flex items-center gap-3">
-                            <FaGift size={15} />
-                            Gifting
-                        </li>
+                        <li className="flex items-center gap-3 text-xm"><FaHandHoldingHeart size={15} /> Handmade with Love</li>
+                        <li className="flex items-center gap-3"><FaTruck size={15} /> Island wide Delivery</li>
+                        <li className="flex items-center gap-3"><FaMagic size={15} /> Can be Customized</li>
+                        <li className="flex items-center gap-3"><FaShieldAlt size={15} /> Safe Payments</li>
+                        <li className="flex items-center gap-3"><FaGift size={15} /> Gifting</li>
                     </ul>
-
                 </div>
-
 
                 <div className="mt-6 bg-black/5 p-4 rounded-lg">
                     <h4 className="font-semibold mb-2">Product Purchasing Policies</h4>
                     <ul className="text-sm space-y-1">
                         <li><FaTruck className="inline text-[#1B4D3E] mr-1" /> Orders will be Delivered within 10-21 days</li>
                         <li><FaUndo className="inline text-[#1B4D3E] mr-1" /> Cancellation of orders are allowed only within 24 h</li>
-                        <li><FaMoneyBillWave className="inline text-[#1B4D3E] mr-1" />Pre-order Only</li>
+                        <li><FaMoneyBillWave className="inline text-[#1B4D3E] mr-1" /> Pre-order Only</li>
                         <li><BiCreditCard className="inline text-[#1B4D3E] mr-1" /> Cash Deposit Only</li>
                     </ul>
                 </div>
             </div>
 
-
-            {/* You May Also Like Section */}
+            {/* You May Also Like */}
             <div className="lg:col-span-2 mt-10">
                 <h3 className="text-2xl font-bold mb-4">You may also like</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

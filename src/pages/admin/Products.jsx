@@ -1,6 +1,7 @@
 // src/pages/admin/Products.jsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FaPlus } from 'react-icons/fa';
 
 const Products = () => {
   const [showModal, setShowModal] = useState(false);
@@ -10,6 +11,7 @@ const Products = () => {
     description: '',
     tags: '',
     images: [],
+    previewUrls: [],
     metalType: '',
     stone: '',
     weight: '',
@@ -19,10 +21,13 @@ const Products = () => {
   });
 
   const handleImageChange = (e) => {
-    setFormData({
-      ...formData,
-      images: Array.from(e.target.files),
-    });
+    const files = Array.from(e.target.files).slice(0, 4);
+    const previewUrls = files.map((file) => URL.createObjectURL(file));
+    setFormData((prevData) => ({
+      ...prevData,
+      images: files,
+      previewUrls,
+    }));
   };
 
   const handleChange = (e) => {
@@ -33,44 +38,34 @@ const Products = () => {
     });
   };
 
+  const resetForm = () => ({
+    name: '',
+    description: '',
+    tags: '',
+    images: [],
+    previewUrls: [],
+    metalType: '',
+    stone: '',
+    weight: '',
+    size: '',
+    stock: true,
+    customizationOptions: '',
+  });
+
   const onClose = () => {
     setShowModal(false);
-    setFormData({
-      name: '',
-      description: '',
-      tags: '',
-      images: [],
-      metalType: '',
-      stone: '',
-      weight: '',
-      size: '',
-      stock: true,
-      customizationOptions: '',
-    });
+    setFormData(resetForm());
   };
 
   const handleAddProduct = () => {
     setProducts([...products, { ...formData, id: Date.now() }]);
-    setShowModal(false);
-    setFormData({
-      name: '',
-      description: '',
-      tags: '',
-      images: [],
-      metalType: '',
-      stone: '',
-      weight: '',
-      size: '',
-      stock: true,
-      customizationOptions: '',
-    });
+    onClose();
   };
 
   const handleDeleteProduct = (id) => {
     setProducts(products.filter((product) => product.id !== id));
   };
 
-  // Animation variants for fade in/out
   const backdropVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
@@ -87,7 +82,6 @@ const Products = () => {
       <h1 className="text-3xl font-bold mb-4">Manage Products</h1>
       <p className="text-gray-600 mb-6">Here you can add, edit, or delete products.</p>
 
-      {/* Add Product Button */}
       <button
         className="bg-blue-500 text-white px-4 py-2 rounded mb-6 hover:bg-blue-600 transition"
         onClick={() => setShowModal(true)}
@@ -95,7 +89,6 @@ const Products = () => {
         Add Product
       </button>
 
-      {/* Product Table */}
       <table className="min-w-full border">
         <thead>
           <tr className="bg-gray-100">
@@ -132,34 +125,36 @@ const Products = () => {
         </tbody>
       </table>
 
-      {/* Modal with fade in/out */}
       <AnimatePresence>
         {showModal && (
           <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 "
             variants={backdropVariants}
             initial="hidden"
             animate="visible"
             exit="hidden"
           >
             <motion.div
-              className="bg-white p-6 rounded w-full max-w-xl relative"
+              className="bg-white rounded-lg w-full max-w-xl max-h-[90vh] flex flex-col relative"
               variants={modalVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
             >
-              <button
-                className="absolute top-3 right-4 text-black text-3xl font-bold"
-                onClick={onClose}
-                aria-label="Close modal"
-              >
-                &times;
-              </button>
+              {/* Fixed Header */}
+              <div className="sticky top-0 bg-white rounded-lg z-10 px-6 pt-6 pb-2 border-b">
+                <h2 className="text-2xl font-semibold text-center">Add New Jewellery Item</h2>
+                <button
+                  className="absolute top-3 right-4 text-black text-3xl font-bold"
+                  onClick={onClose}
+                  aria-label="Close modal"
+                >
+                  &times;
+                </button>
+              </div>
 
-              <h2 className="text-2xl font-bold mb-4">Add New Jewellery Item</h2>
-
-              <div className="space-y-3">
+              {/* Scrollable Content */}
+              <div className="overflow-y-auto px-6 py-4 space-y-3 scrollbar-hide">
                 <input
                   type="text"
                   name="name"
@@ -183,12 +178,43 @@ const Products = () => {
                   value={formData.tags}
                   onChange={handleChange}
                 />
-                <input
-                  type="file"
-                  multiple
-                  className="border p-2 w-full"
-                  onChange={handleImageChange}
-                />
+
+                
+
+
+                <div className="relative w-full">
+                  <label
+                    htmlFor="image-upload"
+                    className="flex items-center justify-center gap-2 w-full p-4 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition"
+                  >
+                    <FaPlus className="text-blue-600" />
+                    <span className="text-blue-700 font-medium">Add up to 4 Images</span>
+                  </label>
+                  <input
+                    id="image-upload"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+
+                  {formData.previewUrls.length > 0 && (
+                    <div className="mt-2 flex gap-2 overflow-x-auto">
+                      {formData.previewUrls.map((url, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={url}
+                            alt={`Preview ${index + 1}`}
+                            className="w-16 h-16 object-cover rounded border"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+            
                 <input
                   type="text"
                   name="metalType"
@@ -238,22 +264,21 @@ const Products = () => {
                   />
                   <span>In Stock</span>
                 </label>
-              </div>
 
-              {/* Modal Actions */}
-              <div className="flex justify-end mt-6 space-x-2">
-                <button
-                  className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition"
-                  onClick={onClose}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-                  onClick={handleAddProduct}
-                >
-                  Add Product
-                </button>
+                <div className="flex justify-end mt-4 space-x-2">
+                  <button
+                    className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition"
+                    onClick={onClose}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                    onClick={handleAddProduct}
+                  >
+                    Add Product
+                  </button>
+                </div>
               </div>
             </motion.div>
           </motion.div>
