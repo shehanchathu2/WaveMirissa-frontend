@@ -1,21 +1,34 @@
 // src/components/admin/Sidebar.jsx
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaTachometerAlt, FaBoxOpen, FaShoppingCart, FaUsers, FaCog, FaSignOutAlt, FaChevronRight } from 'react-icons/fa';
+import {
+  FaTachometerAlt,
+  FaBoxOpen,
+  FaShoppingCart,
+  FaPaintBrush,
+  FaTruck,
+  FaCreditCard,
+  FaChartBar,
+  FaFileAlt,
+  FaUsers,
+  FaCog,
+  FaSignOutAlt,
+  FaChevronRight
+} from 'react-icons/fa';
 
 const Sidebar = () => {
   const links = [
-    { to: '/admin', label: 'Dashboard', exact: true, icon: <FaTachometerAlt /> },
-    { to: '/admin/products', label: 'Products', icon: <FaBoxOpen /> },
-    { to: '/admin/orders', label: 'Orders', icon: <FaShoppingCart /> },
-    { to: '/admin/customization', label: 'Customization', icon: <FaShoppingCart /> },
-    { to: '/admin/delivery', label: 'Delivery&Tracking', icon: <FaShoppingCart /> },
-    { to: '/admin/payment', label: 'Payment', icon: <FaShoppingCart /> },
-    { to: '/admin/reports', label: 'Reports&Analytics', icon: <FaShoppingCart /> },
-    { to: '/admin/content', label: 'Content', icon: <FaShoppingCart /> },
-    { to: '/admin/users', label: 'Users', icon: <FaUsers /> },
-    { to: '/admin/settings', label: 'Settings', icon: <FaCog /> },
-  ];
+  { to: '/admin', label: 'Dashboard', exact: true, icon: <FaTachometerAlt /> },
+  { to: '/admin/products', label: 'Products', icon: <FaBoxOpen /> },
+  { to: '/admin/orders', label: 'Orders', icon: <FaShoppingCart /> },
+  { to: '/admin/customization', label: 'Customization', icon: <FaPaintBrush /> },
+  { to: '/admin/delivery', label: 'Delivery & Tracking', icon: <FaTruck /> },
+  { to: '/admin/payment', label: 'Payment', icon: <FaCreditCard /> },
+  { to: '/admin/reports', label: 'Reports & Analytics', icon: <FaChartBar /> },
+  { to: '/admin/content', label: 'Content', icon: <FaFileAlt /> },
+  { to: '/admin/users', label: 'Users', icon: <FaUsers /> },
+  { to: '/admin/settings', label: 'Settings', icon: <FaCog /> },
+];
 
   return (
 

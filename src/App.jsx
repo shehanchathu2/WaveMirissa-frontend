@@ -19,6 +19,7 @@ import Reports from './pages/admin/Reports';
 import Content from './pages/admin/Content';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import ProductDetail from './pages/ProductDetail';
+import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 
 const App = () => {
   const location = useLocation();
@@ -40,7 +41,9 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={ <ProtectedAdminRoute>
+              <AdminLayout />
+            </ProtectedAdminRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="customization" element={<Customization/>} />

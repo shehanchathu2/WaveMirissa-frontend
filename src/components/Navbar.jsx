@@ -4,10 +4,16 @@ import { motion } from 'framer-motion';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Login from '../components/Login';
 import SignUp from '../components/SignUp';
+import { useAuth } from '../context/AuthContext';
+import { FaUserCircle } from 'react-icons/fa';
+import UserDropdown from './UserDropdown ';
 
 const Navbar = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+
+  const { user } = useAuth();
+
 
   const openLogin = () => {
     setIsLoginOpen(true);
@@ -76,19 +82,26 @@ const Navbar = () => {
 
           {/* Auth Buttons and Cart */}
           <div className="flex items-center space-x-4">
-            <button
-              onClick={openLogin}
-              className="text-gray-700 hover:text-[#1b4765] focus:outline-none"
-            >
-              Login
-            </button>
-
-            <button
-              onClick={openSignup}
-              className="bg-[#1B4965] text-white rounded-md px-4 py-1 hover:bg-[#003e64] focus:outline-none"
-            >
-              Sign Up
-            </button>
+            {user? (
+              // If user is logged in, show user icon
+             <UserDropdown />
+            ) : (
+              // If not logged in, show Login & Sign Up buttons
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={openLogin}
+                  className="text-gray-700 hover:text-[#1B4965] focus:outline-none"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={openSignup}
+                  className="bg-[#1B4965] text-white rounded-md px-4 py-1 hover:bg-[#003e64] focus:outline-none"
+                >
+                  Sign Up
+                </button>
+              </div>
+            )}
 
             <NavLink to="/cart" className="relative text-gray-700 hover:text-blue-600">
               <span className="absolute -top-1 -right-1 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
