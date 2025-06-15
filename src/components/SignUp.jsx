@@ -157,9 +157,9 @@ const SignUp = ({ open, onClose, onSwitchToLogin }) => {
                 />
                 <span
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute top-9 right-3 text-gray-600 cursor-pointer"
+                  className="absolute top-1/3 right-3 text-gray-600 cursor-pointer"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {showPassword ? <VisibilityOff className='mb-20'/> : <Visibility className='mb-20' />}
                 </span>
                 <p className="text-xs text-gray-500 mt-1">
                   Must be at least 8 characters with uppercase, lowercase, number, and special character.
@@ -179,7 +179,7 @@ const SignUp = ({ open, onClose, onSwitchToLogin }) => {
                 />
                 <span
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
-                  className="absolute top-9 right-3 text-gray-600 cursor-pointer"
+                  className="absolute top-8 right-3 text-gray-600 cursor-pointer"
                 >
                   {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                 </span>

@@ -20,14 +20,19 @@ import Content from './pages/admin/Content';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import ProductDetail from './pages/ProductDetail';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
+import Footer from './components/Footer';
+import CheckoutPage from './pages/CheckoutPage';
 
 const App = () => {
   const location = useLocation();
 
   // Hide Navbar on admin pages
   const isAdminRoute = location.pathname.startsWith('/admin');
+  
+
 
   return (
+    
     <>
       {!isAdminRoute && <Navbar />}
 
@@ -39,25 +44,27 @@ const App = () => {
         <Route path="/ai_suggetions" element={<AI_Suggetion />} />
         <Route path="/virtual_try_on" element={<VirtualTryOn />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<CheckoutPage/>} />
 
         {/* Admin Routes */}
-        <Route path="/admin" element={ <ProtectedAdminRoute>
-              <AdminLayout />
-            </ProtectedAdminRoute>}>
+        <Route path="/admin" element={<ProtectedAdminRoute>
+          <AdminLayout />
+        </ProtectedAdminRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
-          <Route path="customization" element={<Customization/>} />
-          <Route path="delivery" element={<Delivery/>} />
-          <Route path="payment" element={<Payment/>} />
-          <Route path="Reports" element={<Reports/>} />
-          <Route path="Content" element={<Content/>} />
+          <Route path="customization" element={<Customization />} />
+          <Route path="delivery" element={<Delivery />} />
+          <Route path="payment" element={<Payment />} />
+          <Route path="Reports" element={<Reports />} />
+          <Route path="Content" element={<Content />} />
           <Route path="orders" element={<Orders />} />
           <Route path="users" element={<Users />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
 
-       {!isAdminRoute && <ScrollToTopButton />}
+      {!isAdminRoute && <ScrollToTopButton />}
+      {!isAdminRoute && <Footer/>}
     </>
   );
 };

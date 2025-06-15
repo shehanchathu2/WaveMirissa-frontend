@@ -16,6 +16,7 @@ import { Recommend } from '@mui/icons-material';
 import { FaRegListAlt, FaRegGem } from 'react-icons/fa';
 import { FaPlay, FaBullseye } from 'react-icons/fa';
 
+
 import { FaArrowRight } from 'react-icons/fa';
 
 
@@ -289,7 +290,7 @@ const Home = () => {
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              className="flex flex-col items-center"
+              className="flex flex-col items-center bg-white shadow-2xl p-6 rounded-lg"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -394,7 +395,7 @@ const Home = () => {
                       }}
                       whileTap={{ scale: 0.95 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                      className="flex items-center justify-center bg-[#264d65] text-white text-sm px-3 py-1 rounded shadow-md hover:bg-[#1B4965] transition-colors duration-300"
+                      className="flex items-center justify-center bg-[#264d65] text-white text-sm px-3 py-1 rounded-xs shadow-md hover:bg-[#1B4965] transition-colors duration-300"
                     >
                       Add to Cart →
                     </motion.button>
@@ -590,7 +591,7 @@ const Home = () => {
               {AIRecommendations.map((item, index) => (
                 <motion.div
                   key={index}
-                  className="flex items-start space-x-6"
+                  className="flex justify-center  space-x-6 bg-white shadow-xl rounded-lg pt-8 pl-6 pr-6"
                   variants={itemVariants}
                   whileHover={{ x: 10 }}
                   transition={{ type: "spring", stiffness: 300 }}
@@ -628,11 +629,11 @@ const Home = () => {
 
             {/* Right Image with Overlay */}
             <motion.div className="relative" variants={imageVariants}>
-              <div className="relative overflow-hidden rounded-lg shadow-xl group h-[400px]">
+              <div className="relative overflow-hidden rounded-lg shadow-xl group h-[500px]">
                 <img
                   src={AIRecommendation}
                   alt="AI Jewelry Recommendation"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 mb-20"
                 />
                 <div
                   className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 flex flex-col items-center justify-center text-center px-6 py-8 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-6 transition-all duration-1000 ease-in-out"
@@ -746,8 +747,6 @@ const Home = () => {
           </div>
         </motion.div>
       </motion.section>
-
-
     </div>
   );
 };
