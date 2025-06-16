@@ -68,6 +68,9 @@ export const CustomizationModal = ({ isOpen, onClose, jewelry, onNext }) => {
     }, 0);
     return jewelry.basePrice + addOnPrice;
   };
+  const handleNext = () => {
+    onNext(calculateTotalPrice());
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
@@ -179,7 +182,7 @@ export const CustomizationModal = ({ isOpen, onClose, jewelry, onNext }) => {
               
             </div>
             <button
-              onClick={onNext}
+              onClick={handleNext}
               className="bg-[#1b4965] hover:bg-[#1b4965]/90 text-white font-semibold px-8 py-3 rounded-md transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Next 

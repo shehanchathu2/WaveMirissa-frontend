@@ -10,6 +10,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { BiCreditCard } from "react-icons/bi";
 import sampleimg from '../assets/sampleProducts/earring_01.jpg';
 import {CustomizationModal} from '../components/ProductPreview/CustomizationModal';
+import {SizeSelectionModal} from '../components/ProductPreview/SizeSelectionModal';
 
 
 const JewelryItem = {
@@ -19,7 +20,7 @@ const JewelryItem = {
   image: sampleimg,
   description: 'Bohemian Style Earrings, Beach Style Earrings',
   materials: ['Zinc Alloy', 'Sea-shells'],
-  type: 'Earrings',
+  type: 'necklace',
   gender: 'women',
   
 };
@@ -29,6 +30,8 @@ const ProductDetail = () => {
    const [quantity, setQuantity] = useState(1); //quantity state
 
     const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
+    const [isSizeModalOpen, setIsSizeModalOpen] = useState(false);
+    const [totalPrice, setTotalPrice] = useState(JewelryItem.basePrice);
 
   const handleCustomizeClick = () => {
     setIsCustomizeOpen(true);
@@ -38,13 +41,38 @@ const ProductDetail = () => {
     setIsCustomizeOpen(false);
   };
 
-  const handleNext = () => {
-    // Handle next step logic here
-    console.log('Proceeding to next step...');
-    setIsCustomizeOpen(false);
+  const handleCloseSizeModal = () => {
+    setIsSizeModalOpen(false);
   };
 
+  const handleNext = (calculatedPrice) => {
+  setTotalPrice(calculatedPrice);
+  setIsCustomizeOpen(false);
 
+  // Only show size modal for necklaces and rings
+  if (JewelryItem.type === 'necklace' || JewelryItem.type === 'ring') {
+    setIsSizeModalOpen(true);
+  } else {
+    // For other jewelry types, go directly to checkout or next step
+    console.log('Proceeding to checkout for', JewelryItem.type);
+  }
+};
+
+const handleCheckout = (selectedSize) => {
+    console.log('Proceeding to checkout with:', {
+      jewelry: JewelryItem.name,
+      totalPrice,
+      size: selectedSize
+    });
+    setIsSizeModalOpen(false);
+    // redirect to payment gateway
+  };
+
+  const handleBackToCustomize = () => {
+    setIsSizeModalOpen(false);
+    setIsCustomizeOpen(true);
+    
+  };
 
     return (
       <div className="grid grid-cols-1 gap-10 p-8 mx-auto max-w-7xl lg:grid-cols-2">
@@ -135,11 +163,11 @@ const ProductDetail = () => {
 
         {/* Product Details */}
         <div>
-          <h2 className="text-xl text-gray-500">
+          <h2 className="mb-2 text-3xl ">
             {JewelryItem.name}
             
           </h2>
-          <h2 className="mb-2 text-3xl">
+          <h2 className="mb-2 text-xl text-gray-500">
             {JewelryItem.description}
             
           </h2>
@@ -311,6 +339,16 @@ const ProductDetail = () => {
         onClose={handleCloseCustomize}
         jewelry={JewelryItem}
         onNext={handleNext}
+      />
+
+      {/* Size Selection Modal */}
+      <SizeSelectionModal
+        isOpen={isSizeModalOpen}
+        onClose={handleCloseSizeModal}
+        onBack={handleBackToCustomize}
+        jewelry={JewelryItem}
+        totalPrice={totalPrice}
+        onCheckout={handleCheckout}
       />
       </div>
     );
