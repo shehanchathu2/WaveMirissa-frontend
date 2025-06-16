@@ -8,12 +8,41 @@ import { FaRegThumbsUp } from "react-icons/fa";
 import { FaHandHoldingHeart, FaMagic, FaShieldAlt, FaGift } from 'react-icons/fa';
 import { FaRegUserCircle } from "react-icons/fa";
 import { BiCreditCard } from "react-icons/bi";
+import sampleimg from '../assets/sampleProducts/earring_01.jpg';
+import {CustomizationModal} from '../components/ProductPreview/CustomizationModal';
 
 
+const JewelryItem = {
+  id: 'classic-necklace',
+  name: 'White & beige color Dangle Shell Earrings',
+  basePrice: 800,
+  image: sampleimg,
+  description: 'Bohemian Style Earrings, Beach Style Earrings',
+  materials: ['Zinc Alloy', 'Sea-shells'],
+  type: 'Earrings',
+  gender: 'women',
+  
+};
 
 const ProductDetail = () => {
     const { productId } = useParams();
    const [quantity, setQuantity] = useState(1); //quantity state
+
+    const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
+
+  const handleCustomizeClick = () => {
+    setIsCustomizeOpen(true);
+  };
+
+  const handleCloseCustomize = () => {
+    setIsCustomizeOpen(false);
+  };
+
+  const handleNext = () => {
+    // Handle next step logic here
+    console.log('Proceeding to next step...');
+    setIsCustomizeOpen(false);
+  };
 
 
 
@@ -31,7 +60,7 @@ const ProductDetail = () => {
               ))}
             </div>
             <img
-              src="https://i.etsystatic.com/22631453/r/il/2bc218/4515072246/il_794xN.4515072246_r92b.jpg"
+              src={JewelryItem.image}
               alt="Product"
               className="shadow-md w-96 rounded-2xl"
             />
@@ -107,10 +136,12 @@ const ProductDetail = () => {
         {/* Product Details */}
         <div>
           <h2 className="text-xl text-gray-500">
-            White & beige color Dangle Shell Earrings
+            {JewelryItem.name}
+            
           </h2>
           <h2 className="mb-2 text-3xl">
-            Bohemian Style Earrings, Beach Style Earrings
+            {JewelryItem.description}
+            
           </h2>
           <div className="flex text-yellow-500">
             <FaStar />
@@ -120,28 +151,29 @@ const ProductDetail = () => {
             <FaStar />
           </div>
           <p className="mt-4 mb-4 text-2xl font-semibold text-teal-600">
-            LKR 800.00
+            LKR {JewelryItem.basePrice}
+            
           </p>
 
           <div className="mb-4 space-y-3 text-sm">
             <div className="flex items-center gap-3">
               <SiShell className="text-xl text-black-600" />
               <p className='text-base'>
-                <strong>Materials Used:</strong> Coated Shell, Pearl, Zinc Alloy
+                <strong>Materials Used:</strong> {JewelryItem.materials[0]}, {JewelryItem.materials[1]}
               </p>
             </div>
 
             <div className="flex items-center gap-3">
               <GiHeartNecklace className="text-xl text-black-600" />
               <p>
-                <strong className='text-base'> Style:</strong> Modern, Dangle Earrings
+                <strong className='text-base'> Style:</strong> Modern {JewelryItem.type}
               </p>
             </div>
 
             <div className="flex items-center gap-3">
               <FaRegThumbsUp className="text-xl text-black-600" />
               <p>
-                <strong className='text-base'> Best for:</strong> Women
+                <strong className='text-base'> Best for:</strong> {JewelryItem.gender}
               </p>
             </div>
           </div>
@@ -185,7 +217,7 @@ const ProductDetail = () => {
 
             {/* Customize, Add to Cart, and Buy Now buttons */}
             <div className="flex flex-col w-full max-w-md gap-4 mb-6 sm:flex-row sm:items-center">
-              <button className="flex-1 bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300">
+              <button  onClick={handleCustomizeClick} className="flex-1 bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300">
                 Customize
               </button>
 
@@ -231,22 +263,21 @@ const ProductDetail = () => {
 
           <div className="p-4 mt-6 rounded-lg bg-black/5">
             <h4 className="mb-2 font-semibold">Product Purchasing Policies</h4>
-            <ul className="space-y-1 text-sm">
+            <ul className="space-y-3 text-sm ">
               <li>
                 <FaTruck className="inline text-[#1B4D3E] mr-1" /> Orders will
-                be Delivered within 10-21 days
+                be Delivered within 14-21 days
               </li>
               <li>
                 <FaUndo className="inline text-[#1B4D3E] mr-1" /> Cancellation
                 of orders are allowed only within 24 h
               </li>
               <li>
-                <FaMoneyBillWave className="inline text-[#1B4D3E] mr-1" />
-                Pre-order Only
+                <FaMoneyBillWave className="inline text-[#1B4D3E] mr-2" />
+                  Pre-order Only
               </li>
               <li>
-                <BiCreditCard className="inline text-[#1B4D3E] mr-1" /> Cash
-                Deposit Only
+                <BiCreditCard className="inline text-[#1B4D3E] mr-1" />  Only Online Payments are Accepted
               </li>
             </ul>
           </div>
@@ -273,6 +304,14 @@ const ProductDetail = () => {
             ))}
           </div>
         </div>
+
+        {/* Customization Modal */}
+      <CustomizationModal
+        isOpen={isCustomizeOpen}
+        onClose={handleCloseCustomize}
+        jewelry={JewelryItem}
+        onNext={handleNext}
+      />
       </div>
     );
 };
