@@ -71,10 +71,14 @@ export const CustomizationModal = ({ isOpen, onClose, jewelry, onNext }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+
       <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full h-[95vh] flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between flex-shrink-0 p-4 border-b border-gray-200">
           <h2 className="text-2xl font-bold text-[#1b5565]">Customize Your Jewelry</h2>
+
+      
+
           <button
             onClick={onClose}
             className="p-2 transition duration-200 rounded-full hover:bg-gray-100"
@@ -86,8 +90,10 @@ export const CustomizationModal = ({ isOpen, onClose, jewelry, onNext }) => {
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto">
           {/* Basic Jewelry Info */}
+
           <div className="pt-2 pl-6 bg-gradient-to-r from-gray-50 to-white">
             <div className="flex items-center space-x-10">
+
               <div className="relative">
                 <img
                   src={jewelry.image}
@@ -97,11 +103,13 @@ export const CustomizationModal = ({ isOpen, onClose, jewelry, onNext }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
               </div>
               <div className="flex-1">
+
                 <h4 className="text-2xl font-semibold text-[#1b4965] mb-2">{jewelry.name}</h4>
                 <p className="mb-3 text-base text-gray-600 ">{jewelry.description}</p>
                 <div className="flex items-center space-x-4">
                   <span className="text-2xl font-bold text-teal-600">
                     LKR {jewelry.basePrice.toLocaleString()}
+
                   </span>
                   <span className="px-3 py-1 text-sm text-gray-500 bg-gray-100 rounded-full">
                     Base Price
@@ -147,7 +155,9 @@ export const CustomizationModal = ({ isOpen, onClose, jewelry, onNext }) => {
                       </div>
                     </div>
                     <h5 className="font-semibold text-[#1b4965] mb-2">{option.name}</h5>
+
                     {/*<p className="text-lg font-bold text-teal-600">+${option.price}</p>*/}
+
                   </div>
                 </div>
               ))}
@@ -155,14 +165,17 @@ export const CustomizationModal = ({ isOpen, onClose, jewelry, onNext }) => {
           </div>
         </div>
 
+
         {/* Footer with Total Price and Continue Button */}
         <div className="flex-shrink-0 p-4 border-t border-gray-200 bg-gray-50">
+
           <div className="flex items-center justify-between">
             <div>
               <p className="mb-1 text-sm text-gray-600">Total Price</p>
               <p className="text-3xl font-bold text-[#1b4965]">
                 ${calculateTotalPrice().toLocaleString()}
               </p>
+
               
             </div>
             <button
@@ -170,6 +183,7 @@ export const CustomizationModal = ({ isOpen, onClose, jewelry, onNext }) => {
               className="bg-[#1b4965] hover:bg-[#1b4965]/90 text-white font-semibold px-8 py-3 rounded-md transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Next 
+
             </button>
           </div>
         </div>
