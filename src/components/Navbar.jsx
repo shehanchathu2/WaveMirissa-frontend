@@ -96,7 +96,7 @@ const Navbar = () => {
                 </button>
                 <button
                   onClick={openSignup}
-                  className="bg-[#1B4965] text-white rounded-md px-4 py-1 hover:bg-[#003e64] focus:outline-none"
+                  className="bg-[#1B4965] text-white rounded-xs px-4 py-1 hover:bg-[#003e64] focus:outline-none"
                 >
                   Sign Up
                 </button>

@@ -148,7 +148,7 @@ const HeroCarousel = () => {
             {/* Left text and buttons */}
             <div className="absolute z-20 left-40 top-1/2 transform -translate-y-1/2 text-left max-w-xl p-6">
 
-                <p className="text-sm  text-gray-500 italic mb-1">Solaé Crafted</p>
+                <p className="text-sm  text-gray-500 italic mb-1">Wave Mirissa</p>
 
                 <AnimatePresence mode="wait">
                     <motion.h1
