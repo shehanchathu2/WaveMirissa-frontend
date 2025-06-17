@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Check } from 'lucide-react';
 import cus1 from '../../assets/CustomizationSamples/Black-round beads.jpeg';
 import cus2 from '../../assets/CustomizationSamples/Blue-round beads.jpeg';
@@ -46,8 +46,21 @@ const customizationOptions = [
   }
 ];
 
-export const CustomizationModal = ({ isOpen, onClose, jewelry, onNext }) => {
+export const CustomizationModal = ({ 
+    isOpen,
+    onClose, 
+    jewelry, 
+    onNext,
+    openedViaCustomize
+ }) => {
   const [selectedOptions, setSelectedOptions] = useState(new Set());
+
+  useEffect(() => {
+    if (isOpen && !openedViaCustomize) {
+      setSelectedOptions(new Set()); // Reset selected options when modal opens
+      
+    }
+  }, [isOpen, openedViaCustomize]);
 
   if (!isOpen) return null;
 
