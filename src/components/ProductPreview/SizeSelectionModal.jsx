@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { X, ShoppingCart } from 'lucide-react';
 
 const necklaceLengths = [
@@ -36,12 +36,26 @@ export const SizeSelectionModal = ({
   onBack,
   jewelry,
   totalPrice,
-  onCheckout
+  onCheckout,
+  showBackButton,
+  hideCheckoutButton
 }) => {
   const [selectedSize, setSelectedSize] = useState('');
   const [customLength, setCustomLength] = useState('');
 
+  useEffect(() => {
+  if (isOpen) {
+    setSelectedSize('');
+    setCustomLength('');
+    
+    
+  }
+}, [isOpen]);
+
   if (!isOpen) return null;
+
+  
+
 
   const getSizeOptions = () => {
     if (jewelry.type === 'necklace') return necklaceLengths;
@@ -93,7 +107,9 @@ export const SizeSelectionModal = ({
                 className="object-cover w-20 h-20 rounded-lg shadow-md"
               />
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-[#1b4965] mb-1">{jewelry.name}</h3>
+                <h3 className="text-xl font-bold text-[#1b4965] mb-1">
+                  {jewelry.name}
+                </h3>
                 <p className="mb-2 text-gray-600">{jewelry.description}</p>
                 <div className="flex items-center space-x-3">
                   <span className="text-2xl font-bold text-teal-600">
@@ -126,7 +142,7 @@ export const SizeSelectionModal = ({
               ))}
             </select>
 
-            {selectedSize === 'custom' && jewelry.type === 'necklace' && (
+            {selectedSize === "custom" && jewelry.type === "necklace" && (
               <div className="mt-4">
                 <label className="block mb-2 text-sm font-medium text-gray-700">
                   Enter Custom Length (inches)
@@ -148,13 +164,12 @@ export const SizeSelectionModal = ({
 
             <div className="p-4 mt-6 border border-teal-200 rounded-lg bg-teal-50">
               <h4 className="mb-2 font-semibold text-teal-800">
-                {jewelry.type === 'necklace' ? 'Length Guide' : 'Size Guide'}
+                {jewelry.type === "necklace" ? "Length Guide" : "Size Guide"}
               </h4>
               <p className="text-sm text-teal-700">
-                {jewelry.type === 'necklace'
+                {jewelry.type === "necklace"
                   ? 'Not sure about the length? A 18" necklace sits at the base of the neck, while a 20" necklace falls just below the collarbone.'
-                  : 'Need help finding your ring size? Visit our size guide or use a ring sizer for the most accurate measurement.'
-                }
+                  : "Need help finding your ring size? Visit our size guide or use a ring sizer for the most accurate measurement."}
               </p>
             </div>
           </div>
@@ -170,24 +185,43 @@ export const SizeSelectionModal = ({
               </p>
             </div>
             <div className="flex space-x-4">
-              <button
-                onClick={onBack}
-                className="px-6 py-3 text-[#1b4965] border-2 border-[#1b4965] rounded-xl font-semibold transition hover:bg-[#1b4965]/10"
-              >
-                Back
-              </button>
-            <button
-              onClick={handleCheckout}
-              disabled={isCheckoutDisabled()}
-              className={`flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition duration-300 shadow-lg ${
-                isCheckoutDisabled()
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-[#1b4965] hover:bg-[#1b4965]/90 text-white hover:shadow-xl transform hover:scale-105'
-              }`}
-            >
-              <ShoppingCart size={20} />
-              <span>Checkout</span>
-            </button>
+              {showBackButton && (
+                <button
+                  onClick={onBack}
+                  className="px-6 py-3 text-[#1b4965] border-2 border-[#1b4965] rounded-xl font-semibold transition hover:bg-[#1b4965]/10"
+                >
+                  Back
+                </button>
+              )}
+              {!hideCheckoutButton && (
+                <button
+                  onClick={handleCheckout}
+                  disabled={isCheckoutDisabled()}
+                  className={`flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition duration-300 shadow-lg ${
+                    isCheckoutDisabled()
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-[#1b4965] hover:bg-[#1b4965]/90 text-white hover:shadow-xl transform hover:scale-105"
+                  }`}
+                >
+                  <ShoppingCart size={20} />
+                  <span>Checkout</span>
+                </button>
+              )}
+
+              {hideCheckoutButton && (
+                <button
+                  onClick={handleCheckout}
+                  disabled={isCheckoutDisabled()}
+                  className={`flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition duration-300 shadow-lg ${
+                    isCheckoutDisabled()
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-[#1b4965] hover:bg-[#1b4965]/90 text-white hover:shadow-xl transform hover:scale-105"
+                  }`}
+                >
+                  <ShoppingCart size={20} />
+                  <span>Add to Cart</span>
+                </button>
+              )}
             </div>
           </div>
         </div>

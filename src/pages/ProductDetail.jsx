@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaHeart, FaTruck, FaMoneyBillWave, FaUndo, FaStar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
@@ -31,11 +31,34 @@ const ProductDetail = () => {
 
     const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
     const [isSizeModalOpen, setIsSizeModalOpen] = useState(false);
+    const [openedViaCustomize, setOpenedViaCustomize] = useState(false);
+    const [openedViaAddtoCart, setOpenedViaAddtoCart] = useState(false);
+
     const [totalPrice, setTotalPrice] = useState(JewelryItem.basePrice);
 
+    
+
+
+
+
   const handleCustomizeClick = () => {
+    setOpenedViaCustomize(false);
     setIsCustomizeOpen(true);
   };
+
+  const handleBuyNowClick = () => {
+    
+    setIsSizeModalOpen(true);
+    setOpenedViaCustomize(false);
+    setOpenedViaAddtoCart(false);
+  };
+
+  const handleAddToCart = () => {
+    setOpenedViaAddtoCart(true);
+    setIsSizeModalOpen(true);
+    setOpenedViaCustomize(false);
+  };
+  
 
   const handleCloseCustomize = () => {
     setIsCustomizeOpen(false);
@@ -43,9 +66,11 @@ const ProductDetail = () => {
 
   const handleCloseSizeModal = () => {
     setIsSizeModalOpen(false);
+    setOpenedViaAddtoCart(false);
   };
 
   const handleNext = (calculatedPrice) => {
+  setOpenedViaCustomize(true); 
   setTotalPrice(calculatedPrice);
   setIsCustomizeOpen(false);
 
@@ -249,13 +274,13 @@ const handleCheckout = (selectedSize) => {
                 Customize
               </button>
 
-              <button className="flex-1 border border-[#1b4965] text-[#1b4965] text-lg px-6 py-2 rounded-lg hover:bg-[#a8d1eb]/60 transition duration-300">
+              <button onClick={handleAddToCart} className="flex-1 border border-[#1b4965] text-[#1b4965] text-lg px-6 py-2 rounded-lg hover:bg-[#a8d1eb]/60 transition duration-300">
                 Add to Cart
               </button>
             </div>
 
             <div className="w-full max-w-md">
-              <button className="w-full bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300">
+              <button onClick={handleBuyNowClick} className="w-full bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300">
                 Buy Now
               </button>
             </div>
@@ -339,6 +364,7 @@ const handleCheckout = (selectedSize) => {
         onClose={handleCloseCustomize}
         jewelry={JewelryItem}
         onNext={handleNext}
+        openedViaCustomize={openedViaCustomize}
       />
 
       {/* Size Selection Modal */}
@@ -349,6 +375,8 @@ const handleCheckout = (selectedSize) => {
         jewelry={JewelryItem}
         totalPrice={totalPrice}
         onCheckout={handleCheckout}
+        showBackButton={openedViaCustomize}
+        hideCheckoutButton={openedViaAddtoCart} 
       />
       </div>
     );
