@@ -7,7 +7,7 @@ import QuestionStep from '../components/PersonalityVirtualTryon/QuestionStep';
 import ImageUploadStep from '../components/PersonalityVirtualTryon/ImageUploadStep';
 import ResultsStep from '../components/PersonalityVirtualTryon/ResultsStep';
 import ProgressBar from '../components/PersonalityVirtualTryon/ProgressBar';
-import sampleimg from '../assets/sampleProducts/earring_01.jpg';
+import sampleimg from '../assets/sampleProducts/CowrieShell-Black_01.jpeg';
 import {SizeSelectionModal} from '../components/ProductPreview/SizeSelectionModal';
 
 
@@ -101,14 +101,14 @@ const VirtualTryOn = () => {
 
   const JewelryItem = {
   id: 'classic-necklace',
-  name: 'White & beige color Dangle Shell Earrings',
+  name: 'Cowrie Shell Necklace with Black String',
   basePrice: 800,
   image: sampleimg,
-  description: 'Bohemian Style Earrings, Beach Style Earrings',
-  materials: ['Zinc Alloy', 'Sea-shells'],
+  description: 'Like you, this necklace embodies creativity and openness to the unknown. The moonstone reflects your intuitive nature and love for artistic beauty, while the rose gold speaks to your warm, agreeable personality. Each time light catches the stone, it mirrors your curious spirit exploring new possibilities. This piece perfectly complements your authentic self-expression and appreciation for meaningful beauty.',
+  materials: ['Black String', 'Sea-shells'],
   type: 'necklace',
-  gender: 'women',
-  personalizedStory: 'Like you, this necklace embodies creativity and openness to the unknown. The moonstone reflects your intuitive nature and love for artistic beauty, while the rose gold speaks to your warm, agreeable personality. Each time light catches the stone, it mirrors your curious spirit exploring new possibilities. This piece perfectly complements your authentic self-expression and appreciation for meaningful beauty.'
+  gender: 'women'
+  
   
 };
 

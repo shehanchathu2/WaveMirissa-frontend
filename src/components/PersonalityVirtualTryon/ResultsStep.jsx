@@ -122,7 +122,7 @@ const ResultsStep = ({
 
             <div className="p-4 mt-6 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl">
               <h4 className="mb-2 font-semibold text-teal-900">Why This Matches You</h4>
-              <p className="text-sm leading-relaxed text-teal-800">{jewelry.personalizedStory}</p>
+              <p className="text-sm leading-relaxed text-teal-800">{jewelry.description}</p>
             </div>
           </div>
 

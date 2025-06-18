@@ -8,18 +8,22 @@ import { FaRegThumbsUp } from "react-icons/fa";
 import { FaHandHoldingHeart, FaMagic, FaShieldAlt, FaGift } from 'react-icons/fa';
 import { FaRegUserCircle } from "react-icons/fa";
 import { BiCreditCard } from "react-icons/bi";
-import sampleimg from '../assets/sampleProducts/earring_01.jpg';
+import sampleimg1 from '../assets/sampleProducts/CowrieShell-Black_01.jpeg';
+import sampleimg2 from '../assets/sampleProducts/CowrieShell-Black_02.jpeg';
+import sampleimg3 from '../assets/sampleProducts/CowrieShell-Black_03.jpg';
 import {CustomizationModal} from '../components/ProductPreview/CustomizationModal';
 import {SizeSelectionModal} from '../components/ProductPreview/SizeSelectionModal';
 
 
 const JewelryItem = {
   id: 'classic-necklace',
-  name: 'White & beige color Dangle Shell Earrings',
+  name: 'Cowrie Shell Necklace with Black String',
   basePrice: 800,
-  image: sampleimg,
-  description: 'Bohemian Style Earrings, Beach Style Earrings',
-  materials: ['Zinc Alloy', 'Sea-shells'],
+  image1: sampleimg1,
+  image2: sampleimg2,
+  image3: sampleimg3,
+  description: 'Bohemian and Beach Style Choker Necklace',
+  materials: ['Black String', 'Sea-shells'],
   type: 'necklace',
   gender: 'women',
   
@@ -35,9 +39,14 @@ const ProductDetail = () => {
     const [openedViaAddtoCart, setOpenedViaAddtoCart] = useState(false);
 
     const [totalPrice, setTotalPrice] = useState(JewelryItem.basePrice);
-
     
 
+    const ProductImages = [
+  sampleimg1,
+  sampleimg2,
+  sampleimg3
+];
+const [mainImage, setMainImage] = useState(ProductImages[0]);
 
 
 
@@ -106,14 +115,26 @@ const handleCheckout = (selectedSize) => {
         <div className="pl-12 space-y-4">
           <div className="flex gap-8">
             <div className="flex flex-col gap-2">
-              {" "}
-              {/*change 1*/}
-              {[1, 2, 3, 4].map((img) => (
-                <div key={img} className="w-16 h-16 bg-gray-200 rounded-lg" />
+              {ProductImages.map((src, idx) => (
+                <img
+                  key={idx}
+                  src={src}
+                  alt={`Thumbnail ${idx + 1}`}
+                  onClick={() => setMainImage(src)}
+                  className="object-cover w-16 h-16 rounded-lg cursor-pointer"
+                />
               ))}
             </div>
+
+            {/* <div className="flex flex-col gap-2">
+              {" "}
+              
+              {[1, 2, 3].map((img) => (
+                <div key={img} className="w-16 h-16 bg-gray-200 rounded-lg" />
+              ))}
+            </div> */}
             <img
-              src={JewelryItem.image}
+              src={mainImage}
               alt="Product"
               className="shadow-md w-96 rounded-2xl"
             />
@@ -188,13 +209,9 @@ const handleCheckout = (selectedSize) => {
 
         {/* Product Details */}
         <div>
-          <h2 className="mb-2 text-3xl ">
-            {JewelryItem.name}
-            
-          </h2>
+          <h2 className="mb-2 text-3xl ">{JewelryItem.name}</h2>
           <h2 className="mb-2 text-xl text-gray-500">
             {JewelryItem.description}
-            
           </h2>
           <div className="flex text-yellow-500">
             <FaStar />
@@ -205,28 +222,30 @@ const handleCheckout = (selectedSize) => {
           </div>
           <p className="mt-4 mb-4 text-2xl font-semibold text-teal-600">
             LKR {JewelryItem.basePrice}
-            
           </p>
 
           <div className="mb-4 space-y-3 text-sm">
             <div className="flex items-center gap-3">
               <SiShell className="text-xl text-black-600" />
-              <p className='text-base'>
-                <strong>Materials Used:</strong> {JewelryItem.materials[0]}, {JewelryItem.materials[1]}
+              <p className="text-base">
+                <strong>Materials Used:</strong> {JewelryItem.materials[0]},{" "}
+                {JewelryItem.materials[1]}
               </p>
             </div>
 
             <div className="flex items-center gap-3">
               <GiHeartNecklace className="text-xl text-black-600" />
-              <p>
-                <strong className='text-base'> Style:</strong> Modern {JewelryItem.type}
+              <p className="capitalize">
+                <strong className="text-base"> Style:</strong> Minimal{" "}
+                {JewelryItem.type}
               </p>
             </div>
 
             <div className="flex items-center gap-3">
               <FaRegThumbsUp className="text-xl text-black-600" />
-              <p>
-                <strong className='text-base'> Best for:</strong> {JewelryItem.gender}
+              <p className="capitalize">
+                <strong className="text-base"> Best for:</strong>{" "}
+                {JewelryItem.gender}
               </p>
             </div>
           </div>
@@ -270,17 +289,26 @@ const handleCheckout = (selectedSize) => {
 
             {/* Customize, Add to Cart, and Buy Now buttons */}
             <div className="flex flex-col w-full max-w-md gap-4 mb-6 sm:flex-row sm:items-center">
-              <button  onClick={handleCustomizeClick} className="flex-1 bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300">
+              <button
+                onClick={handleCustomizeClick}
+                className="flex-1 bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300"
+              >
                 Customize
               </button>
 
-              <button onClick={handleAddToCart} className="flex-1 border border-[#1b4965] text-[#1b4965] text-lg px-6 py-2 rounded-lg hover:bg-[#a8d1eb]/60 transition duration-300">
+              <button
+                onClick={handleAddToCart}
+                className="flex-1 border border-[#1b4965] text-[#1b4965] text-lg px-6 py-2 rounded-lg hover:bg-[#a8d1eb]/60 transition duration-300"
+              >
                 Add to Cart
               </button>
             </div>
 
             <div className="w-full max-w-md">
-              <button onClick={handleBuyNowClick} className="w-full bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300">
+              <button
+                onClick={handleBuyNowClick}
+                className="w-full bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300"
+              >
                 Buy Now
               </button>
             </div>
@@ -327,10 +355,11 @@ const handleCheckout = (selectedSize) => {
               </li>
               <li>
                 <FaMoneyBillWave className="inline text-[#1B4D3E] mr-2" />
-                  Pre-order Only
+                Pre-order Only
               </li>
               <li>
-                <BiCreditCard className="inline text-[#1B4D3E] mr-1" />  Only Online Payments are Accepted
+                <BiCreditCard className="inline text-[#1B4D3E] mr-1" /> Only
+                Online Payments are Accepted
               </li>
             </ul>
           </div>
@@ -359,25 +388,25 @@ const handleCheckout = (selectedSize) => {
         </div>
 
         {/* Customization Modal */}
-      <CustomizationModal
-        isOpen={isCustomizeOpen}
-        onClose={handleCloseCustomize}
-        jewelry={JewelryItem}
-        onNext={handleNext}
-        openedViaCustomize={openedViaCustomize}
-      />
+        <CustomizationModal
+          isOpen={isCustomizeOpen}
+          onClose={handleCloseCustomize}
+          jewelry={JewelryItem}
+          onNext={handleNext}
+          openedViaCustomize={openedViaCustomize}
+        />
 
-      {/* Size Selection Modal */}
-      <SizeSelectionModal
-        isOpen={isSizeModalOpen}
-        onClose={handleCloseSizeModal}
-        onBack={handleBackToCustomize}
-        jewelry={JewelryItem}
-        totalPrice={totalPrice}
-        onCheckout={handleCheckout}
-        showBackButton={openedViaCustomize}
-        hideCheckoutButton={openedViaAddtoCart} 
-      />
+        {/* Size Selection Modal */}
+        <SizeSelectionModal
+          isOpen={isSizeModalOpen}
+          onClose={handleCloseSizeModal}
+          onBack={handleBackToCustomize}
+          jewelry={JewelryItem}
+          totalPrice={totalPrice}
+          onCheckout={handleCheckout}
+          showBackButton={openedViaCustomize}
+          hideCheckoutButton={openedViaAddtoCart}
+        />
       </div>
     );
 };

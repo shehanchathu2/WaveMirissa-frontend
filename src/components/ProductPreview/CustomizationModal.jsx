@@ -84,6 +84,7 @@ export const CustomizationModal = ({
   const handleNext = () => {
     onNext(calculateTotalPrice());
   };
+  
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
@@ -112,7 +113,7 @@ export const CustomizationModal = ({
 
               <div className="relative">
                 <img
-                  src={jewelry.image}
+                  src={jewelry.image1}
                   alt={jewelry.name}
                   className="object-cover w-32 h-32 shadow-lg rounded-xl"
                 />

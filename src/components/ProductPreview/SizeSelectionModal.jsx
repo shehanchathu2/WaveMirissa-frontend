@@ -102,7 +102,7 @@ export const SizeSelectionModal = ({
           <div className="p-4 mb-6 bg-gradient-to-r from-gray-50 to-white rounded-xl">
             <div className="flex items-center space-x-4">
               <img
-                src={jewelry.image}
+                src={jewelry.image1}
                 alt={jewelry.name}
                 className="object-cover w-20 h-20 rounded-lg shadow-md"
               />
