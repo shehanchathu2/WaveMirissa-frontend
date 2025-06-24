@@ -22,18 +22,20 @@ import ProductDetail from './pages/ProductDetail';
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import Footer from './components/Footer';
 import CheckoutPage from './pages/CheckoutPage';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   const location = useLocation();
 
   // Hide Navbar on admin pages
   const isAdminRoute = location.pathname.startsWith('/admin');
-  
+
 
 
   return (
-    
+
     <>
+      <ToastContainer position="top-right" autoClose={1000} />
       {!isAdminRoute && <Navbar />}
 
       <Routes>
@@ -44,12 +46,14 @@ const App = () => {
         <Route path="/ai_suggetions" element={<AI_Suggetion />} />
         <Route path="/virtual_try_on" element={<VirtualTryOn />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<CheckoutPage/>} />
+        <Route path="/checkout" element={<CheckoutPage />} />
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<ProtectedAdminRoute>
-          <AdminLayout />
-        </ProtectedAdminRoute>}>
+        <Route path="/admin" element={
+          <ProtectedAdminRoute>
+            <AdminLayout />
+          </ProtectedAdminRoute>
+        }>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="customization" element={<Customization />} />
@@ -64,7 +68,7 @@ const App = () => {
       </Routes>
 
       {!isAdminRoute && <ScrollToTopButton />}
-      {!isAdminRoute && <Footer/>}
+      {!isAdminRoute && <Footer />}
     </>
   );
 };
