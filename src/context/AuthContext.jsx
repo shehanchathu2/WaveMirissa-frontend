@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         setUser(null);
-        localStorage.removeItem('user'); // 👈 Clear from localStorage
+        localStorage.removeItem('user'); 
         navigate('/');
         toast.success("Logout successfully!");
     };
@@ -60,7 +60,6 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{ user, login, loading, logout, isAuthenticated: !!user, error }}>
             {children}
-            <ToastContainer />
         </AuthContext.Provider>
     );
 };

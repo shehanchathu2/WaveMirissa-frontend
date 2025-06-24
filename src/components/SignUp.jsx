@@ -67,16 +67,21 @@ const SignUp = ({ open, onClose, onSwitchToLogin }) => {
 
       if (response.status === 201) {
         setSuccess("Account created successfully! You can now login.");
-        setTimeout(() => {
-          onClose();
-          onSwitchToLogin();
-        }, 1500);
-        const [form, setForm] = useState({
+
+        // Clear form fields immediately
+        setForm({
           name: '',
           email: '',
           password: '',
           confirmPassword: '',
         });
+
+        // Wait 1.5 seconds, then clear success, close modal and switch to login
+        setTimeout(() => {
+          setSuccess('');
+          onClose();
+          onSwitchToLogin();
+        }, 1500);
       }
     } catch (err) {
       setError(err.response?.data || "Registration failed. Try again.");
@@ -159,7 +164,7 @@ const SignUp = ({ open, onClose, onSwitchToLogin }) => {
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute top-1/3 right-3 text-gray-600 cursor-pointer"
                 >
-                  {showPassword ? <VisibilityOff className='mb-20'/> : <Visibility className='mb-20' />}
+                  {showPassword ? <VisibilityOff className='mb-20' /> : <Visibility className='mb-20' />}
                 </span>
                 <p className="text-xs text-gray-500 mt-1">
                   Must be at least 8 characters with uppercase, lowercase, number, and special character.

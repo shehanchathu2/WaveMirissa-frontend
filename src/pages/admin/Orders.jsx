@@ -1,8 +1,12 @@
-// src/pages/admin/Orders.jsx
 import React, { useState } from 'react';
+import OrderModal from '../../components/admin/OrderModel';
+import ConfirmationModal from '../../components/admin/ConfirmationModal';
+import SendEmailModal from '../../components/admin/SendEmailModel';
 
 const Orders = () => {
-  const [filter, setFilter] = useState('All');
+  const [modalContent, setModalContent] = useState(null);
+  const [confimationModalCon, setConfimationModalCon] = useState(null);
+  const [activeTab, setActiveTab] = useState('Pending');
   const [orders, setOrders] = useState([
     {
       id: 1,
@@ -28,129 +32,372 @@ const Orders = () => {
       date: '2025-06-08',
       total: '$49.99',
     },
+    {
+      id: 4,
+      customerName: 'hansi',
+      status: 'Processing',
+      trackingNumber: 'TRK789101',
+      date: '2025-06-08',
+      total: '$49.99',
+    },
   ]);
 
-  const statusOptions = ['All', 'Pending', 'Shipped', 'Delivered', 'Canceled'];
+  const statusTabs = ['Pending', 'Processing', 'Shipped', 'Delivered'];
 
-  const handleStatusChange = (id, newStatus) => {
-    setOrders((prev) =>
-      prev.map((order) =>
-        order.id === id ? { ...order, status: newStatus } : order
+  const filteredOrders = orders.filter((order) => order.status === activeTab);
+
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+
+  const Data = {
+    name: 'shehan chathu',
+    email: 'shehan@gmail.com',
+    id: '2222222222222222',
+    details: ' Ring,Gold Bracelet',
+  };
+
+
+  const handleMarkAsCompleted = () => {
+    // You can update status or make an API call here
+    setOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order.id === selectedOrderId ? { ...order, status: 'Shipped' } : order
       )
     );
+    setShowConfirmModal(false);
   };
-
-  const handleTrackingChange = (id, value) => {
-    setOrders((prev) =>
-      prev.map((order) =>
-        order.id === id ? { ...order, trackingNumber: value } : order
-      )
-    );
-  };
-
-  const handleDownload = (id) => {
-    const order = orders.find((o) => o.id === id);
-    const data = `Order ID: ${order.id}\nCustomer: ${order.customerName}\nStatus: ${order.status}\nTracking: ${order.trackingNumber}\nDate: ${order.date}\nTotal: ${order.total}`;
-    const blob = new Blob([data], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `order_${order.id}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const filteredOrders =
-    filter === 'All'
-      ? orders
-      : orders.filter((order) => order.status === filter);
 
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4">Manage Orders</h1>
       <p className="text-gray-600 mb-6">View and process customer orders here.</p>
 
-      {/* Filter by Status */}
-      <div className="mb-4">
-        <label className="mr-2 font-medium">Filter by Status:</label>
-        <select
-          className="border p-2 rounded"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          {statusOptions.map((status) => (
-            <option key={status}>{status}</option>
-          ))}
-        </select>
+      <div className="flex gap-4 mb-6">
+        {statusTabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2 rounded-full font-semibold ${activeTab === tab
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+              }`}
+          >
+            {tab} Orders
+          </button>
+        ))}
       </div>
 
-      {/* Orders Table */}
-       <div className="overflow-x-auto bg-white shadow rounded-lg">
-        <table className="min-w-full border border-gray-200">
+      <div className="overflow-x-auto bg-white shadow rounded-lg">
+        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-50 text-gray-700 text-sm uppercase tracking-wide">
-            <tr>
-              <th className="border-b px-6 py-3 text-left">Order ID</th>
-              <th className="border-b px-6 py-3 text-left">Customer</th>
-              <th className="border-b px-6 py-3 text-left">Date</th>
-              <th className="border-b px-6 py-3 text-left">Total</th>
-              <th className="border-b px-6 py-3 text-left">Status</th>
-              <th className="border-b px-6 py-3 text-left">Tracking #</th>
-              <th className="border-b px-6 py-3 text-left">Actions</th>
+            <tr className="bg-[#f1f5f9] text-gray-700 text-sm uppercase tracking-wider">
+              {activeTab === 'Pending' && (
+                <>
+                  <th className="px-6 py-3 text-left">Order Num</th>
+                  <th className="px-6 py-3 text-left">Customer Detail</th>
+                  <th className="px-6 py-3 text-left">Order Details</th>
+                  <th className="px-6 py-3 text-left">Total</th>
+                  <th className="px-6 py-3 text-left">Date</th>
+                  <th className="px-6 py-3 text-left">Actions</th>
+                </>
+              )}
+              {activeTab === 'Processing' && (
+                <>
+                  <th className="px-6 py-3 text-left">Order Num</th>
+                  <th className="px-6 py-3 text-left">Customer</th>
+                  <th className="px-6 py-3 text-left">Order Details</th>
+                  <th className="px-6 py-3 text-left">Estimation Date</th>
+                  <th className="px-6 py-3 text-left">Total</th>
+                  <th className="px-6 py-3 text-left">Action</th>
+                </>
+              )}
+              {activeTab === 'Shipped' && (
+                <>
+                  <th className="px-6 py-3 text-left">Order Num</th>
+                  <th className="px-6 py-3 text-left">Customer</th>
+                  <th className="px-6 py-3 text-left">Order Details</th>
+                  <th className="px-6 py-3 text-left">Tracking #</th>
+                  <th className="px-6 py-3 text-left">Est. Delivery</th>
+                  <th className="px-6 py-3 text-left">Actions</th>
+                </>
+              )}
+              {activeTab === 'Delivered' && (
+                <>
+                  <th className="px-6 py-3 text-left">Order Num</th>
+                  <th className="px-6 py-3 text-left">Customer</th>
+                  <th className="px-6 py-3 text-left">Order Details</th>
+                  <th className="px-6 py-3 text-left">Delivery Date</th>
+                  <th className="px-6 py-3 text-left">Total</th>
+                  <th className="px-6 py-3 text-left">Status</th>
+                </>
+              )}
             </tr>
           </thead>
+
           <tbody className="text-gray-800 text-sm">
-            {filteredOrders.map((order) => (
-              <tr key={order.id} className="hover:bg-gray-50 transition">
-                <td className="border-b px-6 py-4">{order.id}</td>
-                <td className="border-b px-6 py-4">{order.customerName}</td>
-                <td className="border-b px-6 py-4">{order.date}</td>
-                <td className="border-b px-6 py-4">{order.total}</td>
-                <td className="border-b px-6 py-4">
-                  <select
-                    className="border rounded p-1 w-full"
-                    value={order.status}
-                    onChange={(e) =>
-                      handleStatusChange(order.id, e.target.value)
-                    }
-                  >
-                    {statusOptions
-                      .filter((opt) => opt !== 'All')
-                      .map((status) => (
-                        <option key={status}>{status}</option>
-                      ))}
-                  </select>
-                </td>
-                <td className="border-b px-6 py-4">
-                  <input
-                    type="text"
-                    className="border rounded p-1 w-full"
-                    placeholder="Enter tracking #"
-                    value={order.trackingNumber}
-                    onChange={(e) =>
-                      handleTrackingChange(order.id, e.target.value)
-                    }
-                  />
-                </td>
-                <td className="border-b px-6 py-4">
-                  <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition text-sm"
-                    onClick={() => handleDownload(order.id)}
-                  >
-                    Download
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {filteredOrders.length === 0 && (
+            {filteredOrders.length > 0 ? (
+              filteredOrders.map((order) => (
+                <tr key={order.id} className="hover:bg-gray-50 transition">
+                  {activeTab === 'Pending' && (
+                    <>
+                      <td className="border-b px-6 py-4">{order.id}</td>
+                      <td className="border-b px-6 py-4">
+                        <button
+                          onClick={() =>
+                            setModalContent({
+                              title: 'Customer Detail',
+                              content: (
+                                <>
+                                  <p><strong>Name:</strong> {order.customerName}</p>
+                                  <p><strong>Email:</strong> shehan@email.com</p>
+                                  <p><strong>Address:</strong> 123 Main Street, Colombo</p>
+                                  <p><strong>Phone:</strong> +94 77 123 4567</p>
+                                </>
+                              ),
+                            })
+                          }
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                          See Info
+                        </button>
+                      </td>
+
+                      <td className="border-b px-6 py-4">
+                        <button
+                          onClick={() =>
+                            setModalContent({
+                              title: 'Order Detail',
+                              content: (
+                                <>
+                                  <p><strong>Item:</strong> Gold ring</p>
+                                  <p><strong>Size:</strong> 7</p>
+                                  <p><strong>Material:</strong> 24K</p>
+                                  <p><strong>Engraving:</strong> "Forever Yours"</p>
+                                </>
+                              ),
+                            })
+                          }
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                          View Details
+                        </button>
+                      </td>
+
+
+                      <td className="border-b px-6 py-4">{order.total}</td>
+                      <td className="border-b px-6 py-4">{order.date}</td>
+                      <td className="border-b px-6 py-4 space-x-2">
+                        <button className="bg-green-500 text-white px-3 py-1 rounded">
+                          Accept
+                        </button>
+                        <button className="bg-red-500 text-white px-3 py-1 rounded">
+                          Reject
+                        </button>
+                      </td>
+                    </>
+                  )}
+
+                  {activeTab === 'Processing' && (
+                    <>
+                      <td className="border-b px-6 py-4">{order.id}</td>
+                      <td className="border-b px-6 py-4">
+                        <button
+                          onClick={() =>
+                            setModalContent({
+                              title: 'Customer Detail',
+                              content: (
+                                <>
+                                  <p><strong>Name:</strong> {order.customerName}</p>
+                                  <p><strong>Email:</strong> shehan@email.com</p>
+                                  <p><strong>Address:</strong> 123 Main Street, Colombo</p>
+                                  <p><strong>Phone:</strong> +94 77 123 4567</p>
+                                </>
+                              ),
+                            })
+                          }
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                          See Info
+                        </button>
+                      </td>
+
+                      <td className="border-b px-6 py-4">
+                        <button
+                          onClick={() =>
+                            setModalContent({
+                              title: 'Order Detail',
+                              content: (
+                                <>
+                                  <p><strong>Item:</strong> Gold ring</p>
+                                  <p><strong>Size:</strong> 7</p>
+                                  <p><strong>Material:</strong> 24K</p>
+                                  <p><strong>Engraving:</strong> "Forever Yours"</p>
+                                </>
+                              ),
+                            })
+                          }
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                          View Details
+                        </button>
+                      </td>
+                      <td className="border-b px-6 py-4">
+                        {new Date(new Date(order.date).getTime() + 14 * 24 * 60 * 60 * 1000)
+                          .toISOString()
+                          .split('T')[0]}
+                      </td>
+                      <td className="border-b px-6 py-4">
+                        {order.total}
+                      </td>
+                      <td className="border-b px-6 py-4">
+                        <button
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                          onClick={() => {
+                            setConfimationModalCon({
+                              'title': "Mark as Completed",
+                              'message': "Are you sure you want to mark this order as completed?",
+                            })
+                            setSelectedOrderId(order.id);
+                            setShowConfirmModal(true);
+                          }}
+                        >
+                          Mark as Completed
+                        </button>
+                      </td>
+                    </>
+                  )}
+
+                  {activeTab === 'Shipped' && (
+                    <>
+                      <td className="border-b px-6 py-4">{order.id}</td>
+                      <td className="border-b px-6 py-4">
+                        <button
+                          onClick={() =>
+                            setModalContent({
+                              title: 'Customer Detail',
+                              content: (
+                                <>
+                                  <p><strong>Name:</strong> {order.customerName}</p>
+                                  <p><strong>Email:</strong> shehan@email.com</p>
+                                  <p><strong>Address:</strong> 123 Main Street, Colombo</p>
+                                  <p><strong>Phone:</strong> +94 77 123 4567</p>
+                                </>
+                              ),
+                            })
+                          }
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                          See Info
+                        </button>
+                      </td>
+
+                      <td className="border-b px-6 py-4">
+                        <button
+                          onClick={() =>
+                            setModalContent({
+                              title: 'Order Detail',
+                              content: (
+                                <>
+                                  <p><strong>Item:</strong> Gold ring</p>
+                                  <p><strong>Size:</strong> 7</p>
+                                  <p><strong>Material:</strong> 24K</p>
+                                  <p><strong>Engraving:</strong> "Forever Yours"</p>
+                                </>
+                              ),
+                            })
+                          }
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                          View Details
+                        </button>
+                      </td>
+
+                      <td className="border-b px-6 py-4">{order.trackingNumber || 'TRK000000'}</td>
+
+                      <td className="border-b px-6 py-4">2025-06-22</td>
+
+                      <td className="border-b px-6 py-4 space-x-2">
+
+                        
+                        <button
+                          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                          onClick={() => setIsEmailModalOpen(true)}
+                        >
+                          Send Email
+                        </button>
+
+                        <button
+                          className="bg-green-600 hover:bg-green-700 text-white font-semibold px-2 py-2 rounded-md shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                          onClick={() => {
+                            setConfimationModalCon({
+                              'title': "Mark as Delivered",
+                              'message': "Are you sure you want to mark this order as Delivered?",
+                            })
+                            setSelectedOrderId(order.id);
+                            setShowConfirmModal(true);
+                          }}
+                        >
+                          Mark as Delivered
+                        </button>
+                      </td>
+                    </>
+                  )}
+
+                  {activeTab === 'Delivered' && (
+                    <>
+                      <td className="border-b px-6 py-4">{order.id}</td>
+                      <td className="border-b px-6 py-4">{order.customerName}</td>
+                      <td className="border-b px-6 py-4">Diamond bracelet</td>
+                      <td className="border-b px-6 py-4">{order.date}</td>
+                      <td className="border-b px-6 py-4">{order.total}</td>
+                      <td className="border-b px-6 py-4">Delivered</td>
+                    </>
+                  )}
+                </tr>
+              ))
+            ) : (
               <tr>
                 <td colSpan="7" className="text-center py-6 text-gray-500">
-                  No orders found for this status.
+                  No orders found in this category.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
+      {/* Modal */}
+      {modalContent && (
+        <OrderModal
+          title={modalContent.title}
+          onClose={() => setModalContent(null)}
+        >
+          {modalContent.content}
+        </OrderModal>
+      )}
+
+
+
+      {/* Confimation model */}
+      {confimationModalCon && (
+        <ConfirmationModal
+          isOpen={showConfirmModal}
+          title="Mark as Completed"
+          message="Are you sure you want to mark this order as completed?"
+          onCancel={() => setShowConfirmModal(false)}
+          onConfirm={handleMarkAsCompleted}
+        >
+          {confimationModalCon.content}
+        </ConfirmationModal>
+      )}
+
+       <SendEmailModal
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+        data={Data}
+      />
     </div>
   );
 };

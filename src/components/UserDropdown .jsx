@@ -45,11 +45,33 @@ const UserDropdown = () => {
               <button
                 className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                 onClick={() => {
+                  navigate('/profile');
+                  setShowMenu(false);
+                }}
+              >
+                My Profile
+              </button>
+            </li>
+            <li>
+              <button
+                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                onClick={() => {
                   navigate('/orders');
                   setShowMenu(false);
                 }}
               >
                 My Orders
+              </button>
+            </li>
+            <li>
+              <button
+                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                onClick={() => {
+                  navigate('/wishlist');
+                  setShowMenu(false);
+                }}
+              >
+                Wishlist
               </button>
             </li>
             <li>
