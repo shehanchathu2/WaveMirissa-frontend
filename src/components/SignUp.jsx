@@ -99,7 +99,7 @@ const SignUp = ({ open, onClose, onSwitchToLogin }) => {
           exit="hidden"
         >
           <motion.div
-            className="bg-gray-200 rounded-lg shadow-lg p-8 w-[500px] relative"
+            className="bg-white/80 backdrop-blur-lg rounded-lg shadow-lg p-8 w-[500px] relative"
             variants={modalVariants}
             initial="hidden"
             animate="visible"
