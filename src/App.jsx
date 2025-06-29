@@ -29,7 +29,7 @@ import VirtualTryOn from './pages/VirtualTryOn';
 import Cart from './pages/Cart';
 import CheckoutPage from './pages/CheckoutPage';
 
-import { ToastContainer } from 'react-toastify';
+
 import Myorders from './pages/Myorders';
 
 import SuspendPage from './pages/SuspendPage';
