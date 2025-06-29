@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { User, ClipboardList, Heart, LogOut } from 'lucide-react';
 
 const UserDropdown = () => {
   const { user, logout } = useAuth();
@@ -30,66 +31,81 @@ const UserDropdown = () => {
   return (
     <div className="relative flex items-center space-x-4" ref={dropdownRef}>
       {/* Clickable circle */}
+      <div className='flex items-center p-2 space-x-1 cursor-pointer hover:bg-teal-100 rounded-3xl' onClick={() => setShowMenu((prev) => !prev)}>
       <div
-        className="w-10 h-10 bg-[#1B4965] text-white rounded-full flex items-center justify-center text-lg font-semibold cursor-pointer"
-        onClick={() => setShowMenu((prev) => !prev)}
+        className="w-8 h-8 bg-[#1B4965] text-white rounded-full flex items-center justify-center text-lg font-semibold "
+        
       >
         {user?.username?.charAt(0).toUpperCase()}
+        
+      </div>
+       <span className="text-xs text-black " >▼</span>
       </div>
 
       {/* Dropdown Menu */}
       {showMenu && (
-        <div className="absolute right-0 top-12 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50">
+        <div className="absolute right-0 z-50 w-56 bg-white border rounded-lg shadow-lg top-12">
+         <div className='flex items-center px-4 py-1 space-x-1 border-b bg-teal-50'>
+            <div
+        className="w-8 h-8 bg-[#1B4965] text-white rounded-full flex items-center justify-center text-lg font-semibold "
+        
+      >
+        {user?.username?.charAt(0).toUpperCase()}
+        
+      </div>
+      <div>
+          <span
+               className="block w-full px-2 font-semibold text-left text-teal-800">
+                {user?.username}</span>
+                
+                <span className='block w-full px-2 text-xs font-light text-left text-gray-500'>{user?.email}
+              
+              
+            </span>
+            </div>
+            </div>
+            
           <ul className="py-2 text-gray-700">
+            
+                
             <li>
-              <button
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                onClick={() => {
-                  navigate('/profile');
-                  setShowMenu(false);
-                }}
-              >
+              <button className="flex items-center block w-full px-4 py-2 text-left hover:bg-gray-100">
+                <User className="w-5 h-5 mr-2 text-teal-700 " />
                 My Profile
               </button>
+              
             </li>
             <li>
               <button
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                className="flex items-center block w-full px-4 py-2 text-left hover:bg-gray-100"
                 onClick={() => {
-                  navigate('/orders');
+                  navigate('/myorders');
                   setShowMenu(false);
                 }}
               >
+                <ClipboardList className="w-5 h-5 mr-2 text-teal-700 "/>
                 My Orders
               </button>
             </li>
             <li>
               <button
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                className="flex items-center block w-full px-4 py-2 text-left hover:bg-gray-100"
                 onClick={() => {
                   navigate('/wishlist');
                   setShowMenu(false);
                 }}
               >
+                <Heart className="w-5 h-5 mr-2 text-teal-700 "/>
                 Wishlist
               </button>
-            </li>
-            <li>
-              <button
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                onClick={() => {
-                  navigate('/settings');
-                  setShowMenu(false);
-                }}
-              >
-                Settings
-              </button>
+              <br></br>
             </li>
             <li>
               <button
                 onClick={handleLogout}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                className="flex items-center block w-full px-4 py-2 text-left border-t hover:bg-gray-100"
               >
+                <LogOut className="w-5 h-5 mr-2 text-teal-700 "/>
                 Logout
               </button>
             </li>

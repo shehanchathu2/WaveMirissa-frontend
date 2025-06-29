@@ -23,6 +23,7 @@ import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import Footer from './components/Footer';
 import CheckoutPage from './pages/CheckoutPage';
 import { ToastContainer } from 'react-toastify';
+import Myorders from './pages/Myorders';
 
 const App = () => {
   const location = useLocation();
@@ -46,6 +47,8 @@ const App = () => {
         <Route path="/ai_suggetions" element={<AI_Suggetion />} />
         <Route path="/virtual_try_on" element={<VirtualTryOn />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<CheckoutPage/>} />
+        <Route path="/myorders" element={<Myorders/>} />
         <Route path="/checkout" element={<CheckoutPage />} />
 
         {/* Admin Routes */}
@@ -54,6 +57,7 @@ const App = () => {
             <AdminLayout />
           </ProtectedAdminRoute>
         }>
+       
           <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="customization" element={<Customization />} />
