@@ -2,26 +2,34 @@ import React, { useEffect, useState } from "react";
 import AddCustomizationModal from "../../components/admin/AddCustomizationModel";
 import EditCustomizationModal from "../../components/admin/EditCustomizationModal";
 import axios from "axios";
+import WaveMirissaLoader from "../../components/WaveMirissaLoader";
 
 const Customization = () => {
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [loading,setLoading] = useState(false)
 
   const fetchData = async () => {
+    setLoading(true)
     try {
       const res = await axios.get("http://localhost:8080/AllCustomizations");
       setData(res.data);
     } catch (error) {
       console.error("Error fetching products:", error);
       alert("Failed to fetch products.");
+    } finally {
+      setLoading(false)
     }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  if(loading) return <WaveMirissaLoader/>
+
 
   const handleModalSubmit = async () => {
     await fetchData();
@@ -43,7 +51,7 @@ const Customization = () => {
     if (!window.confirm("Are you sure you want to delete this customization?")) return;
 
     try {
-      await axios.delete(`http://localhost:8080/Customizations/${item_id}`);
+      await axios.delete(`http://localhost:8080/Customizations/delete/${item_id}`);
       fetchData();
       alert("Deleted the customization.");
     } catch (error) {

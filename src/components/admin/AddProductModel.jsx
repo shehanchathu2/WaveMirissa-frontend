@@ -10,13 +10,6 @@ const CLOUDINARY_API = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}
 
 
 
-
-
-
-
-
-
-
 const AddProductModal = ({ onClose, onProductAdded }) => {
     const [formData, setFormData] = useState({
         name: '',
@@ -39,7 +32,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
 
 
 
-    const [customizations, setCustomizations] = useState([]); 
+    const [customizations, setCustomizations] = useState([]);
 
     useEffect(() => {
         const fetchCustomizations = async () => {
@@ -104,13 +97,18 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
 
         const payload = {
             ...formData,
+            type: formData.type.toLowerCase(),
             price: parseFloat(formData.price),
             quantity: parseInt(formData.quantity, 10),
             image_url1: formData.image_url1,
             image_url2: formData.image_url2,
             image_url3: formData.image_url3,
+            customizations: customizations
+                .filter(c => c.item_Id == formData.customization)
+                .map(c => ({ item_id: c.item_Id })) 
         };
 
+        console.log(payload)
         try {
             const res = await axios.post('http://localhost:8080/product/addproducts', payload, {
                 headers: { 'Content-Type': 'application/json' },
@@ -126,12 +124,15 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
     return (
         <motion.div
             className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 "
+
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
         >
+            <div className="fixed inset-0 bg-black/30" onClick={onClose}></div>
             <motion.div
                 className="bg-white rounded-lg w-full max-w-xl max-h-[90vh] flex flex-col relative "
+
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}
@@ -148,6 +149,8 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                 </div>
 
                 <div className="overflow-y-auto px-6 py-4 space-y-3 scrollbar-hide">
+
+
                     <input type="text" name="name" placeholder="Name" className="border p-2 w-full" value={formData.name} onChange={handleChange} />
                     <input type="text" name="material" placeholder="Material" className="border p-2 w-full" value={formData.material} onChange={handleChange} />
 

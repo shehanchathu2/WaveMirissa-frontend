@@ -5,6 +5,7 @@ import AddProductModal from '../../components/admin/AddProductModel';
 import EditProductModal from '../../components/admin/EditProductModal';
 import { toast } from 'react-toastify';
 import ProductModel from '../../components/admin/ProductModel';
+import WaveMirissaLoader from '../../components/WaveMirissaLoader';
 
 const Products = () => {
   const [modalContent, setModalContent] = useState(null);
@@ -12,13 +13,18 @@ const Products = () => {
   const [showModal, setShowModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
 
+ const [loading, setLoading] = useState(false); // 👈 loading state
+
   const fetchProducts = async () => {
+    setLoading(true); 
     try {
       const res = await axios.get('http://localhost:8080/product/Allproducts');
       setProducts(res.data);
     } catch (error) {
       console.error('Error fetching products:', error);
       toast.error('Failed to fetch products.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,6 +50,7 @@ const Products = () => {
     toast.success("Product added successfully!");
   };
 
+  if (loading) return <WaveMirissaLoader />; 
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4">Manage Products</h1>

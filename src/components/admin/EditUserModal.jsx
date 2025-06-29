@@ -48,6 +48,7 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdated }) => {
             <select className="w-full border p-2 rounded" value={role} onChange={(e) => setRole(e.target.value)}>
               <option value="user">User</option>
               <option value="admin">Admin</option>
+              <option value="suspend">suspend</option>
             </select>
           </div>
         </div>

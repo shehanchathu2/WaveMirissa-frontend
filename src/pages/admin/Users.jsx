@@ -2,31 +2,35 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import EditUserModal from '../../components/admin/EditUserModal';
+import WaveMirissaLoader from '../../components/WaveMirissaLoader';
 
 const Users = () => {
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [users, setUsers] = useState([])
-
+  const [loading, setLoading] = useState(false)
 
 
   const getAllUsers = async () => {
-      try {
-        const res = await axios.get("http://localhost:8080/users");
-        const onlyUsers = res.data.filter((u) => u.role === "USER"); 
-        setUsers(res.data);
-        console.log(onlyUsers);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-        alert('Failed to fetch users.');
-      }
+    setLoading(true)
+    try {
+      const res = await axios.get("http://localhost:8080/users");
+      const onlyUsers = res.data.filter((u) => u.role === "USER");
+      setUsers(res.data);
+      console.log(onlyUsers);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      alert('Failed to fetch users.');
+    } finally {
+      setLoading(false)
+    }
   };
-  
+
 
   useEffect(() => {
     getAllUsers();
-  }, [users]);
+  },[]);
 
   const handleDeleteUser = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this User?");
@@ -43,7 +47,7 @@ const Users = () => {
     }
   };
 
-
+   if (loading) return <WaveMirissaLoader />; 
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4">Manage Users</h1>
