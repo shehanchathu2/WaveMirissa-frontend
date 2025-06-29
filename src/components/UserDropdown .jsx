@@ -69,7 +69,7 @@ const UserDropdown = () => {
             
                 
             <li>
-              <button className="flex items-center block w-full px-4 py-2 text-left hover:bg-gray-100">
+              <button className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100">
                 <User className="w-5 h-5 mr-2 text-teal-700 " />
                 My Profile
               </button>
@@ -77,7 +77,7 @@ const UserDropdown = () => {
             </li>
             <li>
               <button
-                className="flex items-center block w-full px-4 py-2 text-left hover:bg-gray-100"
+                className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100"
                 onClick={() => {
                   navigate('/myorders');
                   setShowMenu(false);
@@ -89,7 +89,7 @@ const UserDropdown = () => {
             </li>
             <li>
               <button
-                className="flex items-center block w-full px-4 py-2 text-left hover:bg-gray-100"
+                className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-100"
                 onClick={() => {
                   navigate('/wishlist');
                   setShowMenu(false);
@@ -103,7 +103,7 @@ const UserDropdown = () => {
             <li>
               <button
                 onClick={handleLogout}
-                className="flex items-center block w-full px-4 py-2 text-left border-t hover:bg-gray-100"
+                className="flex items-center w-full px-4 py-2 text-left border-t hover:bg-gray-100"
               >
                 <LogOut className="w-5 h-5 mr-2 text-teal-700 "/>
                 Logout
