@@ -51,7 +51,7 @@ const Login = ({ open, onClose, onSwitchToSignup }) => {
           exit="hidden"
         >
           <motion.div
-            className="bg-white/80 backdrop-blur-md border border-white/20 rounded-lg shadow-xl p-10 w-[500px] relative"
+            className="bg-white/80 backdrop-blur-lg border border-white/20 rounded-lg shadow-xl p-10 w-[500px] relative"
             variants={modalVariants}
             initial="hidden"
             animate="visible"

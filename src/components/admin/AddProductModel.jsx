@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaPlus } from 'react-icons/fa';
 import axios from 'axios';
@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
 const CLOUDINARY_CLOUD_NAME = 'dlvhmit8p';
 const CLOUDINARY_API = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+
 
 const AddProductModal = ({ onClose, onProductAdded }) => {
     const [formData, setFormData] = useState({
@@ -27,6 +29,24 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
         image_url3: '',
         previewUrls: [],
     });
+
+
+
+    const [customizations, setCustomizations] = useState([]);
+
+    useEffect(() => {
+        const fetchCustomizations = async () => {
+            try {
+                const response = await axios.get("http://localhost:8080/customizations");
+                setCustomizations(response.data);
+                console.log(response.data)
+            } catch (error) {
+                console.error("Error fetching customizations:", error);
+            }
+        };
+        fetchCustomizations();
+    }, []);
+
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -77,13 +97,18 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
 
         const payload = {
             ...formData,
+            type: formData.type.toLowerCase(),
             price: parseFloat(formData.price),
             quantity: parseInt(formData.quantity, 10),
             image_url1: formData.image_url1,
             image_url2: formData.image_url2,
             image_url3: formData.image_url3,
+            customizations: customizations
+                .filter(c => c.item_Id == formData.customization)
+                .map(c => ({ item_id: c.item_Id })) 
         };
 
+        console.log(payload)
         try {
             const res = await axios.post('http://localhost:8080/product/addproducts', payload, {
                 headers: { 'Content-Type': 'application/json' },
@@ -98,13 +123,16 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
 
     return (
         <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 "
+
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
         >
+            <div className="fixed inset-0 bg-black/30" onClick={onClose}></div>
             <motion.div
-                className="bg-white rounded-lg w-full max-w-xl max-h-[90vh] flex flex-col relative"
+                className="bg-white rounded-lg w-full max-w-xl max-h-[90vh] flex flex-col relative "
+
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}
@@ -121,9 +149,11 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                 </div>
 
                 <div className="overflow-y-auto px-6 py-4 space-y-3 scrollbar-hide">
+
+
                     <input type="text" name="name" placeholder="Name" className="border p-2 w-full" value={formData.name} onChange={handleChange} />
                     <input type="text" name="material" placeholder="Material" className="border p-2 w-full" value={formData.material} onChange={handleChange} />
-                    
+
                     <select name="type" className="border p-2 w-full" value={formData.type} onChange={handleChange}>
                         <option value="">Select Type</option>
                         <option value="ring">Ring</option>
@@ -142,8 +172,29 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                     <input type="number" name="quantity" placeholder="Quantity" className="border p-2 w-full" value={formData.quantity} onChange={handleChange} />
                     <input type="text" name="category" placeholder="Category" className="border p-2 w-full" value={formData.category} onChange={handleChange} />
                     <textarea name="description" placeholder="Description" className="border p-2 w-full" value={formData.description} onChange={handleChange}></textarea>
-                    <input type="text" name="customization" placeholder="Customization" className="border p-2 w-full" value={formData.customization} onChange={handleChange} />
-                    
+
+
+
+                    <select
+                        name="customization"
+                        className="border p-2 w-full"
+                        value={formData.customization}
+                        onChange={handleChange}
+                    >
+                        <option value="">Select a customization</option>
+                        {customizations.length === 0 ? (
+                            <option key="loading" disabled>Loading...</option>
+                        ) : (
+                            customizations.map((item) => (
+                                <option key={item.item_Id} value={item.item_Id}>
+                                    {item.name}
+                                </option>
+                            ))
+                        )}
+                    </select>
+
+
+
                     <select name="gender" className="border p-2 w-full" value={formData.gender} onChange={handleChange}>
                         <option value="">Select Gender</option>
                         <option value="male">Male</option>
@@ -178,7 +229,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                     </div>
                 </div>
             </motion.div>
-        </motion.div>
+        </motion.div >
     );
 };
 

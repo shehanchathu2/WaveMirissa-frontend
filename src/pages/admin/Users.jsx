@@ -1,34 +1,45 @@
 // src/pages/admin/Users.jsx
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import EditUserModal from '../../components/admin/EditUserModal';
+import WaveMirissaLoader from '../../components/WaveMirissaLoader';
 
 const Users = () => {
 
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(false)
 
- useEffect(() => {
+
   const getAllUsers = async () => {
+    setLoading(true)
     try {
       const res = await axios.get("http://localhost:8080/users");
-      const onlyUsers = res.data.filter((u) => u.role === "USER"); // Change based on your actual field
-      setUsers(onlyUsers);
+      const onlyUsers = res.data.filter((u) => u.role === "USER");
+      setUsers(res.data);
       console.log(onlyUsers);
     } catch (error) {
       console.error('Error fetching users:', error);
       alert('Failed to fetch users.');
+    } finally {
+      setLoading(false)
     }
   };
 
-  getAllUsers();
-}, []);
 
-const handleDeleteUser = async (id) => {
+  useEffect(() => {
+    getAllUsers();
+  },[]);
+
+  const handleDeleteUser = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this User?");
     if (!confirmDelete) return;
 
     try {
       await axios.delete(`http://localhost:8080/user/${id}`);
       setUsers((prev) => prev.filter((u) => u.id !== id));
+      getAllUsers();
       toast.success("User deleted successfully!");
     } catch (error) {
       toast.error("Failed to delete user!");
@@ -36,7 +47,7 @@ const handleDeleteUser = async (id) => {
     }
   };
 
-
+   if (loading) return <WaveMirissaLoader />; 
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4">Manage Users</h1>
@@ -48,6 +59,7 @@ const handleDeleteUser = async (id) => {
             <th className="px-6 py-3 text-left">Num</th>
             <th className="px-6 py-3 text-left">Name</th>
             <th className="px-6 py-3 text-left">Email</th>
+            <th className="px-6 py-3 text-left">Role</th>
             <th className="px-6 py-3 text-center">Action</th>
           </tr>
         </thead>
@@ -60,8 +72,15 @@ const handleDeleteUser = async (id) => {
               <td className="px-6 py-4 text-sm text-gray-700">{index + 1}</td>
               <td className="px-6 py-4 text-sm font-medium text-gray-900">{u.username}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{u.email}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{u.role}</td>
               <td className="px-6 py-4 text-center space-x-2">
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+                <button
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
+                  onClick={() => {
+                    setSelectedUser(u);
+                    setShowEditModal(true);
+                  }}
+                >
                   Edit
                 </button>
                 <button
@@ -76,6 +95,20 @@ const handleDeleteUser = async (id) => {
         </tbody>
       </table>
 
+      <EditUserModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        user={selectedUser}
+        onUpdated={() => {
+          setShowEditModal(false);
+          // reload users
+          axios.get("http://localhost:8080/users")
+            .then((res) => {
+              const onlyUsers = res.data.filter((u) => u.role === "USER");
+              setUsers(onlyUsers);
+            });
+        }}
+      />
     </div>
   );
 };

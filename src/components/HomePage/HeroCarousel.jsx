@@ -120,7 +120,7 @@ const HeroCarousel = () => {
     };
 
     return (
-        <div className="relative w-full h-[500px] overflow-hidden">
+        <div className="relative w-full h-[650px] overflow-hidden">
 
             {/* Background image with animation */}
             <AnimatePresence>
@@ -146,14 +146,14 @@ const HeroCarousel = () => {
 
 
             {/* Left text and buttons */}
-            <div className="absolute z-20 left-40 top-1/2 transform -translate-y-1/2 text-left max-w-xl p-6">
+            <div className="absolute z-20 left-40 top-[400px] transform -translate-y-1/2 text-left max-w-xl p-6">
 
                 <p className="text-sm  text-gray-500 italic mb-1">Wave Mirissa</p>
 
                 <AnimatePresence mode="wait">
                     <motion.h1
                         key={HeroImages[currentIndex].title}
-                        className="text-4xl font-lily  text-[#0A3D62] leading-tight mb-3 "
+                        className="text-5xl font-lily  text-[#0A3D62] leading-tight mb-3 "
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
@@ -187,28 +187,28 @@ const HeroCarousel = () => {
                         className="flex space-x-4 mb-10"
                     >
                         <Link to="/shop">
-    <motion.button
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="bg-[#1f445f] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#1B4965] transition"
-    >
-        Shop Now
-    </motion.button>
-</Link>
+                            <motion.button
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.8, delay: 0.2 }}
+                                className="bg-[#1f445f] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#1B4965] transition"
+                            >
+                                Shop Now
+                            </motion.button>
+                        </Link>
 
-<Link to="/virtual_try_on">
-    <motion.button
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-        className="border border-[#2a4f64] text-[#25495e] px-5 py-2 rounded-md font-semibold hover:bg-[#1B4965] hover:text-white transition"
-    >
-        Virtual Try-On
-    </motion.button>
-</Link>
+                        <Link to="/virtual_try_on">
+                            <motion.button
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.8, delay: 0.4 }}
+                                className="border border-[#2a4f64] text-[#25495e] px-5 py-2 rounded-md font-semibold hover:bg-[#1B4965] hover:text-white transition"
+                            >
+                                Virtual Try-On
+                            </motion.button>
+                        </Link>
                     </motion.div>
                 </AnimatePresence>
 
