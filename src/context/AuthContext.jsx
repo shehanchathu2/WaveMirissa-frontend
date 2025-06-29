@@ -1,67 +1,86 @@
-// src/context/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-    }, []);
+  const [initializing, setInitializing] = useState(true); // for checking localStorage on load
+  const [loading, setLoading] = useState(false); // for login/logout actions
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-    const login = async (email, password) => {
-        setLoading(true);
-        setError(null); // Reset error state
-        try {
-            const response = await axios.post('http://localhost:8080/authentication', {
-                email,
-                password,
-            });
+  useEffect(() => {
+    // Simulate re-authentication delay if needed
+    setTimeout(() => {
+      setInitializing(false); // done checking localStorage
+    }, 200); // Optional delay for smoother UI
+  }, []);
 
-            const loggedInUser = response.data;
-            setUser(loggedInUser);
-            localStorage.setItem('user', JSON.stringify(loggedInUser)); // 👈 Store in localStorage
+  const login = async (email, password) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.post('http://localhost:8080/authentication', {
+        email,
+        password,
+      });
 
-            if (loggedInUser.role === 'admin') {
-                navigate('/admin');
-                toast.success("User Login successfully!");
-            } else {
-                navigate('/');
-                toast.success("Login successfully!");
-                return true;
-            }
-        } catch (err) {
-            console.error('Login error:', err);
-            setError('Invalid email or password');
-            return false; // Indicate failure
-        } finally {
-            setLoading(false);
-        }
-    };
+      const loggedInUser = response.data;
+      setUser(loggedInUser);
+      localStorage.setItem('user', JSON.stringify(loggedInUser));
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem('user'); 
+      if (loggedInUser.role === 'admin') {
+        navigate('/admin');
+        toast.success('Admin login successful!');
+      } else if(loggedInUser.role === 'user'){
         navigate('/');
-        toast.success("Logout successfully!");
-    };
+        toast.success('Login successful!');
+      } else {
+        navigate('/suspend');
+        toast.success('Login successful!');
+      }
 
-    return (
-        <AuthContext.Provider value={{ user, login, loading, logout, isAuthenticated: !!user, error }}>
-            {children}
-        </AuthContext.Provider>
-    );
+      return true;
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Invalid email or password');
+      toast.error('Invalid email or password');
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    navigate('/');
+    toast.success('Logout successful!');
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        loading,
+        initializing,
+        isAuthenticated: !!user,
+        error,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => useContext(AuthContext);

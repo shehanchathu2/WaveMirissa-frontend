@@ -23,6 +23,7 @@ import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute';
 import Footer from './components/Footer';
 import CheckoutPage from './pages/CheckoutPage';
 import { ToastContainer } from 'react-toastify';
+import SuspendPage from './pages/SuspendPage';
 
 const App = () => {
   const location = useLocation();
@@ -39,7 +40,6 @@ const App = () => {
       {!isAdminRoute && <Navbar />}
 
       <Routes>
-        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/shop/product/:productId" element={<ProductDetail />} />
@@ -47,6 +47,7 @@ const App = () => {
         <Route path="/virtual_try_on" element={<VirtualTryOn />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/suspend" element={<SuspendPage />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={
