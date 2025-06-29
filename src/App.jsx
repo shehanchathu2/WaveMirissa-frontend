@@ -28,7 +28,12 @@ import AI_Suggetion from './pages/AI_Suggetion';
 import VirtualTryOn from './pages/VirtualTryOn';
 import Cart from './pages/Cart';
 import CheckoutPage from './pages/CheckoutPage';
+
+import { ToastContainer } from 'react-toastify';
+import Myorders from './pages/Myorders';
+
 import SuspendPage from './pages/SuspendPage';
+
 
 
 
@@ -42,6 +47,9 @@ const App = () => {
       {!isAdminRoute && <Navbar />}
 
       <Routes>
+
+
+           {/* Public Routes */}
         <Route
           path="/"
           element={
@@ -98,6 +106,7 @@ const App = () => {
             </ProtectedUserRoute>
           }
         />
+            <Route path="/myorders" element={<Myorders/>} />
 
         {/* Always accessible for suspended users */}
         <Route path="/suspend" element={<SuspendPage />} />
@@ -111,6 +120,7 @@ const App = () => {
             </ProtectedAdminRoute>
           }
         >
+
           <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="customization" element={<Customization />} />
