@@ -30,7 +30,7 @@ const Users = () => {
 
   useEffect(() => {
     getAllUsers();
-  },[]);
+  }, []);
 
   const handleDeleteUser = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this User?");
@@ -47,7 +47,7 @@ const Users = () => {
     }
   };
 
-   if (loading) return <WaveMirissaLoader />; 
+  if (loading) return <WaveMirissaLoader />;
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4">Manage Users</h1>
@@ -75,7 +75,7 @@ const Users = () => {
               <td className="px-6 py-4 text-sm text-gray-600">{u.role}</td>
               <td className="px-6 py-4 text-center space-x-2">
                 <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm"
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md text-sm"
                   onClick={() => {
                     setSelectedUser(u);
                     setShowEditModal(true);
@@ -83,12 +83,7 @@ const Users = () => {
                 >
                   Edit
                 </button>
-                <button
-                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
-                  onClick={() => handleDeleteUser(u.id)}
-                >
-                  Delete
-                </button>
+               
               </td>
             </tr>
           ))}
@@ -101,12 +96,7 @@ const Users = () => {
         user={selectedUser}
         onUpdated={() => {
           setShowEditModal(false);
-          // reload users
-          axios.get("http://localhost:8080/users")
-            .then((res) => {
-              const onlyUsers = res.data.filter((u) => u.role === "USER");
-              setUsers(onlyUsers);
-            });
+          getAllUsers(); // 
         }}
       />
     </div>
