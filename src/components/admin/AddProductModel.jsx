@@ -95,6 +95,8 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
             return;
         }
 
+        const selectedIds = (formData.customizations || []).map(id => parseInt(id, 10));
+
         const payload = {
             ...formData,
             type: formData.type.toLowerCase(),
@@ -104,11 +106,12 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
             image_url2: formData.image_url2,
             image_url3: formData.image_url3,
             customizations: customizations
-                .filter(c => c.item_Id == formData.customization)
-                .map(c => ({ item_id: c.item_Id })) 
+                .filter(c => selectedIds.includes(c.id))
+                .map(c => ({ item_id: c.id })),
         };
 
-        console.log(payload)
+        console.log(payload);
+
         try {
             const res = await axios.post('http://localhost:8080/product/addproducts', payload, {
                 headers: { 'Content-Type': 'application/json' },
@@ -117,6 +120,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
             onProductAdded(res.data);
             onClose();
         } catch (err) {
+            console.error(err);
             toast.error('Failed to add product.');
         }
     };
@@ -176,22 +180,23 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
 
 
                     <select
-                        name="customization"
+                        name="customizations"
+                        multiple
                         className="border p-2 w-full"
-                        value={formData.customization}
-                        onChange={handleChange}
+                        value={formData.customizations || []}
+                        onChange={(e) => {
+                            const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+                            setFormData(prev => ({
+                                ...prev,
+                                customizations: selectedOptions
+                            }));
+                        }}
                     >
-                        <option value="">Select a customization</option>
-                        {customizations.length === 0 ? (
-                            <option key="loading" disabled>Loading...</option>
-                        ) : (
-                            customizations.map((item) => (
-                                <option key={item.item_Id} value={item.item_Id}>
-                                    {item.name}
-                                </option>
-                            ))
-                        )}
+                        {customizations.map((item) => (
+                            <option key={item.id} value={item.id}>{item.name}</option>
+                        ))}
                     </select>
+
 
 
 

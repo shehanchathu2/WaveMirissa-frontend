@@ -149,7 +149,6 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                             <input name="name" value={formData.name || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Product Name" />
                             <input name="material" value={formData.material || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Material" />
                             <input name="price" type="number" value={formData.price || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Price" />
-                            <input name="quantity" type="number" value={formData.quantity || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Quantity" />
                             <input name="category" value={formData.category || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Category" />
 
                             <select
@@ -174,12 +173,7 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                                 <option value="wristband">Wristband</option>
                             </select>
 
-                            {formData.type === 'ring' && (
-                                <input type="number" name="size" placeholder="Ring Size" className="border p-2 w-full" value={formData.size || ''} onChange={handleChange} />
-                            )}
-                            {formData.type === 'neckless' && (
-                                <input type="number" name="length" placeholder="Necklace Length" className="border p-2 w-full" value={formData.length || ''} onChange={handleChange} />
-                            )}
+                           
 
                             <input name="description" value={formData.description || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Description" />
 
