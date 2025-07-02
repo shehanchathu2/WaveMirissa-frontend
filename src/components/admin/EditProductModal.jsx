@@ -95,7 +95,6 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
         const payload = {
             ...formData,
             price: parseFloat(formData.price),
-            quantity: parseInt(formData.quantity, 10),
             available: Boolean(formData.available),
             producttype: formData.producttype ? formData.producttype.toLowerCase() : null,
         };
@@ -157,14 +156,11 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                                 <option value="ring">Ring</option>
                                 <option value="neckless">Neckless</option>
                                 <option value="wristband">Wristband</option>
+                                <option value="earring">Earring</option>
+                                <option value="bracelet">Bracelet</option>
+                                <option value="anklet">Anklet</option>
                             </select>
 
-                            {formData.producttype === 'ring' && (
-                                <input type="number" name="size" value={formData.size || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Ring Size" />
-                            )}
-                            {formData.producttype === 'neckless' && (
-                                <input type="number" name="length" value={formData.length || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Necklace Length" />
-                            )}
 
                             <input name="description" value={formData.description || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Description" />
 

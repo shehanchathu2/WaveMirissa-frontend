@@ -1,19 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from "framer-motion";
 import { FiHeart, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from 'react-router-dom';
 import { AiFillStar } from 'react-icons/ai';
-import img2 from '../assets/bestSeller/img2.jpg';
 import { FaThList } from 'react-icons/fa';
-
-const products = Array(12).fill({
-  title: "Ceramic Whisper",
-  price: "$240.00",
-  image: img2,
-  rating: 4,
-  reviews: 23,
-  inStock: true,
-});
+import axios from 'axios';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -29,10 +20,87 @@ const itemVariants = {
 };
 
 const Shop = () => {
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [types, setTypes] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedType, setSelectedType] = useState('All');
+
+  const [materials, setMaterials] = useState([]);
+  const [selectedMaterial, setSelectedMaterial] = useState('All');
+
+  const [gender, setGender] = useState([]);
+  const [selectedGender, setSelectedGender] = useState('All');
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get('http://localhost:8080/product/Allproducts');
+        setProducts(res.data);
+        console.log(res.data)
+        setFilteredProducts(res.data);
+        const uniqueCategories = ['All', ...new Set(res.data.map(p => p.category))];
+        setCategories(uniqueCategories);
+
+        const uniqueType = ['All', ...new Set(res.data.map(p => p.producttype))];
+        setTypes(uniqueType);
+
+        const uniqueMaterials = ['All', ...new Set(res.data.map(p => p.material))];
+        setMaterials(uniqueMaterials);
+
+        const uniqueGender = ['All', ...new Set(res.data.map(p => p.gender))];
+        setGender(uniqueGender);
+
+      } catch (err) {
+        console.error('Error loading products:', err);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    if (category === 'All') {
+      setFilteredProducts(products);
+    } else {
+      setFilteredProducts(products.filter(p => p.category === category));
+    }
+  };
+
+
+
+
+  const handletypeChange = (type) => {
+    setSelectedType(type);
+    if (type === 'All') {
+      setFilteredProducts(products);
+    } else {
+      setFilteredProducts(products.filter(p => p.producttype === type));
+    }
+  };
+
+
+  const handleMaterials = (material) => {
+    setSelectedMaterial(material);
+    if (material === 'All') {
+      setFilteredProducts(products);
+    } else {
+      setFilteredProducts(products.filter(p => p.material === material));
+    }
+  };
+
+  const handleGenderChange = (gender) => {
+    setSelectedGender(gender);
+    if (gender === 'All') {
+      setFilteredProducts(products);
+    } else {
+      setFilteredProducts(products.filter(p => p.gender === gender));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
-
-      {/* Title Bar */}
       <div className="text-center py-10 bg-white border-b border-t border-gray-200">
         <h1 className="text-2xl font-bold text-gray-900">Shop All Jewelry</h1>
         <p className="text-sm text-gray-600 mt-2">
@@ -41,94 +109,110 @@ const Shop = () => {
         <p className="text-sm text-gray-700 mt-1">Home / Shop</p>
       </div>
 
-      {/* Main Layout */}
       <motion.div
         className="px-20 py-6 grid grid-cols-12 gap-6"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
+        <motion.div className="col-span-12 lg:col-span-3 w-[18rem] space-y-8 bg-white py-6 px-8 rounded-xl shadow-md" variants={itemVariants}>
 
-        {/* Sidebar */}
-        <motion.div
-          className="col-span-12 lg:col-span-3 w-[18rem] space-y-8 bg-white py-6 px-8 rounded-xl shadow-md"
-          variants={itemVariants}
-        >
-          {/* Categories */}
-          <div>
-            <h2 className="font-semibold text-lg text-gray-800 mb-3 border-b pb-2 mx-4">Categories</h2>
-            <ul className="space-y-2 text-sm text-gray-700">
-              <ul className="ml-4 space-y-1">
-                <li><input type="checkbox" className="mr-2" /> Necklaces</li>
-                <li><input type="checkbox" className="mr-2" /> Bracelets</li>
-                <li><input type="checkbox" className="mr-2" /> Earrings</li>
-                <li><input type="checkbox" className="mr-2" /> Rings</li>
+          <div className="space-y-6">
+            {/* Category Filter */}
+            <div>
+              <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Categories</h2>
+              <ul className="space-y-1 text-sm text-gray-700">
+                {categories.map((cat, index) => (
+                  <li key={index}>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="category"
+                        value={cat}
+                        checked={selectedCategory === cat}
+                        onChange={() => handleCategoryChange(cat)}
+                        className="accent-[#1b4765]"
+                      />
+                      {cat}
+                    </label>
+                  </li>
+                ))}
               </ul>
-            </ul>
-          </div>
-
-          {/* Materials */}
-          <div>
-            <h2 className="font-semibold text-lg text-gray-800 mb-3 border-b pb-2">Materials</h2>
-            <ul className="ml-2 space-y-2 text-sm text-gray-700">
-              <li><input type="checkbox" className="mr-2" /> Gold</li>
-              <li><input type="checkbox" className="mr-2" /> Silver</li>
-              <li><input type="checkbox" className="mr-2" /> Diamond</li>
-              <li><input type="checkbox" className="mr-2" /> Pearls</li>
-            </ul>
-          </div>
-
-          {/* Color Options */}
-          <div>
-            <p className="text-sm font-medium text-gray-800 mb-2 border-b pb-1">Color Options</p>
-            <ul className="ml-2 space-y-2 text-sm text-gray-700">
-              <li><input type="checkbox" className="mr-2" /> Red</li>
-              <li><input type="checkbox" className="mr-2" /> Blue</li>
-              <li><input type="checkbox" className="mr-2" /> Green</li>
-            </ul>
-          </div>
-
-          {/* Size */}
-          <div>
-            <p className="text-sm font-medium text-gray-800 mb-2 border-b pb-1">Size</p>
-            <ul className="ml-2 space-y-2 text-sm text-gray-700">
-              <li><input type="checkbox" className="mr-2" /> Small (S)</li>
-              <li><input type="checkbox" className="mr-2" /> Medium (M)</li>
-              <li><input type="checkbox" className="mr-2" /> Large (L)</li>
-              <li><input type="checkbox" className="mr-2" /> Extra Large (XL)</li>
-            </ul>
-          </div>
-
-          {/* Price Range */}
-          <div>
-            <p className="text-sm font-medium text-gray-800 mb-2 border-b pb-1">Price</p>
-            <div className="flex items-center gap-2">
-              <input
-                type="range"
-                min="25"
-                max="450"
-                className="w-full h-2 bg-[#1b4765]/20 rounded-lg appearance-none cursor-pointer"
-              />
             </div>
-            <div className="text-xs text-gray-600 mt-1 flex justify-between">
-              <span>$25</span>
-              <span>$450</span>
+
+            {/* Type Filter */}
+            <div>
+              <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Type</h2>
+              <ul className="space-y-1 text-sm text-gray-700">
+                {types.map((t, index) => (
+                  <li key={index}>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="productType"
+                        value={t}
+                        checked={selectedType === t}
+                        onChange={() => handletypeChange(t)}
+                        className="accent-[#1b4765]"
+                      />
+                      {t}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Material Filter */}
+            {/* <div>
+              <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Material</h2>
+              <ul className="space-y-1 text-sm text-gray-700">
+                {materials.map((m, index) => (
+                  <li key={index}>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="material"
+                        value={m}
+                        checked={selectedMaterial === m}
+                        onChange={() => handleMaterials(m)}
+                        className="accent-[#1b4765]"
+                      />
+                      {m}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </div> */}
+
+            {/* Gender Filter */}
+            <div>
+              <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Gender</h2>
+              <ul className="space-y-1 text-sm text-gray-700">
+                {gender.map((g, index) => (
+                  <li key={index}>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value={g}
+                        checked={selectedGender === g}
+                        onChange={() => handleGenderChange(g)}
+                        className="accent-[#1b4765]"
+                      />
+                      {g}
+                    </label>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <button className="bg-transparent border border-[#1b4765] text-[#1b4765] px-6 py-2 rounded-sm hover:bg-[#1b4765] hover:text-white transition-colors duration-300">
-              Clear All Filters
-            </button>
-          </div>
         </motion.div>
 
-        {/* Main Content */}
         <motion.div className="col-span-12 lg:col-span-9 space-y-4" variants={itemVariants}>
-          {/* Sorting Bar */}
           <div className="flex justify-between items-center border bg-white rounded-md px-4 py-2">
             <div className="text-sm text-gray-700">
-              Showing <strong>12</strong> products
+              Showing <strong>{filteredProducts.length}</strong> products
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-700">
               <span>Sort by:</span>
@@ -143,18 +227,17 @@ const Shop = () => {
             </div>
           </div>
 
-          {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product, index) => (
-              <Link to={`/shop/product/${index}`} key={index}>
+            {filteredProducts.map((product, index) => (
+              <Link to={`/shop/product/${product.product_id}`} key={product.product_id}>
                 <motion.div
-                  className="bg-white rounded shadow hover:shadow-lg transition p-0"
+                  className="bg-white rounded shadow hover:shadow-lg transition"
                   variants={itemVariants}
                 >
                   <div className="relative">
                     <img
-                      src={product.image}
-                      alt={product.title}
+                      src={product.image_url1}
+                      alt={product.name}
                       className="w-full h-64 object-cover rounded"
                     />
                     <button className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:text-pink-600">
@@ -162,15 +245,15 @@ const Shop = () => {
                     </button>
                   </div>
                   <div className="pt-3 px-4 py-4">
-                    <h3 className="font-semibold text-gray-800 text-sm">{product.title}</h3>
+                    <h3 className="font-semibold text-gray-800 text-sm">{product.name}</h3>
                     <div className="flex items-center text-yellow-400 text-xs">
                       {[...Array(5)].map((_, i) => (
-                        <AiFillStar key={i} className={i < product.rating ? '' : 'text-gray-300'} />
+                        <AiFillStar key={i} className={i < 4 ? '' : 'text-gray-300'} />
                       ))}
-                      <span className="ml-1 text-gray-500">({product.reviews})</span>
+                      <span className="ml-1 text-gray-500">(12)</span>
                     </div>
-                    <p className="text-sm font-bold text-[#1b4765] mt-1">{product.price}</p>
-                    {product.inStock && (
+                    <p className="text-sm font-bold text-[#1b4765] mt-1">LKR {product.price}</p>
+                    {product.available && (
                       <span className="inline-block mt-1 bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full">
                         In Stock
                       </span>
@@ -181,7 +264,6 @@ const Shop = () => {
             ))}
           </div>
 
-          {/* Pagination */}
           <div className="flex justify-center items-center gap-2 mt-6">
             <button className="p-2 bg-white shadow rounded-full hover:bg-gray-100">
               <FiChevronLeft size={18} />
@@ -198,4 +280,5 @@ const Shop = () => {
     </div>
   );
 };
+
 export default Shop;
