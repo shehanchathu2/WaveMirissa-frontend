@@ -32,18 +32,18 @@ const Cart = () => {
   return (
     <div className="pb-10 bg-gradient-to-br bg-gray-50">
       {/* Header */}
-      <div className="py-10 bg-white border-t border-gray-200 flex items-center justify-center px- mb-3">
+      <div className="flex items-center justify-center py-6 mb-3 bg-white border-t border-gray-200 px-">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Shopping Cart</h1>
-          <p className="text-gray-600 text-sm">Handcrafted treasures waiting for you</p>
+          <h1 className="mb-2 text-2xl font-bold text-gray-800">Shopping Cart</h1>
+          <p className="text-sm text-gray-600">Handcrafted treasures waiting for you</p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 pb-12 grid lg:grid-cols-3 gap-8">
+      <div className="grid max-w-6xl gap-8 px-6 pb-12 mx-auto lg:grid-cols-3">
         {/* Cart Items */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           {/* Offer Banner */}
-          <div className="relative bg-white border border-gray-200 rounded-2xl p-6 text-gray-800 shadow-sm">
+          <div className="relative p-6 text-gray-800 bg-white border border-gray-200 shadow-sm rounded-2xl">
             <div className="relative">
               <div className="flex items-center gap-2 mb-2">
                 <HiSparkles className="w-5 h-5 text-yellow-500" />
@@ -56,8 +56,8 @@ const Cart = () => {
           </div>
 
           {/* Cart Item 1 */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
-            <div className="flex gap-4 items-start">
+          <div className="p-6 transition-shadow duration-300 bg-white border border-gray-100 shadow-sm rounded-2xl hover:shadow-md">
+            <div className="flex items-start gap-4">
 
               {/* Selected circle */}
               <div className="pt-2">
@@ -67,7 +67,7 @@ const Cart = () => {
                     } flex items-center justify-center`}
                 >
                   {selectedItems.item1 && (
-                    <FaCheck className="text-white text-xs" />
+                    <FaCheck className="text-xs text-white" />
                   )}
                 </button>
               </div>
@@ -75,18 +75,18 @@ const Cart = () => {
               {/* Product image */}
               <div className="relative">
                 <div className="w-24 h-24 pb-2">
-                  <img src={img4} alt="" className="rounded-lg object-cover w-full h-full" />
+                  <img src={img4} alt="" className="object-cover w-full h-full rounded-lg" />
                 </div>
               </div>
 
               {/* Content */}
               <div className="flex-1">
-                <div className="flex justify-between items-start mb-2">
+                <div className="flex items-start justify-between mb-2">
                   <div>
-                    <h3 className="font-medium text-gray-800 mb-1">Delicate Rose Gold Chain</h3>
+                    <h3 className="mb-1 font-medium text-gray-800">Delicate Rose Gold Chain</h3>
                     <p className="text-sm text-gray-500">18k Rose Gold • 16" length</p>
                   </div>
-                  <button className="text-gray-400 hover:text-rose-500 transition-colors">
+                  <button className="text-gray-400 transition-colors hover:text-rose-500">
                     <FaTrashAlt className="w-4 h-4" />
                   </button>
                 </div>
@@ -94,11 +94,11 @@ const Cart = () => {
                 <div className="flex items-center justify-between">
                   {/* Quantity controls */}
                   <div className="flex items-center gap-2">
-                    <button onClick={() => updateQuantity('item1', -1)} className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                    <button onClick={() => updateQuantity('item1', -1)} className="flex items-center justify-center w-8 h-8 transition-colors border border-gray-200 rounded-full hover:bg-gray-50">
                       <FaMinus className="w-4 h-4 text-gray-600" />
                     </button>
-                    <span className="w-8 text-center font-medium">{quantities.item1}</span>
-                    <button onClick={() => updateQuantity('item1', 1)} className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                    <span className="w-8 font-medium text-center">{quantities.item1}</span>
+                    <button onClick={() => updateQuantity('item1', 1)} className="flex items-center justify-center w-8 h-8 transition-colors border border-gray-200 rounded-full hover:bg-gray-50">
                       <FaPlus className="w-4 h-4 text-gray-600" />
                     </button>
                   </div>
@@ -115,8 +115,8 @@ const Cart = () => {
 
 
           {/* Cart Item 2 */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
-            <div className="flex gap-4 items-start">
+          <div className="p-6 transition-shadow duration-300 bg-white border border-gray-100 shadow-sm rounded-2xl hover:shadow-md">
+            <div className="flex items-start gap-4">
 
               {/* Selected circle */}
               <div className="pt-2">
@@ -126,7 +126,7 @@ const Cart = () => {
                     } flex items-center justify-center`}
                 >
                   {selectedItems.item1 && (
-                    <FaCheck className="text-white text-xs" />
+                    <FaCheck className="text-xs text-white" />
                   )}
                 </button>
               </div>
@@ -134,18 +134,18 @@ const Cart = () => {
               {/* Product image */}
               <div className="relative">
                 <div className="w-24 h-24 pb-2">
-                  <img src={img4} alt="" className="rounded-lg object-cover w-full h-full" />
+                  <img src={img4} alt="" className="object-cover w-full h-full rounded-lg" />
                 </div>
               </div>
 
               {/* Content */}
               <div className="flex-1">
-                <div className="flex justify-between items-start mb-2">
+                <div className="flex items-start justify-between mb-2">
                   <div>
-                    <h3 className="font-medium text-gray-800 mb-1">Delicate Rose Gold Chain</h3>
+                    <h3 className="mb-1 font-medium text-gray-800">Delicate Rose Gold Chain</h3>
                     <p className="text-sm text-gray-500">18k Rose Gold • 16" length</p>
                   </div>
-                  <button className="text-gray-400 hover:text-rose-500 transition-colors">
+                  <button className="text-gray-400 transition-colors hover:text-rose-500">
                     <FaTrashAlt className="w-4 h-4" />
                   </button>
                 </div>
@@ -153,11 +153,11 @@ const Cart = () => {
                 <div className="flex items-center justify-between">
                   {/* Quantity controls */}
                   <div className="flex items-center gap-2">
-                    <button onClick={() => updateQuantity('item1', -1)} className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                    <button onClick={() => updateQuantity('item1', -1)} className="flex items-center justify-center w-8 h-8 transition-colors border border-gray-200 rounded-full hover:bg-gray-50">
                       <FaMinus className="w-4 h-4 text-gray-600" />
                     </button>
-                    <span className="w-8 text-center font-medium">{quantities.item1}</span>
-                    <button onClick={() => updateQuantity('item1', 1)} className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                    <span className="w-8 font-medium text-center">{quantities.item1}</span>
+                    <button onClick={() => updateQuantity('item1', 1)} className="flex items-center justify-center w-8 h-8 transition-colors border border-gray-200 rounded-full hover:bg-gray-50">
                       <FaPlus className="w-4 h-4 text-gray-600" />
                     </button>
                   </div>
@@ -176,10 +176,10 @@ const Cart = () => {
 
         {/* Order Summary */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 sticky top-6">
-            <h3 className="font-medium text-gray-800 mb-6 text-lg">Order Summary</h3>
+          <div className="sticky p-6 bg-white border border-gray-100 shadow-sm rounded-2xl top-6">
+            <h3 className="mb-6 text-lg font-medium text-gray-800">Order Summary</h3>
 
-            <div className="space-y-4 mb-6">
+            <div className="mb-6 space-y-4">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Subtotal (2 items)</span>
                 <span className="text-gray-800">$238.00</span>
@@ -192,10 +192,10 @@ const Cart = () => {
                 <span className="text-gray-600">Shipping</span>
                 <span className="text-gray-800">Free</span>
               </div>
-              <div className="border-t pt-4">
+              <div className="pt-4 border-t">
                 <div className="flex justify-between">
                   <span className="font-medium text-gray-800">Total</span>
-                  <span className="font-semibold text-xl text-gray-800">$188.00</span>
+                  <span className="text-xl font-semibold text-gray-800">$188.00</span>
                 </div>
               </div>
             </div>
@@ -208,7 +208,7 @@ const Cart = () => {
               </button>
             </Link>
 
-            <div className="text-center mb-6">
+            <div className="mb-6 text-center">
               <p className="text-xs text-gray-500">Secure checkout with</p>
               <div className="flex justify-center gap-4 mt-2 text-2xl">
                 <FaCcVisa className="text-blue-600" title="Visa" />
@@ -218,13 +218,13 @@ const Cart = () => {
               </div>
             </div>
 
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+            <div className="p-4 border border-green-200 bg-green-50 rounded-xl">
               <div className="flex items-start gap-3">
                 <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-white text-xs">✓</span>
+                  <span className="text-xs text-white">✓</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-green-800 mb-1">Handmade Guarantee</p>
+                  <p className="mb-1 text-sm font-medium text-green-800">Handmade Guarantee</p>
                   <p className="text-xs text-green-700">
                     Each piece is lovingly crafted by skilled artisans with a lifetime quality promise.
                   </p>
@@ -236,7 +236,7 @@ const Cart = () => {
       </div>
 
       {/* you mat to love */}
-      <div className="mt-10 lg:col-span-2 pl-40 pr-40 mb-20">
+      <div className="pl-40 pr-40 mt-10 mb-20 lg:col-span-2">
         <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {[...Array(8)].map((_, i) => (

@@ -101,7 +101,11 @@ const Shop = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="text-center py-10 bg-white border-b border-t border-gray-200">
+
+
+      {/* Title Bar */}
+      <div className="text-center py-5 bg-white border-b border-t border-gray-200">
+
         <h1 className="text-2xl font-bold text-gray-900">Shop All Jewelry</h1>
         <p className="text-sm text-gray-600 mt-2">
           Discover our stunning jewelry collections. Browse and find your perfect piece.
@@ -116,6 +120,8 @@ const Shop = () => {
         animate="visible"
       >
         <motion.div className="col-span-12 lg:col-span-3 w-[18rem] space-y-8 bg-white py-6 px-8 rounded-xl shadow-md" variants={itemVariants}>
+
+
 
           <div className="space-y-6">
             {/* Category Filter */}
@@ -137,6 +143,7 @@ const Shop = () => {
                     </label>
                   </li>
                 ))}
+
               </ul>
             </div>
 

@@ -1,8 +1,8 @@
 // src/App.jsx
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 
+import { ToastContainer } from 'react-toastify';
 import AdminLayout from './pages/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import Products from './pages/admin/Products';
@@ -28,7 +28,13 @@ import AI_Suggetion from './pages/AI_Suggetion';
 import VirtualTryOn from './pages/VirtualTryOn';
 import Cart from './pages/Cart';
 import CheckoutPage from './pages/CheckoutPage';
+
+
+import Myorders from './pages/Myorders';
+
 import SuspendPage from './pages/SuspendPage';
+import UserProfile from './pages/UserProfile';
+
 
 
 
@@ -42,6 +48,9 @@ const App = () => {
       {!isAdminRoute && <Navbar />}
 
       <Routes>
+
+
+           {/* Public Routes */}
         <Route
           path="/"
           element={
@@ -98,6 +107,8 @@ const App = () => {
             </ProtectedUserRoute>
           }
         />
+            <Route path="/myorders" element={<Myorders/>} />
+            <Route path="/profile" element={<UserProfile/>} />
 
         {/* Always accessible for suspended users */}
         <Route path="/suspend" element={<SuspendPage />} />
@@ -111,6 +122,7 @@ const App = () => {
             </ProtectedAdminRoute>
           }
         >
+
           <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="customization" element={<Customization />} />

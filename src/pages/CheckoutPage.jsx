@@ -101,15 +101,21 @@ console.log({ order_id: newOrderId, amount: amount.toFixed(2), hash: hashValue }
   };
 
   return (
-    <div className="bg-gray-100 pb-10">
-      <div className="py-10 bg-white border-t border-gray-200 flex items-center justify-center px-10 mb-3">
+
+    <div className="pb-10 bg-gray-100">
+      {/* Header */}
+      <div className="flex items-center justify-center px-10 py-6 mb-3 bg-white border-t border-gray-200">
+
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Checkout</h1>
-          <p className="text-gray-600 text-sm">You're just one step away from owning something special</p>
+          <h1 className="mb-2 text-2xl font-bold text-gray-800">Checkout</h1>
+          <p className="text-sm text-gray-600">You're just one step away from owning something special</p>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto mb-8">
+
+        
+
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-3 space-y-6">
             <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
@@ -159,7 +165,7 @@ console.log({ order_id: newOrderId, amount: amount.toFixed(2), hash: hashValue }
                   <p className="text-gray-500 text-xs">Delivery: Jul 09 - 18</p>
                   <div className="flex items-center gap-4 mt-2">
                     <span className="text-green-600 text-sm font-medium">4pcs green</span>
-                    <span className="font-bold text-gray-800">LKR151.39</span>
+
                   </div>
                 </div>
               </div>
@@ -172,19 +178,23 @@ console.log({ order_id: newOrderId, amount: amount.toFixed(2), hash: hashValue }
             transition={{ duration: 0.5 }}
             className="lg:col-span-2"
           >
-            <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm sticky top-8">
-              <h2 className="text-xl font-bold text-gray-800 mb-6 text-center">Order Summary</h2>
-              <div className="space-y-4 mb-6">
-                <div className="flex justify-between">
+            <div className="sticky p-6 bg-white border border-gray-100 shadow-sm rounded-3xl top-8">
+              <h2 className="mb-6 text-xl font-bold text-center text-gray-800">Order Summary</h2>
+
+              <div className="mb-6 space-y-4">
+                <div className="flex items-center justify-between">
                   <span className="text-gray-600">Subtotal</span>
                   <span className="font-semibold">LKR484.03</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between">
                   <span className="text-gray-600">Shipping</span>
                   <span className="font-semibold">LKR181.30</span>
                 </div>
-                <div className="border-t border-gray-200 pt-4">
-                  <div className="flex justify-between">
+                <div className="pt-4 border-t border-gray-200">
+                  <div className="flex items-center justify-between">
+
+          
+
                     <span className="text-lg font-bold text-gray-800">Total</span>
                     <span className="text-xl font-bold text-blue-600">LKR665.33</span>
                   </div>
@@ -200,7 +210,12 @@ console.log({ order_id: newOrderId, amount: amount.toFixed(2), hash: hashValue }
               >
                 {isProcessing ? 'Processing...' : 'Pay with PayHere'}
               </button>
-              <p className="text-xs text-gray-500 text-center mt-4">
+
+
+              <p className="mt-4 text-xs leading-relaxed text-center text-gray-500">
+
+            
+
                 By placing your order, you agree to our terms and conditions
               </p>
             </div>
