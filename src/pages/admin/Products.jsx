@@ -12,8 +12,7 @@ const Products = () => {
   const [products, setProducts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
-
-  const [loading, setLoading] = useState(false); // 👈 loading state
+  const [loading, setLoading] = useState(false);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -33,24 +32,24 @@ const Products = () => {
   }, []);
 
   const handleDeleteProduct = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this product?");
-    if (!confirmDelete) return;
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
 
     try {
       await axios.delete(`http://localhost:8080/product/delete/${id}`);
       fetchProducts();
-      toast.success("Product deleted successfully!");
+      toast.success('Product deleted successfully!');
     } catch (error) {
-      toast.error("Failed to delete product!");
+      toast.error('Failed to delete product!');
     }
   };
 
   const handleProductAdded = (newProduct) => {
     setProducts((prev) => [...prev, newProduct]);
-    toast.success("Product added successfully!");
+    toast.success('Product added successfully!');
   };
 
   if (loading) return <WaveMirissaLoader />;
+
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4">Manage Products</h1>
@@ -98,12 +97,17 @@ const Products = () => {
                       content: (
                         <div className="space-y-4">
                           <div className="flex justify-center mb-6 gap-4">
-                            {[product.image_url1, product.image_url2, product.image_url3].map((url, index) =>
-                              url && (
-                                <div key={index} className="w-24 h-24 rounded-lg overflow-hidden border-2 border-gray-200 shadow-sm">
-                                  <img src={url} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
-                                </div>
-                              )
+                            {[product.image_url1, product.image_url2, product.image_url3].map(
+                              (url, i) =>
+                                url && (
+                                  <div key={i} className="w-24 h-24 rounded-lg overflow-hidden border-2 border-gray-200 shadow-sm">
+                                    <img
+                                      src={url}
+                                      alt={`${product.name} ${i + 1}`}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
+                                )
                             )}
                           </div>
                           <div className="grid grid-cols-1 gap-3">
