@@ -1,8 +1,8 @@
 // src/App.jsx
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 
+import { ToastContainer } from 'react-toastify';
 import AdminLayout from './pages/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import Products from './pages/admin/Products';
@@ -33,6 +33,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import Myorders from './pages/Myorders';
 
 import SuspendPage from './pages/SuspendPage';
+import UserProfile from './pages/UserProfile';
 
 
 
@@ -107,6 +108,7 @@ const App = () => {
           }
         />
             <Route path="/myorders" element={<Myorders/>} />
+            <Route path="/profile" element={<UserProfile/>} />
 
         {/* Always accessible for suspended users */}
         <Route path="/suspend" element={<SuspendPage />} />
