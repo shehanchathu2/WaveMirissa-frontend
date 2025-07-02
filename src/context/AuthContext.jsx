@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 
 const AuthContext = createContext();
 
@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false); // for login/logout actions
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
 
   useEffect(() => {
     // Simulate re-authentication delay if needed
@@ -59,6 +60,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const isAdmin = user?.role === 'admin';
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
@@ -74,6 +77,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         loading,
         initializing,
+        isAdmin,
         isAuthenticated: !!user,
         error,
       }}

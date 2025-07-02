@@ -24,7 +24,7 @@ const Login = ({ open, onClose, onSwitchToSignup }) => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, loading, error } = useAuth();
+    const { login, loading, error } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

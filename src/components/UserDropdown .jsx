@@ -5,11 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import { User, ClipboardList, Heart, LogOut } from 'lucide-react';
 
 
+
+
 const UserDropdown = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef();
+
+
 
   const handleLogout = () => {
     logout();
@@ -114,6 +118,16 @@ const UserDropdown = () => {
               </button>
               <br></br>
 
+            </li>
+            <li>
+              {isAdmin && (
+                <button
+                  onClick={() => navigate('/admin')}
+                  className="flex items-center gap-3 w-full px-4 py-2 hover:bg-gray-100 text-blue-600"
+                >
+                  <FaSignOutAlt /> Admin Panel
+                </button>
+              )}
             </li>
             <li>
               <button
