@@ -24,7 +24,7 @@ const JewelryItem = {
   image3: sampleimg3,
   description: 'Bohemian and Beach Style Choker Necklace',
   materials: ['Black String', 'Sea-shells'],
-  type: 'necklace',
+  type: 'bracelet',
   gender: 'women',
   
 };
