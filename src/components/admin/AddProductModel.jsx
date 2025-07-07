@@ -200,10 +200,10 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         <option value="unisex">Unisex</option>
                     </select>
 
-                    <label className="flex items-center space-x-2">
+                    {/* <label className="flex items-center space-x-2">
                         <input type="checkbox" name="available" checked={formData.available} onChange={handleChange} />
                         <span>Available</span>
-                    </label>
+                    </label> */}
 
                     <label htmlFor="image-upload" className="flex items-center justify-center gap-2 w-full p-4 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition">
                         <FaPlus className="text-blue-600" />

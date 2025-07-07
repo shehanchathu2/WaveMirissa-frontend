@@ -204,7 +204,7 @@ const SignUp = ({ open, onClose, onSwitchToLogin }) => {
               <hr className="flex-grow border-gray-300" />
             </div>
 
-            <div className="flex space-x-3 mb-6">
+            {/* <div className="flex space-x-3 mb-6">
               <button className="flex-1 flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-lg py-2 hover:bg-gray-100 transition">
                 <GoogleIcon style={{ color: '#DB4437' }} />
               </button>
@@ -214,7 +214,7 @@ const SignUp = ({ open, onClose, onSwitchToLogin }) => {
               <button className="flex-1 flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-lg py-2 hover:bg-gray-100 transition">
                 <AppleIcon style={{ color: 'black' }} />
               </button>
-            </div>
+            </div> */}
 
             <p className="text-sm text-center text-gray-600">
               Already have an account?{' '}

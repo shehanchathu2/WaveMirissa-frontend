@@ -88,7 +88,7 @@ const Customization = () => {
           <tbody className="divide-y divide-gray-200 bg-white">
             {data.map((item, index) => (
               <tr key={item.item_id} className="hover:bg-gray-50 transition">
-                <td className="px-4 py-3 text-sm text-gray-700">{item.item_id}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{++index}</td>
                 <td className="px-4 py-3">
                   <img
                     src={item.imageUrl}

@@ -62,17 +62,7 @@ const VideoBanner = () => {
             Watch our master artisans bring each piece to life with traditional
             techniques passed down through generations.
           </motion.p>
-          <motion.button
-            className="bg-white text-[#1B4965] px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-100 transition-all duration-300 shadow-lg"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            whileHover={{ scale: 1.05 }}
-          >
-            <FaPlay className="inline mr-2" />
-            Watch Our Story
-          </motion.button>
+         
         </div>
       </div>
     </section>

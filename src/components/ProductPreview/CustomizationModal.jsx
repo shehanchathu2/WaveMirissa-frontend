@@ -190,7 +190,7 @@ export const CustomizationModal = ({
             <div>
               <p className="mb-1 text-sm text-gray-600">Total Price</p>
               <p className="text-3xl font-bold text-[#1b4965]">
-                ${calculateTotalPrice().toLocaleString()}
+                LKR {calculateTotalPrice().toLocaleString()}
               </p>
 
               
