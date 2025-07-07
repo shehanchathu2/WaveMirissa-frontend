@@ -188,14 +188,18 @@ export const CustomizationModal = ({
           </div>
         </div>
 
+
         {/* Footer with Total Price and Continue Button */}
         <div className="flex-shrink-0 p-4 border-t border-gray-200 bg-gray-50">
+
           <div className="flex items-center justify-between">
             <div>
               <p className="mb-1 text-sm text-gray-600">Total Price</p>
               <p className="text-3xl font-bold text-[#1b4965]">
                 ${calculateTotalPrice().toLocaleString()}
               </p>
+
+              
             </div>
             
             {(jewelry.type !== "necklace" && jewelry.type !== "ring") ? (
