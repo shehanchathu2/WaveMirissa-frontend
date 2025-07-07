@@ -1,5 +1,7 @@
 import React from 'react'
-
+import img2 from '../../assets/about us/img2.jpg'
+import img3 from '../../assets/story/img2.jpg'
+import img4 from '../../assets/bridal/w.jpg'
 const CategoryGrid = () => {
     const categories2 = [
         {
@@ -10,19 +12,19 @@ const CategoryGrid = () => {
         },
         {
             label: "Women's Collection",
-            image: "https://images.unsplash.com/photo-1494790108755-2616c6d1e3b0?w=800&h=600&fit=crop&crop=face",
+            image: img2,
             link: "/womens",
             description: "Elegant styles for every occasion"
         },
         {
-            label: "Accessories",
-            image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop",
+            label: "Bridal Collection",
+            image: img4,
             link: "/accessories",
             description: "Complete your perfect look"
         },
         {
             label: "New Arrivals",
-            image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop",
+            image: img3,
             link: "/new-arrivals",
             description: "Fresh styles just for you"
         }

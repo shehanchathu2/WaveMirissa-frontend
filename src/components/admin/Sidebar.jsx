@@ -27,9 +27,9 @@ const Sidebar = () => {
     { to: '/admin/delivery', label: 'Delivery & Tracking', icon: <FaTruck /> },
     { to: '/admin/payment', label: 'Payment', icon: <FaCreditCard /> },
     { to: '/admin/reports', label: 'Reports & Analytics', icon: <FaChartBar /> },
-    { to: '/admin/content', label: 'Content', icon: <FaFileAlt /> },
+    // { to: '/admin/content', label: 'Content', icon: <FaFileAlt /> },
     { to: '/admin/users', label: 'Users', icon: <FaUsers /> },
-    { to: '/admin/settings', label: 'Settings', icon: <FaCog /> },
+    // { to: '/admin/settings', label: 'Settings', icon: <FaCog /> },
   ];
 
   const { logout } = useAuth();
@@ -129,14 +129,14 @@ const Sidebar = () => {
 
 
         <button
-  className="group w-full flex items-center gap-3 px-4 py-3 mb-6 text-[#b8d4e6] hover:text-white transition-all duration-300 hover:bg-white/10 rounded-xl"
-  onClick={GoToHomePage}
->
-  <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-500/20 group-hover:bg-blue-500/30 transition-colors duration-300">
-    <FaArrowLeft className="text-sm text-blue-600" />
-  </div>
-  Back to User Site
-</button>
+          className="group w-full flex items-center gap-3 px-4 py-3 mb-6 text-[#b8d4e6] hover:text-white transition-all duration-300 hover:bg-white/10 rounded-xl"
+          onClick={GoToHomePage}
+        >
+          <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-500/20 group-hover:bg-blue-500/30 transition-colors duration-300">
+            <FaArrowLeft className="text-sm text-blue-600" />
+          </div>
+          Back to User Site
+        </button>
 
 
 
@@ -144,15 +144,15 @@ const Sidebar = () => {
         <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 cursor-pointer group">
           <div className="relative">
             <div className="w-12 h-12 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">SC</span>
+              <span className="text-white font-bold text-lg">A</span>
             </div>
             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-[#1b4765] rounded-full" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-semibold text-white truncate">Shehan</p>
-            <p className="text-xs text-[#8bb5d1] group-hover:text-[#10B981] transition-colors duration-300">
+            <p className="font-semibold text-white truncate">Admin</p>
+            {/* <p className="text-xs text-[#8bb5d1] group-hover:text-[#10B981] transition-colors duration-300">
               View profile →
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

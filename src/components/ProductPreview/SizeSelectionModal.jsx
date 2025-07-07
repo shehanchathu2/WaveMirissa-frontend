@@ -113,7 +113,7 @@ export const SizeSelectionModal = ({
                 <p className="mb-2 text-gray-600">{jewelry.description}</p>
                 <div className="flex items-center space-x-3">
                   <span className="text-2xl font-bold text-teal-600">
-                    ${totalPrice.toLocaleString()}
+                    LKR {totalPrice.toLocaleString()}
                   </span>
                   <span className="px-2 py-1 text-sm text-gray-500 bg-gray-100 rounded-full">
                     Total Price
@@ -181,7 +181,7 @@ export const SizeSelectionModal = ({
             <div>
               <p className="text-sm text-gray-600">Ready to purchase</p>
               <p className="text-2xl font-bold text-[#1b4965]">
-                ${totalPrice.toLocaleString()}
+                LKR {totalPrice.toLocaleString()}
               </p>
             </div>
             <div className="flex space-x-4">

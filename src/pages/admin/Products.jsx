@@ -69,7 +69,7 @@ const Products = () => {
             <th className="px-6 py-3 text-left">Name</th>
             <th className="px-6 py-3 text-left">Category</th>
             <th className="px-6 py-3 text-left">Price</th>
-            <th className="px-6 py-3 text-center">Available</th>
+            <th className="px-6 py-3 text-center">Type</th>
             <th className="px-6 py-3 text-center">Product Details</th>
             <th className="px-6 py-3 text-center">Actions</th>
           </tr>
@@ -86,7 +86,7 @@ const Products = () => {
               <td className="px-6 py-4 text-sm text-gray-600">${product.price}</td>
               <td className="px-6 py-4 text-sm text-center">
                 <span className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${product.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                  {product.available ? 'Yes' : 'No'}
+                  {product.producttype}
                 </span>
               </td>
               <td className="px-6 py-4 text-sm text-gray-600">
@@ -130,10 +130,10 @@ const Products = () => {
                                 <span className="text-sm font-semibold text-gray-800 block mb-1">Material</span>
                                 <span className="text-gray-700">{product.material}</span>
                               </div>
-                              <div className="bg-gray-50 p-3 rounded-md">
+                              {/* <div className="bg-gray-50 p-3 rounded-md">
                                 <span className="text-sm font-semibold text-gray-800 block mb-1">Quantity</span>
                                 <span className="text-gray-700 font-medium">{product.quantity}</span>
-                              </div>
+                              </div> */}
                             </div>
                             <div className="bg-gray-50 p-3 rounded-md">
                               <span className="text-sm font-semibold text-gray-800 block mb-1">Customization</span>

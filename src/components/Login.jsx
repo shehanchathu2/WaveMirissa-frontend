@@ -128,7 +128,7 @@ const Login = ({ open, onClose, onSwitchToSignup }) => {
             </div>
 
             {/* Social Buttons */}
-            <div className="flex space-x-3">
+            {/* <div className="flex space-x-3">
               <button className="flex-1 flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-lg py-2 hover:bg-gray-100 transition">
                 <GoogleIcon style={{ color: '#DB4437' }} />
               </button>
@@ -138,7 +138,7 @@ const Login = ({ open, onClose, onSwitchToSignup }) => {
               <button className="flex-1 flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-lg py-2 hover:bg-gray-100 transition">
                 <AppleIcon style={{ color: 'black' }} />
               </button>
-            </div>
+            </div> */}
 
             {/* Sign up link */}
             <p className="text-sm text-center text-gray-600 mt-6">
