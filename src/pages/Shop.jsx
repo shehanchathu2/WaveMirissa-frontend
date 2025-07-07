@@ -222,12 +222,12 @@ const Shop = () => {
               Showing <strong>{filteredProducts.length}</strong> products
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-700">
-              <span>Sort by:</span>
-              <select className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none">
+              {/* <span>Sort by:</span> */}
+              {/* <select className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none">
                 <option>Newest</option>
                 <option>Price: Low to High</option>
                 <option>Price: High to Low</option>
-              </select>
+              </select> */}
               <button className="p-1">
                 <FaThList className="text-gray-600 hover:text-black" />
               </button>

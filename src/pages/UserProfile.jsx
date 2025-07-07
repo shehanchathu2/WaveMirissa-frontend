@@ -55,7 +55,7 @@ const UserProfile = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-stone-50 via-amber-50 to-stone-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50  to-gray-100">
       <div className="sticky top-0 z-10 bg-white border-b shadow-sm border-stone-200">
         <div className="px-4 py-6 mx-auto max-w-7xl">
           <div className="flex items-center justify-between">

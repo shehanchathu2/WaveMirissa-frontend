@@ -4,101 +4,21 @@ import { FaMoneyCheckAlt } from 'react-icons/fa';
 import AddAddressModal from '../components/AddAddressModal ';
 import axios from 'axios';
 
+import Payment from '../components/Payment';
+
+
+
+
 const CheckoutPage = () => {
   const [showModal, setShowModal] = useState(false);
-  const [orderId, setOrderId] = useState('');
-  const [hash, setHash] = useState('');
+  const [orderID, setOrderID] = useState('');
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+
   const [isProcessing, setIsProcessing] = useState(false);
 
+
   const amount = 665.33;
-
-  const generateHash = async (orderId) => {
-    try {
-      const response = await axios.get('http://localhost:8080/api/payhere/hash', {
-        params: {
-          orderId,
-          amount: amount.toFixed(2)
-        },
-      });
-      console.log(response.data.hash)
-      return response.data.hash;
-    } catch (error) {
-      console.error('Error generating hash:', error);
-      throw error;
-    }
-  };
-
-  const payNow = async () => {
-    if (isProcessing) return;
-
-    setIsProcessing(true);
-    const newOrderId = `ORDER_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    setOrderId(newOrderId);
-    console.log("🆔 Generated Order ID:", newOrderId);
-
-    try {
-      const hashValue = (await generateHash(newOrderId)).toUpperCase();
-      console.log("🔐 Hash received for Order ID:", newOrderId);
-      console.log("🔑 Hash value:", hashValue);
-      setHash(hashValue);
-
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = 'https://sandbox.payhere.lk/pay/checkout';
-      form.target = '_self';
-
-      const fields = {
-        merchant_id: '1231047',
-        return_url: 'http://localhost:5173/payment-success',
-        cancel_url: 'http://localhost:5173/payment-cancel',
-        notify_url: 'http://localhost:8080/api/payments/notify',
-        order_id: newOrderId,
-        items: 'Car Luminous Tire Valve Caps',
-        amount: amount.toFixed(2),
-        currency: 'LKR',
-        hash: hashValue,
-        first_name: 'Jane',
-        last_name: 'Doe',
-        email: 'jane@doe.com',
-        phone: '0712345678',
-        address: '123 Galle Road',
-        city: 'Colombo',
-        country: 'Sri Lanka',
-        delivery_address: '123 Galle Road',
-        delivery_city: 'Colombo',
-        delivery_country: 'Sri Lanka'
-      };
-
-      console.log('Submitting PayHere form with fields:', fields);
-
-      console.log("🧾 Final form submission:");
-      console.log("Order ID:", newOrderId);            
-      console.log("Hash:", hashValue);                 
-      console.log("Amount:", amount.toFixed(2));      
-      console.log("Currency:", 'LKR');
-
-      console.log("✅ Using Order ID:", newOrderId);
-// const hashValue = (await generateHash(newOrderId)).toUpperCase();
-console.log("✅ Hash from backend:", hashValue);
-console.log("✅ Sending to PayHere form:");
-console.log({ order_id: newOrderId, amount: amount.toFixed(2), hash: hashValue });
-
-      Object.entries(fields).forEach(([key, value]) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = value;
-        form.appendChild(input);
-      });
-
-      document.body.appendChild(form);
-      form.submit();
-    } catch (err) {
-      console.error('Payment Error:', err);
-      alert('Failed to process payment. Please try again.');
-      setIsProcessing(false);
-    }
-  };
+  
 
   return (
 
@@ -200,8 +120,16 @@ console.log({ order_id: newOrderId, amount: amount.toFixed(2), hash: hashValue }
                   </div>
                 </div>
               </div>
-              <button
-                onClick={payNow}
+               <Payment
+              firstname="John"
+              lastname="Doe"
+              email="john@example.com"
+              paymentTitle="Car Luminous Tire Valve Caps"
+              amount={amount}
+              setPaymentSuccess={setPaymentSuccess}
+              setOrderID={setOrderID}
+            
+                
                 disabled={isProcessing}
                 className={`w-full py-3 rounded-xl font-medium transition-colors ${isProcessing
                   ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
@@ -209,7 +137,7 @@ console.log({ order_id: newOrderId, amount: amount.toFixed(2), hash: hashValue }
                   }`}
               >
                 {isProcessing ? 'Processing...' : 'Pay with PayHere'}
-              </button>
+              </Payment>
 
 
               <p className="mt-4 text-xs leading-relaxed text-center text-gray-500">
@@ -222,6 +150,8 @@ console.log({ order_id: newOrderId, amount: amount.toFixed(2), hash: hashValue }
           </motion.div>
         </div>
       </div>
+
+       
     </div>
   );
 };

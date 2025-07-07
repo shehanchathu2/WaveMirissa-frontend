@@ -136,8 +136,38 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                         <div className="space-y-4">
                             <input name="name" value={formData.name || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Product Name" />
                             <input name="material" value={formData.material || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Material" />
+
+                            <select name="producttype" className="border p-2 w-full" value={formData.producttype || ""} onChange={handleChange}>
+                                <option value="">Select Type</option>
+                                <option value="ring">Ring</option>
+                                <option value="neckless">Neckless</option>
+                                <option value="wristband">Wristband</option>
+                                <option value="earring">Earring</option>
+                                <option value="bracelet">Bracelet</option>
+                                <option value="anklet">Anklet</option>
+                            </select>
+
                             <input name="price" type="number" value={formData.price || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Price" />
-                            <input name="category" value={formData.category || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Category" />
+
+                            <select
+                                name="category"
+                                className="border p-2 w-full"
+                                value={formData.category}
+                                onChange={handleChange}
+                            >
+                                <option value="">Select Category</option>
+                                <option value="bridal">Bridal</option>
+                                <option value="seashells">Seashells</option>
+                                <option value="normals">Normals</option>
+                            </select>
+
+                            <input name="description" value={formData.description || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Description" />
+
+
+                            {/* <input name="category" value={formData.category || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Category" /> */}
+
+
+
 
                             <select
                                 name="customization"
@@ -151,18 +181,9 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                                 ))}
                             </select>
 
-                            <select name="producttype" className="border p-2 w-full" value={formData.producttype || ""} onChange={handleChange}>
-                                <option value="">Select Type</option>
-                                <option value="ring">Ring</option>
-                                <option value="neckless">Neckless</option>
-                                <option value="wristband">Wristband</option>
-                                <option value="earring">Earring</option>
-                                <option value="bracelet">Bracelet</option>
-                                <option value="anklet">Anklet</option>
-                            </select>
 
 
-                            <input name="description" value={formData.description || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Description" />
+
 
                             <select name="gender" className="border p-2 w-full" value={formData.gender || ""} onChange={handleChange}>
                                 <option value="">Select Gender</option>
@@ -171,10 +192,10 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                                 <option value="unisex">Unisex</option>
                             </select>
 
-                            <label className="flex items-center gap-2">
+                            {/* <label className="flex items-center gap-2">
                                 <input type="checkbox" name="available" checked={formData.available || false} onChange={handleChange} />
                                 <span>Available</span>
-                            </label>
+                            </label> */}
 
                             <div className="flex flex-wrap gap-2">
                                 {formData.previewUrls?.map((url, i) => (

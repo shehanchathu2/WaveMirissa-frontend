@@ -54,7 +54,7 @@ const Delivery = () => {
         <table className="min-w-full border border-gray-200 text-sm">
           <thead className="bg-gray-50 text-gray-700 uppercase tracking-wide">
             <tr>
-              <th className="border-b px-6 py-3 text-left">Order ID</th>
+              <th className="border-b px-6 py-3 text-left">Order Num</th>
               <th className="border-b px-6 py-3 text-left">Customer</th>
               <th className="border-b px-6 py-3 text-left">Address</th>
               <th className="border-b px-6 py-3 text-left">Shipped Date</th>
