@@ -141,11 +141,15 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                     </button>
                 </div>
 
-                <div className="overflow-y-auto px-6 py-4 space-y-3 scrollbar-hide">
-                    <input type="text" name="name" placeholder="Name" className="border p-2 w-full" value={formData.name} onChange={handleChange} />
-                    <input type="text" name="material" placeholder="Material" className="border p-2 w-full" value={formData.material} onChange={handleChange} />
+                <div className="overflow-y-auto px-6 py-6 space-y-5 scrollbar-hide">
+                    <label className="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" name="name" placeholder="Name" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.name} onChange={handleChange} />
 
-                    <select name="producttype" className="border p-2 w-full" value={formData.producttype} onChange={handleChange}>
+                    <label className="block text-sm font-medium text-gray-700">Material</label>
+                    <input type="text" name="material" placeholder="Material" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.material} onChange={handleChange} />
+
+                    <label className="block text-sm font-medium text-gray-700">Type</label>
+                    <select name="producttype" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.producttype} onChange={handleChange}>
                         <option value="">Select Type</option>
                         <option value="ring">Ring</option>
                         <option value="neckless">Neckless</option>
@@ -155,13 +159,13 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         <option value="anklet">Anklet</option>
                     </select>
 
+                    <label className="block text-sm font-medium text-gray-700">Price</label>
+                    <input type="number" name="price" placeholder="Price" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.price} onChange={handleChange} />
 
-
-                    <input type="number" name="price" placeholder="Price" className="border p-2 w-full" value={formData.price} onChange={handleChange} />
-                    {/* <input type="number" name="quantity" placeholder="Quantity" className="border p-2 w-full" value={formData.quantity} onChange={handleChange} /> */}
+                    <label className="block text-sm font-medium text-gray-700">Category</label>
                     <select
                         name="category"
-                        className="border p-2 w-full"
+                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md"
                         value={formData.category}
                         onChange={handleChange}
                     >
@@ -170,42 +174,66 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         <option value="seashells">Seashells</option>
                         <option value="normals">Normals</option>
                     </select>
-                    
-                    <textarea name="description" placeholder="Description" className="border p-2 w-full" value={formData.description} onChange={handleChange}></textarea>
 
-                    <select
-                        name="customizations"
-                        className="border p-2 w-full"
-                        value={formData.customizations[0] || ''}
-                        onChange={(e) => {
-                            const selectedValue = e.target.value;
-                            setFormData((prev) => ({
-                                ...prev,
-                                customizations: selectedValue ? [selectedValue] : [],
-                            }));
-                        }}
-                    >
-                        <option value="">Select a Customization</option>
-                        {customizations.map((item) => (
-                            <option key={item.id} value={item.id}>
-                                {item.name}
-                            </option>
+                    <label className="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea name="description" placeholder="Description" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.description} onChange={handleChange}></textarea>
+
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Customizations</label>
+                    <div className="space-y-2">
+                        {formData.customizations.map((value, index) => (
+                            <div key={index} className="flex gap-2 items-center">
+                                <select
+                                    value={value}
+                                    onChange={(e) => {
+                                        const updated = [...formData.customizations];
+                                        updated[index] = e.target.value;
+                                        setFormData((prev) => ({ ...prev, customizations: updated }));
+                                    }}
+                                    className="border border-gray-300 p-2 rounded-md w-full"
+                                >
+                                    <option value="">Select a Customization</option>
+                                    {customizations.map((item) => (
+                                        <option key={item.id} value={item.id}>
+                                            {item.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const updated = formData.customizations.filter((_, i) => i !== index);
+                                        setFormData((prev) => ({ ...prev, customizations: updated }));
+                                    }}
+                                    className="text-red-500 hover:text-red-700 text-sm"
+                                >
+                                    ✕
+                                </button>
+                            </div>
                         ))}
-                    </select>
 
-                    <select name="gender" className="border p-2 w-full" value={formData.gender} onChange={handleChange}>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    customizations: [...prev.customizations, '']
+                                }));
+                            }}
+                            className="mt-2 text-blue-600 hover:underline text-sm"
+                        >
+                            + Add Customization
+                        </button>
+                    </div>
+
+                    <label className="block text-sm font-medium text-gray-700">Gender</label>
+                    <select name="gender" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.gender} onChange={handleChange}>
                         <option value="">Select Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="unisex">Unisex</option>
                     </select>
 
-                    {/* <label className="flex items-center space-x-2">
-                        <input type="checkbox" name="available" checked={formData.available} onChange={handleChange} />
-                        <span>Available</span>
-                    </label> */}
-
-                    <label htmlFor="image-upload" className="flex items-center justify-center gap-2 w-full p-4 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition">
+                    <label htmlFor="image-upload" className="flex items-center justify-center gap-2 w-full p-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-100 transition">
                         <FaPlus className="text-blue-600" />
                         <span className="text-blue-700 font-medium">Add Image ({formData.previewUrls.length}/3)</span>
                     </label>
@@ -221,9 +249,9 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         </div>
                     )}
 
-                    <div className="flex justify-end mt-4 space-x-2">
-                        <button className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition" onClick={onClose}>Cancel</button>
-                        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" onClick={handleSubmit}>Add Product</button>
+                    <div className="flex justify-end mt-6 space-x-3 pt-4 border-t">
+                        <button className="bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400 transition" onClick={onClose}>Cancel</button>
+                        <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition" onClick={handleSubmit}>Add Product</button>
                     </div>
                 </div>
             </motion.div>

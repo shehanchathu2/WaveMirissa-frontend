@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Check } from 'lucide-react';
+import { X, Check, ShoppingCart } from 'lucide-react';
 import cus1 from '../../assets/CustomizationSamples/Black-round beads.jpeg';
 import cus2 from '../../assets/CustomizationSamples/Blue-round beads.jpeg';
 import cus3 from '../../assets/CustomizationSamples/Oval seashells.jpeg';
@@ -79,7 +79,7 @@ export const CustomizationModal = ({
       const option = customizationOptions.find(opt => opt.id === optionId);
       return total + (option?.price || 0);
     }, 0);
-    return jewelry.basePrice + addOnPrice;
+    return jewelry.price + addOnPrice;
   };
   const handleNext = () => {
     onNext(calculateTotalPrice());
@@ -113,7 +113,7 @@ export const CustomizationModal = ({
 
               <div className="relative">
                 <img
-                  src={jewelry.image1}
+                  src={jewelry.image_url1}
                   alt={jewelry.name}
                   className="object-cover w-32 h-32 shadow-lg rounded-xl"
                 />
@@ -125,7 +125,7 @@ export const CustomizationModal = ({
                 <p className="mb-3 text-base text-gray-600 ">{jewelry.description}</p>
                 <div className="flex items-center space-x-4">
                   <span className="text-2xl font-bold text-teal-600">
-                    LKR {jewelry.basePrice.toLocaleString()}
+                    LKR {jewelry.price.toLocaleString()}
 
                   </span>
                   <span className="px-3 py-1 text-sm text-gray-500 bg-gray-100 rounded-full">
@@ -195,13 +195,21 @@ export const CustomizationModal = ({
 
               
             </div>
-            <button
+            {(jewelry.producttype !== "neckless" && jewelry.producttype !== "ring") ? (
+              <button
+                
+                
+                className={"flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition duration-300 shadow-lg bg-[#1b4965] hover:bg-[#1b4965]/90 text-white hover:shadow-xl transform hover:scale-105"}
+              >
+                <ShoppingCart size={20} />
+                <span>Checkout</span>
+              </button>
+            ):(<button
               onClick={handleNext}
               className="bg-[#1b4965] hover:bg-[#1b4965]/90 text-white font-semibold px-8 py-3 rounded-md transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              Next 
-
-            </button>
+              Next
+            </button>)}
           </div>
         </div>
       </div>

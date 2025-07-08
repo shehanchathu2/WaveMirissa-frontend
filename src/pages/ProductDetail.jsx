@@ -25,14 +25,14 @@ const JewelryItem = {
   image3: sampleimg3,
   description: 'Bohemian and Beach Style Choker Necklace',
   materials: ['Black String', 'Sea-shells'],
-  type: 'necklace',
+  producttype: 'neckless',
   gender: 'women',
 
 };
 
 const ProductDetail = () => {
   const { productId } = useParams();
-  const [quantity, setQuantity] = useState(1); //quantity state
+  const [quantity, setQuantity] = useState(1);
 
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
   const [isSizeModalOpen, setIsSizeModalOpen] = useState(false);
@@ -139,8 +139,8 @@ useEffect(() => {
     setTotalPrice(calculatedPrice);
     setIsCustomizeOpen(false);
 
-    // Only show size modal for necklaces and rings
-    if (JewelryItem.type === 'necklace' || JewelryItem.type === 'ring') {
+    // Only show size modal for neckless and rings
+    if (JewelryItem.producttype === 'neckless' || JewelryItem.producttype === 'ring') {
       setIsSizeModalOpen(true);
     } else {
       // For other jewelry types, go directly to checkout or next step
@@ -173,10 +173,6 @@ useEffect(() => {
   return (
     <div className="grid grid-cols-1 gap-10 p-8 mx-auto max-w-7xl lg:grid-cols-2">
       {/* Product Images */}
-
-
-
-      
       <div className="pl-12 space-y-4">
         <div className="flex gap-8">
           <div className="flex flex-col gap-2">
@@ -197,15 +193,6 @@ useEffect(() => {
             className="shadow-md w-96 rounded-2xl"
           />
         </div>
-
-        
-
-
-
-
-
-
-
 
 
         <div className="max-w-2xl px-4 mx-auto text-gray-800">
@@ -465,7 +452,7 @@ useEffect(() => {
       <CustomizationModal
         isOpen={isCustomizeOpen}
         onClose={handleCloseCustomize}
-        jewelry={JewelryItem}
+        jewelry={product}
         onNext={handleNext}
         openedViaCustomize={openedViaCustomize}
       />
@@ -475,7 +462,7 @@ useEffect(() => {
         isOpen={isSizeModalOpen}
         onClose={handleCloseSizeModal}
         onBack={handleBackToCustomize}
-        jewelry={JewelryItem}
+        jewelry={product}
         totalPrice={totalPrice}
         onCheckout={handleCheckout}
         showBackButton={openedViaCustomize}
