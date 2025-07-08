@@ -19,7 +19,7 @@ import axios from 'axios';
 const JewelryItem = {
   id: 'classic-necklace',
   name: 'Cowrie Shell Necklace with Black String',
-  basePrice: 800,
+  price: 800,
   image1: sampleimg1,
   image2: sampleimg2,
   image3: sampleimg3,
@@ -39,7 +39,7 @@ const ProductDetail = () => {
   const [openedViaCustomize, setOpenedViaCustomize] = useState(false);
   const [openedViaAddtoCart, setOpenedViaAddtoCart] = useState(false);
 
-  const [totalPrice, setTotalPrice] = useState(JewelryItem.basePrice);
+  const [totalPrice, setTotalPrice] = useState(JewelryItem.price);
 
 
 
