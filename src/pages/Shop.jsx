@@ -38,7 +38,7 @@ const Shop = () => {
       try {
         const res = await axios.get('http://localhost:8080/product/Allproducts');
         setProducts(res.data);
-        console.log(res.data)
+        console.log("shop",res.data)
         setFilteredProducts(res.data);
         const uniqueCategories = ['All', ...new Set(res.data.map(p => p.category))];
         setCategories(uniqueCategories);

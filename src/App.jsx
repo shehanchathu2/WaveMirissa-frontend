@@ -1,7 +1,7 @@
 // src/App.jsx
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-
+import { Toaster } from 'react-hot-toast';
 import { ToastContainer } from 'react-toastify';
 import AdminLayout from './pages/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
@@ -45,6 +45,7 @@ const App = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={1000} />
+       <Toaster position="top-center" reverseOrder={false} />
       {!isAdminRoute && <Navbar />}
 
       <Routes>
