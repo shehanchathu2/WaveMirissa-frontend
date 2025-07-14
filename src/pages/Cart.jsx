@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { FaShoppingCart } from 'react-icons/fa';
 import {
   FaMinus,
   FaPlus,
@@ -179,15 +180,21 @@ const Cart = () => {
                 </div>
               ))
             ) : (
-              <div className="text-center py-10">
-                <p className="mb-4 text-lg text-gray-600">Your cart is empty.</p>
-                <button
-                  onClick={() => navigate('/shop')}
-                  className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                >
-                  Go to Shop
-                </button>
-              </div>
+               <div className="flex items-center justify-center min-h-[60vh] bg-[#f3f7fa] px-4">
+      <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+        <div className="flex justify-center mb-4">
+          <FaShoppingCart className="text-[#1b4765]" size={48} />
+        </div>
+        <h2 className="text-2xl font-semibold text-[#1b4765] mb-2">Your cart is empty</h2>
+        <p className="text-gray-600 mb-6">Looks like you haven’t added anything to your cart yet.</p>
+        <button
+          onClick={() => navigate('/shop')}
+          className="px-6 py-2 rounded-xl bg-[#1b4765] text-white hover:bg-[#163a54] transition duration-200"
+        >
+          Go to Shop
+        </button>
+      </div>
+    </div>
             )}
           </div>
         </div>

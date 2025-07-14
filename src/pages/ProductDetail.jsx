@@ -225,6 +225,11 @@ const ProductDetail = () => {
 
 
   const handleAddToCart = () => {
+     if (!user) {
+      toast.error("Please log in to add to cart.");
+      return;
+    }
+
     const type = product?.producttype?.toLowerCase();
     const userId = user.id;
     const size = '';
