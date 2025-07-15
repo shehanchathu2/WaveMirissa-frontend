@@ -34,6 +34,7 @@ import Myorders from './pages/Myorders';
 
 import SuspendPage from './pages/SuspendPage';
 import UserProfile from './pages/UserProfile';
+import WishlistPage from './pages/WishlistPage';
 
 
 
@@ -45,13 +46,13 @@ const App = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={1000} />
-       <Toaster position="top-center" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
       {!isAdminRoute && <Navbar />}
 
       <Routes>
 
 
-           {/* Public Routes */}
+        {/* Public Routes */}
         <Route
           path="/"
           element={
@@ -108,8 +109,22 @@ const App = () => {
             </ProtectedUserRoute>
           }
         />
-            <Route path="/myorders" element={<Myorders/>} />
-            <Route path="/profile" element={<UserProfile/>} />
+
+        <Route
+          path="/wishlist"
+          element={
+            <ProtectedUserRoute>
+              <WishlistPage />
+            </ProtectedUserRoute>
+          }
+        />
+
+
+        <Route path="/myorders" element={<Myorders />} />
+        <Route path="/profile" element={<UserProfile />} />
+
+
+
 
         {/* Always accessible for suspended users */}
         <Route path="/suspend" element={<SuspendPage />} />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FaShoppingCart } from 'react-icons/fa';
 import {
+  FaShoppingCart,
   FaMinus,
   FaPlus,
   FaTrashAlt,
@@ -15,39 +15,70 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import toast from 'react-hot-toast';
+import ConfirmationModal from '../components/admin/ConfirmationModal'; // Adjust the path as needed
 
 const Cart = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [cart, setCart] = useState(null);
   const [quantities, setQuantities] = useState({});
+  const [size, setSize] = useState({});
+  const [customizations, setCustomization] = useState({})
   const [selectedItems, setSelectedItems] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
 
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        if (user) {
-          const res = await axios.get(`http://localhost:8080/cart/${user.id}`);
-          setCart(res.data);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
-          const initialQuantities = {};
-          const initialSelected = {};
-          res.data.items.forEach(item => {
-            initialQuantities[item.id] = item.quantity;
-            initialSelected[item.id] = true;
-          });
+  const fetchCart = async (user, setCart, setQuantities, setSize, setCustomization, setSelectedItems) => {
+    try {
+      if (user) {
+        const res = await axios.get(`http://localhost:8080/cart/${user.id}`);
+        setCart(res.data);
 
-          setQuantities(initialQuantities);
-          setSelectedItems(initialSelected);
-        }
-      } catch (err) {
-        console.error("Error fetching cart:", err);
+        const initialQuantities = {};
+        const initialSelected = {};
+        res.data.items.forEach(item => {
+          initialQuantities[item.id] = item.quantity;
+          initialSelected[item.id] = true;
+        });
+
+        setQuantities(initialQuantities);
+        setSelectedItems(initialSelected);
       }
-    };
+    } catch (err) {
+      console.error("Error fetching cart:", err);
+    }
+  };
 
-    fetchCart();
+  useEffect(() => {
+    fetchCart(user, setCart, setQuantities, setSize, setCustomization, setSelectedItems);
   }, [user]);
+
+  const openDeleteModal = (itemId) => {
+    setItemToDelete(itemId);
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8080/cart/item/${itemToDelete}`);
+      fetchCart(user, setCart, setQuantities, setSize, setCustomization, setSelectedItems);
+      toast.success("Item removed from cart!");
+    } catch (err) {
+      console.error('Failed to remove item:', err);
+      toast.error("Failed to remove item");
+    } finally {
+      setIsModalOpen(false);
+      setItemToDelete(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setIsModalOpen(false);
+    setItemToDelete(null);
+  };
 
   useEffect(() => {
     if (!cart || !cart.items) return;
@@ -78,6 +109,11 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {
+    if (totalPrice === 0) {
+      toast.error("Your cart is empty. Please add items before checking out.");
+      return;
+    }
+
     if (!cart?.items) return;
 
     const selectedItemsData = cart.items
@@ -85,6 +121,8 @@ const Cart = () => {
       .map(item => ({
         ...item,
         quantity: quantities[item.id] ?? item.quantity,
+        size: item.size,
+        customMaterial: item.customMaterial,
       }));
 
     navigate('/checkout', {
@@ -92,8 +130,12 @@ const Cart = () => {
         selectedItems: selectedItemsData,
         totalPrice,
       },
+
     });
   };
+
+
+
 
   return (
     <div className="pb-10 bg-gradient-to-br bg-gray-50">
@@ -113,12 +155,11 @@ const Cart = () => {
                 <span className="font-medium">Artisan's Promise</span>
               </div>
               <p className="text-sm text-gray-600">
-                Enjoy complimentary polishing and care support on all handcrafted jewelry. It's our way of saying thank you.
+                Enjoy complimentary polishing and care support on all handcrafted jewelry.
               </p>
             </div>
           </div>
 
-          {/* Cart Items */}
           <div className="p-6 transition-shadow duration-300 bg-white border border-gray-100 shadow-sm rounded-2xl hover:shadow-md space-y-6">
             {cart?.items?.length > 0 ? (
               cart.items.map((item) => (
@@ -148,7 +189,10 @@ const Cart = () => {
                         <h3 className="mb-1 font-medium text-gray-800">{item.productName}</h3>
                         <p className="text-sm text-gray-500">Custom Material or Size</p>
                       </div>
-                      <button className="text-gray-400 transition-colors hover:text-rose-500">
+                      <button
+                        onClick={() => openDeleteModal(item.id)}
+                        className="text-gray-400 transition-colors hover:text-rose-500"
+                      >
                         <FaTrashAlt className="w-4 h-4" />
                       </button>
                     </div>
@@ -180,30 +224,28 @@ const Cart = () => {
                 </div>
               ))
             ) : (
-               <div className="flex items-center justify-center min-h-[60vh] bg-[#f3f7fa] px-4">
-      <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
-        <div className="flex justify-center mb-4">
-          <FaShoppingCart className="text-[#1b4765]" size={48} />
-        </div>
-        <h2 className="text-2xl font-semibold text-[#1b4765] mb-2">Your cart is empty</h2>
-        <p className="text-gray-600 mb-6">Looks like you haven’t added anything to your cart yet.</p>
-        <button
-          onClick={() => navigate('/shop')}
-          className="px-6 py-2 rounded-xl bg-[#1b4765] text-white hover:bg-[#163a54] transition duration-200"
-        >
-          Go to Shop
-        </button>
-      </div>
-    </div>
+              <div className="flex items-center justify-center min-h-[60vh] bg-[#f3f7fa] px-4">
+                <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+                  <div className="flex justify-center mb-4">
+                    <FaShoppingCart className="text-[#1b4765]" size={48} />
+                  </div>
+                  <h2 className="text-2xl font-semibold text-[#1b4765] mb-2">Your cart is empty</h2>
+                  <p className="text-gray-600 mb-6">Looks like you haven’t added anything to your cart yet.</p>
+                  <button
+                    onClick={() => navigate('/shop')}
+                    className="px-6 py-2 rounded-xl bg-[#1b4765] text-white hover:bg-[#163a54] transition duration-200"
+                  >
+                    Go to Shop
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
 
-        {/* Order Summary */}
         <div className="lg:col-span-1">
           <div className="sticky p-6 bg-white border border-gray-100 shadow-sm rounded-2xl top-6">
             <h3 className="mb-6 text-lg font-medium text-gray-800">Order Summary</h3>
-
             <div className="mb-6 space-y-4">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Subtotal</span>
@@ -227,7 +269,6 @@ const Cart = () => {
             >
               Proceed to Checkout
             </button>
-
             <div className="mb-6 text-center">
               <p className="text-xs text-gray-500">Secure checkout with</p>
               <div className="flex justify-center gap-4 mt-2 text-2xl">
@@ -255,7 +296,6 @@ const Cart = () => {
         </div>
       </div>
 
-      {/* You may also like */}
       <div className="pl-40 pr-40 mt-10 mb-20 lg:col-span-2">
         <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -271,6 +311,16 @@ const Cart = () => {
           ))}
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        title="Delete Item"
+        message="Are you sure you want to remove this item from your cart?"
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+      />
+
     </div>
   );
 };
