@@ -9,6 +9,7 @@ const Payment = ({
   amount,
   setPaymentSuccess,
   setOrderID,
+  selectedItems,
 }) => {
   const [payData, setPayData] = useState(null);
   const [scriptLoaded, setScriptLoaded] = useState(false);
@@ -59,7 +60,7 @@ const Payment = ({
       return;
     }
 
-    const payment = {
+   const payment = {
       sandbox: true,
       merchant_id: '1231066',
       return_url: 'https://www.example.com/success',
@@ -86,11 +87,10 @@ const Payment = ({
     <button
       onClick={pay}
       disabled={!payData || !scriptLoaded}
-      className={`w-full py-3 rounded-xl font-medium transition-colors ${
-        !payData || !scriptLoaded
-          ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-          : 'bg-blue-600 text-white hover:bg-blue-700'
-      }`}
+      className={`w-full py-3 rounded-xl font-medium transition-colors ${!payData || !scriptLoaded
+        ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+        : 'bg-blue-600 text-white hover:bg-blue-700'
+        }`}
     >
       Pay with PayHere
     </button>

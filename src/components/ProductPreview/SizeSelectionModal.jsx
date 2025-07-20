@@ -58,14 +58,14 @@ export const SizeSelectionModal = ({
 
 
   const getSizeOptions = () => {
-    if (jewelry.type === 'necklace') return necklaceLengths;
-    if (jewelry.type === 'ring') return ringSizes;
+    if (jewelry.producttype === 'neckless') return necklaceLengths;
+    if (jewelry.producttype === 'ring') return ringSizes;
     return [];
   };
 
   const getSizeLabel = () => {
-    if (jewelry.type === 'necklace') return 'Necklace Length';
-    if (jewelry.type === 'ring') return 'Ring Size';
+    if (jewelry.producttype === 'neckless') return 'Necklace Length';
+    if (jewelry.producttype === 'ring') return 'Ring Size';
     return 'Size';
   };
 
@@ -102,7 +102,7 @@ export const SizeSelectionModal = ({
           <div className="p-4 mb-6 bg-gradient-to-r from-gray-50 to-white rounded-xl">
             <div className="flex items-center space-x-4">
               <img
-                src={jewelry.image1}
+                src={jewelry.image_url1}
                 alt={jewelry.name}
                 className="object-cover w-20 h-20 rounded-lg shadow-md"
               />
@@ -142,7 +142,7 @@ export const SizeSelectionModal = ({
               ))}
             </select>
 
-            {selectedSize === "custom" && jewelry.type === "necklace" && (
+            {selectedSize === "custom" && jewelry.producttype === "neckless" && (
               <div className="mt-4">
                 <label className="block mb-2 text-sm font-medium text-gray-700">
                   Enter Custom Length (inches)
@@ -164,10 +164,10 @@ export const SizeSelectionModal = ({
 
             <div className="p-4 mt-6 border border-teal-200 rounded-lg bg-teal-50">
               <h4 className="mb-2 font-semibold text-teal-800">
-                {jewelry.type === "necklace" ? "Length Guide" : "Size Guide"}
+                {jewelry.producttype === "neckless" ? "Length Guide" : "Size Guide"}
               </h4>
               <p className="text-sm text-teal-700">
-                {jewelry.type === "necklace"
+                {jewelry.producttype === "neckless"
                   ? 'Not sure about the length? A 18" necklace sits at the base of the neck, while a 20" necklace falls just below the collarbone.'
                   : "Need help finding your ring size? Visit our size guide or use a ring sizer for the most accurate measurement."}
               </p>

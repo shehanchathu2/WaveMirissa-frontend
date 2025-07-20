@@ -125,19 +125,24 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
             <motion.div className="bg-white rounded-lg w-full max-w-xl max-h-[90vh] flex flex-col relative"
                 initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} transition={{ duration: 0.3 }}>
 
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    <div className="fixed inset-0 bg-black/30" onClick={onClose} />
-                    <div className="relative bg-white rounded-xl shadow-xl w-full max-w-2xl p-6 z-50 overflow-y-auto max-h-screen">
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold">Edit Product</h2>
-                            <button onClick={onClose}><AiOutlineClose /></button>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+                    <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-8 z-50 overflow-y-auto max-h-[90vh] scrollbar-hide">
+                        <div className="flex justify-between items-center mb-6 border-b pb-3">
+                            <h2 className="text-2xl font-semibold text-gray-800">Edit Product</h2>
+                            <button onClick={onClose} className="text-gray-500 hover:text-gray-800 transition">
+                                <AiOutlineClose size={20} />
+                            </button>
                         </div>
 
-                        <div className="space-y-4">
-                            <input name="name" value={formData.name || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Product Name" />
-                            <input name="material" value={formData.material || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Material" />
+                        <div className="space-y-5">
+                            <label className="block text-sm font-medium text-gray-700">Product Name</label>
+                            <input name="name" value={formData.name || ""} onChange={handleChange} className="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 rounded-md" placeholder="Product Name" />
 
-                            <select name="producttype" className="border p-2 w-full" value={formData.producttype || ""} onChange={handleChange}>
+                            <label className="block text-sm font-medium text-gray-700">Material</label>
+                            <input name="material" value={formData.material || ""} onChange={handleChange} className="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 rounded-md" placeholder="Material" />
+
+                            <label className="block text-sm font-medium text-gray-700">Type</label>
+                            <select name="producttype" className="border border-gray-300 p-2 w-full rounded-md focus:ring-2 focus:ring-blue-500" value={formData.producttype || ""} onChange={handleChange}>
                                 <option value="">Select Type</option>
                                 <option value="ring">Ring</option>
                                 <option value="neckless">Neckless</option>
@@ -147,11 +152,13 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                                 <option value="anklet">Anklet</option>
                             </select>
 
-                            <input name="price" type="number" value={formData.price || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Price" />
+                            <label className="block text-sm font-medium text-gray-700">Price</label>
+                            <input name="price" type="number" value={formData.price || ""} onChange={handleChange} className="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 rounded-md" placeholder="Price" />
 
+                            <label className="block text-sm font-medium text-gray-700">Category</label>
                             <select
                                 name="category"
-                                className="border p-2 w-full"
+                                className="border border-gray-300 p-2 w-full rounded-md focus:ring-2 focus:ring-blue-500"
                                 value={formData.category}
                                 onChange={handleChange}
                             >
@@ -161,17 +168,13 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                                 <option value="normals">Normals</option>
                             </select>
 
-                            <input name="description" value={formData.description || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Description" />
+                            <label className="block text-sm font-medium text-gray-700">Description</label>
+                            <input name="description" value={formData.description || ""} onChange={handleChange} className="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 rounded-md" placeholder="Description" />
 
-
-                            {/* <input name="category" value={formData.category || ""} onChange={handleChange} className="w-full border p-2 rounded" placeholder="Category" /> */}
-
-
-
-
+                            <label className="block text-sm font-medium text-gray-700">Customization</label>
                             <select
                                 name="customization"
-                                className="border p-2 w-full"
+                                className="border border-gray-300 p-2 w-full rounded-md focus:ring-2 focus:ring-blue-500"
                                 value={formData.customization || ""}
                                 onChange={handleChange}
                             >
@@ -181,27 +184,19 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                                 ))}
                             </select>
 
-
-
-
-
-                            <select name="gender" className="border p-2 w-full" value={formData.gender || ""} onChange={handleChange}>
+                            <label className="block text-sm font-medium text-gray-700">Gender</label>
+                            <select name="gender" className="border border-gray-300 p-2 w-full rounded-md focus:ring-2 focus:ring-blue-500" value={formData.gender || ""} onChange={handleChange}>
                                 <option value="">Select Gender</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                                 <option value="unisex">Unisex</option>
                             </select>
 
-                            {/* <label className="flex items-center gap-2">
-                                <input type="checkbox" name="available" checked={formData.available || false} onChange={handleChange} />
-                                <span>Available</span>
-                            </label> */}
-
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-3">
                                 {formData.previewUrls?.map((url, i) => (
                                     <div key={i} className="relative w-20 h-20">
-                                        <img src={url} className="w-full h-full object-cover rounded" alt={`Preview ${i + 1}`} />
-                                        <button className="absolute top-0 right-0 text-xs px-1 py-0.5 bg-red-500 text-white rounded"
+                                        <img src={url} className="w-full h-full object-cover rounded-md border" alt={`Preview ${i + 1}`} />
+                                        <button className="absolute top-0 right-0 text-xs px-1 py-0.5 bg-red-500 text-white rounded-full"
                                             onClick={() => handleRemoveImage(i)}>
                                             ✕
                                         </button>
@@ -211,7 +206,7 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
 
                             {formData.previewUrls?.length < 3 && (
                                 <div className="flex items-center gap-2 w-full">
-                                    <label htmlFor="image-upload" className="flex items-center gap-2 px-4 py-2 bg-gray-100 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 transition">
+                                    <label htmlFor="image-upload" className="flex items-center gap-2 px-4 py-2 bg-gray-100 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 transition">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                         </svg>
@@ -221,13 +216,14 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                                 </div>
                             )}
 
-                            <div className="flex justify-end gap-2 mt-4">
-                                <button className="px-4 py-2 border rounded" onClick={onClose}>Cancel</button>
-                                <button className="px-4 py-2 bg-blue-600 text-white rounded" onClick={handleSubmit} disabled={isUploading}>Update Product</button>
+                            <div className="flex justify-end gap-2 pt-4 border-t mt-6">
+                                <button className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-100" onClick={onClose}>Cancel</button>
+                                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition" onClick={handleSubmit} disabled={isUploading}>Update Product</button>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </motion.div>
         </motion.div>
     );
