@@ -1,4 +1,4 @@
-// src/App.jsx
+
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
@@ -45,7 +45,7 @@ const App = () => {
 
   return (
     <>
-      <ToastContainer position="top-right" autoClose={1000} />
+      <ToastContainer position="top-right" autoClose={2000} />
       <Toaster position="top-center" reverseOrder={false} />
       {!isAdminRoute && <Navbar />}
 
