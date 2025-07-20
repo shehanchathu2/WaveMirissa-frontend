@@ -44,7 +44,7 @@ const Login = ({ open, onClose, onSwitchToSignup }) => {
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center"
+          className="fixed inset-0 z-[10000] bg-black/40 backdrop-blur-sm flex items-center justify-center"
           variants={backdropVariants}
           initial="hidden"
           animate="visible"

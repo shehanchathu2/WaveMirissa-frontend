@@ -27,7 +27,7 @@ const CheckoutPage = () => {
   const productIds = selectedItems.map(item => item.id);
   // Replace or get from user context/auth if you have one
 
-  console.log(selectedItems)
+  console.log("selected items", selectedItems);
   // Save order to backend DB after payment success
   const saveOrderToDB = async (payhereRef) => {
     try {
