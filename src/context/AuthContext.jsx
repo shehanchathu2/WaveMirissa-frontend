@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
 
       const loggedInUser = response.data;
       setUser(loggedInUser);
+      console.log(loggedInUser)
       localStorage.setItem('user', JSON.stringify(loggedInUser));
 
       if (loggedInUser.role === 'admin') {

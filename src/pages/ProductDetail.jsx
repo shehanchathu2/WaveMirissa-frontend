@@ -14,12 +14,16 @@ import sampleimg3 from '../assets/sampleProducts/CowrieShell-Black_03.jpg';
 import { CustomizationModal } from '../components/ProductPreview/CustomizationModal';
 import { SizeSelectionModal } from '../components/ProductPreview/SizeSelectionModal';
 import axios from 'axios';
+// import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
+import { useAuth } from '../context/AuthContext';
+import CartModal from '../components/CartModal';
 
 
 const JewelryItem = {
   id: 'classic-necklace',
   name: 'Cowrie Shell Necklace with Black String',
-  basePrice: 800,
+  price: 800,
   image1: sampleimg1,
   image2: sampleimg2,
   image3: sampleimg3,
@@ -31,21 +35,22 @@ const JewelryItem = {
 };
 
 const ProductDetail = () => {
+  const { user } = useAuth();
+  const [product, setProduct] = useState([]);
   const { productId } = useParams();
-  const [quantity, setQuantity] = useState(1); //quantity state
+  const [quantity, setQuantity] = useState(1);
 
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
   const [isSizeModalOpen, setIsSizeModalOpen] = useState(false);
   const [openedViaCustomize, setOpenedViaCustomize] = useState(false);
   const [openedViaAddtoCart, setOpenedViaAddtoCart] = useState(false);
+  const [custemiztionOptions, setCustomizationOptions] = useState([]);
+  const [cartModalOpen, setCartModalOpen] = useState(false);
 
-  const [totalPrice, setTotalPrice] = useState(JewelryItem.basePrice);
+  const [customMaterial, setCustomMaterial] = useState('');
 
 
-
-
-  const [product, setProduct] = useState([]);
-
+  const [totalPrice, setTotalPrice] = useState(product.price);
 
   const ProductImages = [
     sampleimg1,
@@ -53,39 +58,55 @@ const ProductDetail = () => {
     sampleimg3
   ];
   const [mainImage, setMainImage] = useState(ProductImages[0]);
+  const [customizations, setCustomizations] = useState([]);
 
 
 
- useEffect(() => {
-  const fetchProduct = async () => {
-    try {
-      const res = await axios.get(`http://localhost:8080/product/${productId}`);
-      setProduct(res.data);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/product/${productId}`);
+        const productData = res.data;
 
-      const defaultImg = res.data.image_url1 || res.data.image_url2 || res.data.image_url3;
-      setMainImage(defaultImg);
-    } catch (err) {
-      console.error('Error fetching product:', err);
-    }
-  };
-  fetchProduct();
-}, [productId]);
+        setProduct(productData);
 
-useEffect(() => {
-  console.log('Updated product:', product);
-}, [product]);
+        // Store customization array
+        if (productData.customizations && Array.isArray(productData.customizations)) {
+          setCustomizations(productData.customizations);
+        }
+        console.log("customizations", customizations);
+
+        // Set default image
+        const defaultImg =
+          productData.image_url1 || productData.image_url2 || productData.image_url3;
+        setMainImage(defaultImg);
+        console.log("Customizations:", productData.customizations);
+      } catch (err) {
+        console.error('Error fetching product:', err);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
+
+
+
+
+
+
 
 
   const productImages = [product?.image_url1, product?.image_url2, product?.image_url3].filter(Boolean);
 
-const [likeproudct , setLikeProducs] = useState([])
+  const [likeproudct, setLikeProducs] = useState([])
 
 
-useEffect(() => {
+  useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get('http://localhost:8080/product/Allproducts');
         setLikeProducs(res.data);
+
         console.log(likeproudct)
       } catch (err) {
         console.error('Error loading products:', err);
@@ -112,22 +133,26 @@ useEffect(() => {
   };
 
   const handleBuyNowClick = () => {
+    const type = product?.producttype?.toLowerCase();
 
-    setIsSizeModalOpen(true);
-    setOpenedViaCustomize(false);
-    setOpenedViaAddtoCart(false);
+    if (type === 'ring' || type === 'neckless') {
+      setIsSizeModalOpen(true);
+      setOpenedViaCustomize(false);
+      setOpenedViaAddtoCart(false);
+    } else {
+      // Handle Buy Now flow without size selection
+      console.log('Proceeding to checkout without size modal...');
+    }
   };
 
-  const handleAddToCart = () => {
-    setOpenedViaAddtoCart(true);
-    setIsSizeModalOpen(true);
-    setOpenedViaCustomize(false);
-  };
 
 
   const handleCloseCustomize = () => {
     setIsCustomizeOpen(false);
+    setCustomMaterial('');
+    setTotalPrice(product.price);
   };
+
 
   const handleCloseSizeModal = () => {
     setIsSizeModalOpen(false);
@@ -139,24 +164,113 @@ useEffect(() => {
     setTotalPrice(calculatedPrice);
     setIsCustomizeOpen(false);
 
-    // Only show size modal for necklaces and rings
-    if (JewelryItem.producttype === 'neckless' || JewelryItem.producttype === 'ring') {
+    if (product.producttype === 'neckless' || product.producttype === 'ring') {
       setIsSizeModalOpen(true);
-    } else {
-      // For other jewelry types, go directly to checkout or next step
-      console.log('Proceeding to checkout for', JewelryItem.producttype);
     }
   };
 
-  const handleCheckout = (selectedSize) => {
-    console.log('Proceeding to checkout with:', {
-      jewelry: JewelryItem.name,
-      totalPrice,
-      size: selectedSize
-    });
-    setIsSizeModalOpen(false);
-    // redirect to payment gateway
+
+
+  useEffect(() => {
+    console.log(user);
+  }, []);
+
+
+
+
+
+  const addToCart = async (userId, productId, quantity, size, customMaterial, price) => {
+    try {
+      console.log("🛒 Adding to cart:", {
+        userId,
+        productId,
+        quantity,
+        size,
+        customMaterial,
+        price
+      });
+
+      await axios.post('http://localhost:8080/cart/add', {
+        userId,
+        productId,
+        quantity,
+        size,
+        customMaterial,
+        price
+      });
+
+      // toast.success("Item added to cart!");
+      toast.success("Item added to cart!");
+    } catch (error) {
+      console.error("Add to cart failed:", error);
+      toast.error("Error adding item.");
+    }
   };
+
+  const handleCheckout = async (selectedSize) => {
+    if (!user) {
+      toast.error("Please log in to add to cart.");
+      return;
+    }
+
+    const userId = user.id || user.userId; // use correct property name
+    const size = selectedSize || '';
+    const materialToUse = customMaterial || '';
+    const priceToSend = totalPrice || product.price;
+
+    await addToCart(userId, product.product_id, quantity, size, materialToUse, priceToSend);
+    setIsSizeModalOpen(false);
+  };
+
+
+
+  const handleAddToCart = () => {
+     if (!user) {
+      toast.error("Please log in to add to cart.");
+      return;
+    }
+
+    const type = product?.producttype?.toLowerCase();
+    const userId = user.id;
+    const size = '';
+
+    // Check if product is customized
+    const isCustomized = isCustomizeOpen || openedViaCustomize;
+    const materialToSave = isCustomized ? customMaterial : '';
+    const priceToSend = isCustomized ? totalPrice : product.price;
+
+    // If it's a ring or neckless, show size modal instead
+    if (type === 'ring' || type === 'neckless') {
+      setOpenedViaCustomize(false);
+      setCustomMaterial('');
+      setTotalPrice(product.price);
+      setOpenedViaAddtoCart(true);
+      setIsSizeModalOpen(true);
+      return;
+    }
+
+    // Otherwise, save directly to cart
+    addToCart(userId, product.product_id, quantity, size, materialToSave, priceToSend);
+
+    // Reset customization state
+    setOpenedViaCustomize(false);
+    setCustomMaterial('');
+    setTotalPrice(product.price);
+  };
+
+
+
+
+  const handleDirectCheckout = (material, price) => {
+    const userId = user.id;
+    const size = '';
+    // customMaterial = material || '';
+    addToCart(userId, product.product_id, quantity, size, material, price);
+
+    setIsCustomizeOpen(false);
+  };
+
+
 
   const handleBackToCustomize = () => {
     setIsSizeModalOpen(false);
@@ -173,10 +287,6 @@ useEffect(() => {
   return (
     <div className="grid grid-cols-1 gap-10 p-8 mx-auto max-w-7xl lg:grid-cols-2">
       {/* Product Images */}
-
-
-
-      
       <div className="pl-12 space-y-4">
         <div className="flex gap-8">
           <div className="flex flex-col gap-2">
@@ -197,15 +307,6 @@ useEffect(() => {
             className="shadow-md w-96 rounded-2xl"
           />
         </div>
-
-        
-
-
-
-
-
-
-
 
 
         <div className="max-w-2xl px-4 mx-auto text-gray-800">
@@ -253,7 +354,7 @@ useEffect(() => {
               </div>
               <div>
                 <div className="flex items-center space-x-2 text-sm text-gray-700">
-                  <p className="font-semibold">Yasindu Navodh</p>
+                  <p className="font-semibold">shehan chathuranga</p>
                   <span className="text-gray-400">on May 29 2025</span>
                 </div>
                 <p className="mt-1 text-sm text-gray-600">
@@ -297,8 +398,7 @@ useEffect(() => {
           <div className="flex items-center gap-3">
             <SiShell className="text-xl text-black-600" />
             <p className="text-base">
-              <strong>Materials Used:</strong> {JewelryItem.materials[0]},{" "}
-              {JewelryItem.materials[1]}
+              <strong>Materials Used:</strong>        {product.material}
             </p>
           </div>
 
@@ -366,7 +466,10 @@ useEffect(() => {
             </button>
 
             <button
-              onClick={handleAddToCart}
+              onClick={() => {
+                handleAddToCart();         // Your function to add item to cart
+                setCartModalOpen(true);    // Show modal
+              }}
               className="flex-1 border border-[#1b4965] text-[#1b4965] text-lg px-6 py-2 rounded-lg hover:bg-[#a8d1eb]/60 transition duration-300"
             >
               Add to Cart
@@ -438,25 +541,25 @@ useEffect(() => {
       <div className="mt-10 lg:col-span-2">
         <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          
-            
 
 
 
 
-           {likeproudct.map((p,i) => (
-             <motion.div
-               key={i}
-               className="p-3 transition border rounded-xl hover:shadow-lg"
-               whileHover={{ scale: 1.05 }}
-             >
-               <img
-                 src={p.image_url1}
-                 alt={p.name}
-                 className="object-cover w-full h-32 rounded-lg"
-               />
-  
-             </motion.div>
+
+
+          {likeproudct.map((p, i) => (
+            <motion.div
+              key={i}
+              className="p-3 transition border rounded-xl hover:shadow-lg"
+              whileHover={{ scale: 1.05 }}
+            >
+              <img
+                src={p.image_url1}
+                alt={p.name}
+                className="object-cover w-full h-32 rounded-lg"
+              />
+
+            </motion.div>
           ))}
         </div>
       </div>
@@ -465,9 +568,12 @@ useEffect(() => {
       <CustomizationModal
         isOpen={isCustomizeOpen}
         onClose={handleCloseCustomize}
-        jewelry={JewelryItem}
+        jewelry={product}
         onNext={handleNext}
+        onCheckout={handleDirectCheckout}
         openedViaCustomize={openedViaCustomize}
+        setCustomMaterial={setCustomMaterial}
+        customizationOptions={customizations}
       />
 
       {/* Size Selection Modal */}
@@ -475,12 +581,19 @@ useEffect(() => {
         isOpen={isSizeModalOpen}
         onClose={handleCloseSizeModal}
         onBack={handleBackToCustomize}
-        jewelry={JewelryItem}
+        jewelry={product}
         totalPrice={totalPrice}
         onCheckout={handleCheckout}
         showBackButton={openedViaCustomize}
         hideCheckoutButton={openedViaAddtoCart}
       />
+
+      {/* {cartModalOpen && (
+        <CartModal
+          
+          onClose={() => setCartModalOpen(false)}
+        />
+      )} */}
     </div>
   );
 };
