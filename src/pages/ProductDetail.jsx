@@ -25,7 +25,7 @@ const JewelryItem = {
   image3: sampleimg3,
   description: 'Bohemian and Beach Style Choker Necklace',
   materials: ['Black String', 'Sea-shells'],
-  type: 'bracelet',
+  producttype: 'neckless',
   gender: 'women',
 
 };
@@ -140,11 +140,11 @@ useEffect(() => {
     setIsCustomizeOpen(false);
 
     // Only show size modal for necklaces and rings
-    if (JewelryItem.type === 'necklace' || JewelryItem.type === 'ring') {
+    if (JewelryItem.producttype === 'neckless' || JewelryItem.producttype === 'ring') {
       setIsSizeModalOpen(true);
     } else {
       // For other jewelry types, go directly to checkout or next step
-      console.log('Proceeding to checkout for', JewelryItem.type);
+      console.log('Proceeding to checkout for', JewelryItem.producttype);
     }
   };
 

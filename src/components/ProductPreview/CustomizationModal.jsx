@@ -202,7 +202,7 @@ export const CustomizationModal = ({
               
             </div>
             
-            {(jewelry.type !== "necklace" && jewelry.type !== "ring") ? (
+            {(jewelry.producttype !== "neckless" && jewelry.producttype !== "ring") ? (
               <button
                 
                 
