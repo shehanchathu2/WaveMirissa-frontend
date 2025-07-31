@@ -28,6 +28,9 @@ export const CustomizationModal = ({
         : [...prev, optionId]
     );
   };
+  
+
+  
 
   const calculateTotalPrice = () => {
     const addOnPrice = selectedOptions.reduce((total, optionId) => {
@@ -83,7 +86,9 @@ export const CustomizationModal = ({
 
           {/* Customization Options */}
           <div className="p-6">
-            <h4 className="text-xl font-semibold text-[#1b4965] mb-6">Available Customizations</h4>
+            <h4 className="text-xl font-semibold text-[#1b4965] mb-6">
+              Available Customizations
+            </h4>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {customizationOptions.map((option) => (
                 <div
