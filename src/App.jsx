@@ -1,7 +1,7 @@
-// src/App.jsx
+
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-
+import { Toaster } from 'react-hot-toast';
 import { ToastContainer } from 'react-toastify';
 import AdminLayout from './pages/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
@@ -34,6 +34,7 @@ import Myorders from './pages/Myorders';
 
 import SuspendPage from './pages/SuspendPage';
 import UserProfile from './pages/UserProfile';
+import WishlistPage from './pages/WishlistPage';
 
 
 
@@ -44,7 +45,8 @@ const App = () => {
 
   return (
     <>
-      <ToastContainer position="top-right" autoClose={1000} />
+      <ToastContainer position="top-right" autoClose={2000} />
+      <Toaster position="top-center" reverseOrder={false} />
       {!isAdminRoute && <Navbar />}
 
       <Routes>
@@ -107,8 +109,27 @@ const App = () => {
             </ProtectedUserRoute>
           }
         />
+<<<<<<< HEAD
         <Route path="/myorders" element={<Myorders />} />
         <Route path="/profile" element={<UserProfile />} />
+=======
+
+        <Route
+          path="/wishlist"
+          element={
+            <ProtectedUserRoute>
+              <WishlistPage />
+            </ProtectedUserRoute>
+          }
+        />
+
+
+        <Route path="/myorders" element={<Myorders />} />
+        <Route path="/profile" element={<UserProfile />} />
+
+
+
+>>>>>>> 4563166d586a7e675add2af731996dd284ab05be
 
         {/* Always accessible for suspended users */}
         <Route path="/suspend" element={<SuspendPage />} />

@@ -1,26 +1,50 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaMoneyCheckAlt } from 'react-icons/fa';
 
 import axios from 'axios';
 import Payment from '../components/Payment';
+<<<<<<< HEAD
 import AddAddressModal from '../components/AddAddressModal ';
 
+=======
+import { useAuth } from '../context/AuthContext';
+>>>>>>> 4563166d586a7e675add2af731996dd284ab05be
 
 const CheckoutPage = () => {
+  const { user } = useAuth();
+
+  const { state } = useLocation();
+  const selectedItems = state?.selectedItems || [];
+  const totalPrice = state?.totalPrice || 0;
+
   const [showModal, setShowModal] = useState(false);
   const [orderID, setOrderID] = useState('');
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
+<<<<<<< HEAD
   const amount = 665.33; // Example amount
   const userId = 1; // Replace with logged-in user id dynamically
   const productIds = [101, 102]; // Replace with cart product IDs dynamically
 
+=======
+  const shippingAmount = 299.99; // Fixed shipping amount
+  const totalAmount = totalPrice + shippingAmount; // Total amount including shipping
+
+  // Extract product IDs from selectedItems to send to backend
+  const productIds = selectedItems.map(item => item.id);
+  // Replace or get from user context/auth if you have one
+
+  console.log("selected items", selectedItems);
+  // Save order to backend DB after payment success
+>>>>>>> 4563166d586a7e675add2af731996dd284ab05be
   const saveOrderToDB = async (payhereRef) => {
     try {
       const orderData = {
         orderId: orderID,
+<<<<<<< HEAD
         amount: amount.toFixed(2),
         currency: 'LKR',
         status: 'PAID',
@@ -28,6 +52,22 @@ const CheckoutPage = () => {
         userId: userId,
         productIds: productIds,
         payhereRef: payhereRef,
+=======
+        amount: totalAmount.toFixed(2),
+        currency: 'LKR',
+        status: 'PAID',
+        paymentMethod: 'PAYHERE',
+        userId: user.id,
+        productIds: productIds,
+        payhereRef: payhereRef,
+
+         items: selectedItems.map(item => ({
+        productId: item.id,
+        quantity: item.quantity,
+        size: item.size,
+        customMaterial: item.customMaterial,
+      }))
+>>>>>>> 4563166d586a7e675add2af731996dd284ab05be
       };
 
       const response = await axios.post('http://localhost:8080/api/admin/orders', orderData);
@@ -40,6 +80,10 @@ const CheckoutPage = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  // Callback after successful payment
+>>>>>>> 4563166d586a7e675add2af731996dd284ab05be
   const handlePaymentSuccess = (payhereRef) => {
     setPaymentSuccess(true);
     saveOrderToDB(payhereRef);
@@ -99,6 +143,7 @@ const CheckoutPage = () => {
                 </div>
                 <h2 className="text-lg font-semibold text-gray-800">Order Items</h2>
               </div>
+<<<<<<< HEAD
               <div className="flex gap-4 p-4 rounded-2xl bg-gray-50">
                 <img
                   src="https://ae01.alicdn.com/kf/S91eec62f57a84ac7ae22b0e75c5a5e9cT.jpg"
@@ -110,9 +155,24 @@ const CheckoutPage = () => {
                   <p className="text-gray-500 text-xs">Delivery: Jul 09 - 18</p>
                   <div className="flex items-center gap-4 mt-2">
                     <span className="text-green-600 text-sm font-medium">4pcs green</span>
+=======
+              {selectedItems.map((item) => (
+                <div key={item.id} className="flex gap-4 p-4 mb-3 rounded-2xl bg-gray-50">
+                  <img
+                    src={item.imageUrl || 'https://via.placeholder.com/150'}
+                    alt={item.productName || 'Product'}
+                    className="w-20 h-20 rounded-xl object-cover"
+                  />
+                  <div className="flex-1">
+                    <h3 className="font-medium text-gray-800 text-sm">{item.productName}</h3>
+                    <p className="text-gray-500 text-xs">Quantity: {item.quantity}</p>
+                    <div className="flex items-center gap-4 mt-2">
+                      <span className="text-green-600 text-sm font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+>>>>>>> 4563166d586a7e675add2af731996dd284ab05be
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -129,25 +189,29 @@ const CheckoutPage = () => {
               <div className="mb-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-semibold">LKR484.03</span>
+                  <span className="font-semibold">{totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Shipping</span>
-                  <span className="font-semibold">LKR181.30</span>
+                  <span className="font-semibold">LKR{shippingAmount.toFixed(2)}</span>
                 </div>
                 <div className="pt-4 border-t border-gray-200">
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-bold text-gray-800">Total</span>
-                    <span className="text-xl font-bold text-blue-600">LKR665.33</span>
+                    <span className="text-xl font-bold text-blue-600">LKR{totalAmount.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
 
+<<<<<<< HEAD
               {/* Payment Component */}
+=======
+>>>>>>> 4563166d586a7e675add2af731996dd284ab05be
               <Payment
                 firstname="John"
                 lastname="Doe"
                 email="john@example.com"
+<<<<<<< HEAD
                 paymentTitle="Car Luminous Tire Valve Caps"
                 amount={amount}
                 setPaymentSuccess={handlePaymentSuccess}
@@ -158,6 +222,16 @@ const CheckoutPage = () => {
                     ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
                     : 'bg-blue-600 text-white hover:bg-blue-700'
                 }`}
+=======
+                paymentTitle="Order Payment"
+                amount={totalAmount}
+                setPaymentSuccess={handlePaymentSuccess}  // Pass the handler here!
+                setOrderID={setOrderID}
+                selectedItems={selectedItems}
+                disabled={isProcessing}
+                className={`w-full py-3 rounded-xl font-medium transition-colors ${isProcessing ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700'
+                  }`}
+>>>>>>> 4563166d586a7e675add2af731996dd284ab05be
               >
                 {isProcessing ? 'Processing...' : 'Pay with PayHere'}
               </Payment>

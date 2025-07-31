@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { motion } from "framer-motion";
 import { FiHeart, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from 'react-router-dom';
-import { AiFillStar } from 'react-icons/ai';
+import { AiFillStar, AiFillHeart } from 'react-icons/ai';
 import { FaThList } from 'react-icons/fa';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -20,6 +22,7 @@ const itemVariants = {
 };
 
 const Shop = () => {
+  const { user } = useAuth();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -38,7 +41,7 @@ const Shop = () => {
       try {
         const res = await axios.get('http://localhost:8080/product/Allproducts');
         setProducts(res.data);
-        console.log(res.data)
+        console.log("shop", res.data)
         setFilteredProducts(res.data);
         const uniqueCategories = ['All', ...new Set(res.data.map(p => p.category))];
         setCategories(uniqueCategories);
@@ -98,6 +101,59 @@ const Shop = () => {
       setFilteredProducts(products.filter(p => p.gender === gender));
     }
   };
+
+
+
+
+  const [likedProducts, setLikedProducts] = useState([]);
+
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchWishlist = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/wishlist/${user.id}`);
+        const ids = res.data.map((item) => item.productId);
+        setLikedProducts(ids);
+      } catch (err) {
+        console.error('Failed to fetch wishlist:', err);
+      }
+    };
+
+    fetchWishlist();
+  }, [user?.id]);
+
+
+  const toggleLike = async (productId) => {
+    if (!user?.id) {
+      toast.error("Please log in to use wishlist");
+      return;
+    }
+
+    const isLiked = likedProducts.includes(productId);
+
+    try {
+      if (isLiked) {
+        setLikedProducts((prev) => prev.filter((id) => id !== productId));
+        await axios.delete('http://localhost:8080/wishlist/remove', {
+          params: { userId: user.id, productId },
+        });
+        toast.success("Removed from wishlist");
+      } else {
+        setLikedProducts((prev) => [...prev, productId]);
+        await axios.post('http://localhost:8080/wishlist/add', {
+          userId: user.id,
+          productId,
+        });
+        toast.success("Added to wishlist");
+      }
+    } catch (err) {
+      console.error("Wishlist toggle error:", err);
+      toast.error("Something went wrong");
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -212,8 +268,13 @@ const Shop = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map((product, index) => (
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {filteredProducts.map((product) => (
               <Link to={`/shop/product/${product.product_id}`} key={product.product_id}>
                 <motion.div
                   className="bg-white rounded shadow hover:shadow-lg transition"
@@ -225,9 +286,21 @@ const Shop = () => {
                       alt={product.name}
                       className="w-full h-64 object-cover rounded"
                     />
-                    <button className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:text-pink-600">
-                      <FiHeart size={16} />
-                    </button>
+                    <motion.button
+                      className="absolute top-2 right-2 bg-white rounded-full p-2 shadow z-50"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleLike(product.product_id);
+                      }}
+                      whileTap={{ scale: 1.2 }}
+                    >
+                      {likedProducts.includes(product.product_id) ? (
+                        <AiFillHeart size={18} className="text-pink-600 transition-all duration-200" />
+                      ) : (
+                        <FiHeart size={18} className="text-gray-600 transition-all duration-200" />
+                      )}
+                    </motion.button>
                   </div>
                   <div className="pt-3 px-4 py-4">
                     <h3 className="font-semibold text-gray-800 text-sm">{product.name}</h3>
@@ -247,7 +320,7 @@ const Shop = () => {
                 </motion.div>
               </Link>
             ))}
-          </div>
+          </motion.div>
 
           <div className="flex justify-center items-center gap-2 mt-6">
             <button className="p-2 bg-white shadow rounded-full hover:bg-gray-100">
