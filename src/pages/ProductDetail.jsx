@@ -541,21 +541,6 @@ const ProductDetail = () => {
       <div className="mt-10 lg:col-span-2">
         <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-<<<<<<< HEAD
-           {likeproudct.map((p,i) => (
-             <motion.div
-               key={i}
-               className="p-3 transition border rounded-xl hover:shadow-lg"
-               whileHover={{ scale: 1.05 }}
-             >
-               <img
-                 src={p.image_url1}
-                 alt={p.name}
-                 className="object-cover w-full h-32 rounded-lg"
-               />
-  
-             </motion.div>
-=======
 
 
 
@@ -575,7 +560,6 @@ const ProductDetail = () => {
               />
 
             </motion.div>
->>>>>>> 4563166d586a7e675add2af731996dd284ab05be
           ))}
         </div>
       </div>

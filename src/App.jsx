@@ -109,10 +109,10 @@ const App = () => {
             </ProtectedUserRoute>
           }
         />
-<<<<<<< HEAD
+
         <Route path="/myorders" element={<Myorders />} />
         <Route path="/profile" element={<UserProfile />} />
-=======
+
 
         <Route
           path="/wishlist"
@@ -129,7 +129,7 @@ const App = () => {
 
 
 
->>>>>>> 4563166d586a7e675add2af731996dd284ab05be
+
 
         {/* Always accessible for suspended users */}
         <Route path="/suspend" element={<SuspendPage />} />

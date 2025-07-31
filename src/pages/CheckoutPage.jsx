@@ -2,15 +2,11 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaMoneyCheckAlt } from 'react-icons/fa';
-
-import axios from 'axios';
-import Payment from '../components/Payment';
-<<<<<<< HEAD
 import AddAddressModal from '../components/AddAddressModal ';
+import axios from 'axios';
 
-=======
+import Payment from '../components/Payment';
 import { useAuth } from '../context/AuthContext';
->>>>>>> 4563166d586a7e675add2af731996dd284ab05be
 
 const CheckoutPage = () => {
   const { user } = useAuth();
@@ -24,12 +20,6 @@ const CheckoutPage = () => {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-<<<<<<< HEAD
-  const amount = 665.33; // Example amount
-  const userId = 1; // Replace with logged-in user id dynamically
-  const productIds = [101, 102]; // Replace with cart product IDs dynamically
-
-=======
   const shippingAmount = 299.99; // Fixed shipping amount
   const totalAmount = totalPrice + shippingAmount; // Total amount including shipping
 
@@ -39,20 +29,10 @@ const CheckoutPage = () => {
 
   console.log("selected items", selectedItems);
   // Save order to backend DB after payment success
->>>>>>> 4563166d586a7e675add2af731996dd284ab05be
   const saveOrderToDB = async (payhereRef) => {
     try {
       const orderData = {
         orderId: orderID,
-<<<<<<< HEAD
-        amount: amount.toFixed(2),
-        currency: 'LKR',
-        status: 'PAID',
-        paymentMethod: 'PAYHERE',
-        userId: userId,
-        productIds: productIds,
-        payhereRef: payhereRef,
-=======
         amount: totalAmount.toFixed(2),
         currency: 'LKR',
         status: 'PAID',
@@ -67,7 +47,6 @@ const CheckoutPage = () => {
         size: item.size,
         customMaterial: item.customMaterial,
       }))
->>>>>>> 4563166d586a7e675add2af731996dd284ab05be
       };
 
       const response = await axios.post('http://localhost:8080/api/admin/orders', orderData);
@@ -80,10 +59,7 @@ const CheckoutPage = () => {
     }
   };
 
-<<<<<<< HEAD
-=======
   // Callback after successful payment
->>>>>>> 4563166d586a7e675add2af731996dd284ab05be
   const handlePaymentSuccess = (payhereRef) => {
     setPaymentSuccess(true);
     saveOrderToDB(payhereRef);
@@ -101,7 +77,6 @@ const CheckoutPage = () => {
 
       <div className="max-w-6xl mx-auto mb-8">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          {/* Address & Payment Method */}
           <div className="lg:col-span-3 space-y-6">
             <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
@@ -110,10 +85,7 @@ const CheckoutPage = () => {
                 </div>
                 <h2 className="text-lg font-semibold text-gray-800">Shipping Address</h2>
               </div>
-              <button
-                onClick={() => setShowModal(true)}
-                className="text-blue-500 hover:text-blue-600 font-medium"
-              >
+              <button onClick={() => setShowModal(true)} className="text-blue-500 hover:text-blue-600 font-medium">
                 + Add new address
               </button>
               {showModal && <AddAddressModal onClose={() => setShowModal(false)} />}
@@ -135,7 +107,6 @@ const CheckoutPage = () => {
               </label>
             </div>
 
-            {/* Order Items */}
             <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-9 h-9 bg-[#1B4965] rounded-full flex items-center justify-center">
@@ -143,19 +114,6 @@ const CheckoutPage = () => {
                 </div>
                 <h2 className="text-lg font-semibold text-gray-800">Order Items</h2>
               </div>
-<<<<<<< HEAD
-              <div className="flex gap-4 p-4 rounded-2xl bg-gray-50">
-                <img
-                  src="https://ae01.alicdn.com/kf/S91eec62f57a84ac7ae22b0e75c5a5e9cT.jpg"
-                  alt="product"
-                  className="w-20 h-20 rounded-xl object-cover"
-                />
-                <div className="flex-1">
-                  <h3 className="font-medium text-gray-800 text-sm">Car Luminous Tire Valve Caps</h3>
-                  <p className="text-gray-500 text-xs">Delivery: Jul 09 - 18</p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <span className="text-green-600 text-sm font-medium">4pcs green</span>
-=======
               {selectedItems.map((item) => (
                 <div key={item.id} className="flex gap-4 p-4 mb-3 rounded-2xl bg-gray-50">
                   <img
@@ -169,14 +127,12 @@ const CheckoutPage = () => {
                     <div className="flex items-center gap-4 mt-2">
                       <span className="text-green-600 text-sm font-medium">${(item.price * item.quantity).toFixed(2)}</span>
                     </div>
->>>>>>> 4563166d586a7e675add2af731996dd284ab05be
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Order Summary & Payment */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -203,26 +159,10 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
-<<<<<<< HEAD
-              {/* Payment Component */}
-=======
->>>>>>> 4563166d586a7e675add2af731996dd284ab05be
               <Payment
                 firstname="John"
                 lastname="Doe"
                 email="john@example.com"
-<<<<<<< HEAD
-                paymentTitle="Car Luminous Tire Valve Caps"
-                amount={amount}
-                setPaymentSuccess={handlePaymentSuccess}
-                setOrderID={setOrderID}
-                disabled={isProcessing}
-                className={`w-full py-3 rounded-xl font-medium transition-colors ${
-                  isProcessing
-                    ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-=======
                 paymentTitle="Order Payment"
                 amount={totalAmount}
                 setPaymentSuccess={handlePaymentSuccess}  // Pass the handler here!
@@ -231,7 +171,6 @@ const CheckoutPage = () => {
                 disabled={isProcessing}
                 className={`w-full py-3 rounded-xl font-medium transition-colors ${isProcessing ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700'
                   }`}
->>>>>>> 4563166d586a7e675add2af731996dd284ab05be
               >
                 {isProcessing ? 'Processing...' : 'Pay with PayHere'}
               </Payment>
