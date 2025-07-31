@@ -398,8 +398,7 @@ const ProductDetail = () => {
           <div className="flex items-center gap-3">
             <SiShell className="text-xl text-black-600" />
             <p className="text-base">
-              <strong>Materials Used:</strong> {product.material},{" "}
-              {product.material}
+              <strong>Materials Used:</strong>        {product.material}
             </p>
           </div>
 

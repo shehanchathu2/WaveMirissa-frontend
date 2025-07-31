@@ -27,6 +27,7 @@ const CheckoutPage = () => {
   const productIds = selectedItems.map(item => item.id);
   // Replace or get from user context/auth if you have one
 
+  console.log("selected items", selectedItems);
   // Save order to backend DB after payment success
   const saveOrderToDB = async (payhereRef) => {
     try {
@@ -39,6 +40,13 @@ const CheckoutPage = () => {
         userId: user.id,
         productIds: productIds,
         payhereRef: payhereRef,
+
+         items: selectedItems.map(item => ({
+        productId: item.id,
+        quantity: item.quantity,
+        size: item.size,
+        customMaterial: item.customMaterial,
+      }))
       };
 
       const response = await axios.post('http://localhost:8080/api/admin/orders', orderData);
