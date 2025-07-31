@@ -169,29 +169,7 @@ const Shop = () => {
               </ul>
             </div>
 
-            {/* Material Filter */}
-            {/* <div>
-              <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Material</h2>
-              <ul className="space-y-1 text-sm text-gray-700">
-                {materials.map((m, index) => (
-                  <li key={index}>
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="material"
-                        value={m}
-                        checked={selectedMaterial === m}
-                        onChange={() => handleMaterials(m)}
-                        className="accent-[#1b4765]"
-                      />
-                      {m}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div> */}
-
-            {/* Gender Filter */}
+            
             <div>
               <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Gender</h2>
               <ul className="space-y-1 text-sm text-gray-700">

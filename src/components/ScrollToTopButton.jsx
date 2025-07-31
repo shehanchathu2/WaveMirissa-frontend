@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { FaArrowUp } from "react-icons/fa6";
+
 const ScrollToTopButton = () => {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowScrollToTop(true);
-      } else {
-        setShowScrollToTop(false);
-      }
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      setShowScrollToTop(scrollTop > 300);
     };
 
     window.addEventListener('scroll', handleScroll);

@@ -425,12 +425,6 @@ useEffect(() => {
       <div className="mt-10 lg:col-span-2">
         <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          
-            
-
-
-
-
            {likeproudct.map((p,i) => (
              <motion.div
                key={i}

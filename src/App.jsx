@@ -50,7 +50,7 @@ const App = () => {
       <Routes>
 
 
-           {/* Public Routes */}
+        {/* Public Routes */}
         <Route
           path="/"
           element={
@@ -107,8 +107,8 @@ const App = () => {
             </ProtectedUserRoute>
           }
         />
-            <Route path="/myorders" element={<Myorders/>} />
-            <Route path="/profile" element={<UserProfile/>} />
+        <Route path="/myorders" element={<Myorders />} />
+        <Route path="/profile" element={<UserProfile />} />
 
         {/* Always accessible for suspended users */}
         <Route path="/suspend" element={<SuspendPage />} />

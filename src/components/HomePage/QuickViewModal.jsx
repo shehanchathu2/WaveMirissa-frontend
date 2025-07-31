@@ -1,6 +1,7 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaStar } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const QuickViewModal = ({ isOpen, onClose, product }) => {
   if (!isOpen || !product) return null;
@@ -50,7 +51,22 @@ const QuickViewModal = ({ isOpen, onClose, product }) => {
                 <div><span className="font-semibold">Gender:</span> {product.gender}</div>
                 <div><span className="font-semibold">Available:</span> {product.available ? 'Yes' : 'No'}</div>
               </div>
+
+
+
+              <div className="w-full max-w-md">
+  <Link to={`/shop/product/${product.product_id}`}>
+    <button
+      className="w-full bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300"
+    >
+      Buy Now
+    </button>
+  </Link>
+</div>
+
+
             </div>
+
           </div>
         </motion.div>
       </motion.div>
