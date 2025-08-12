@@ -6,6 +6,7 @@ import EditProductModal from '../../components/admin/EditProductModal';
 import { toast } from 'react-toastify';
 import ProductModel from '../../components/admin/ProductModel';
 import WaveMirissaLoader from '../../components/WaveMirissaLoader';
+import ConfirmationModal from '../../components/admin/ConfirmationModal';
 
 const Products = () => {
   const [modalContent, setModalContent] = useState(null);
@@ -31,17 +32,40 @@ const Products = () => {
     fetchProducts();
   }, []);
 
-  const handleDeleteProduct = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) return;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
-    try {
-      await axios.delete(`http://localhost:8080/product/delete/${id}`);
-      fetchProducts();
-      toast.success('Product deleted successfully!');
-    } catch (error) {
-      toast.error('Failed to delete product!');
-    }
+  const openDeleteModal = (itemId) => {
+  console.log('itemId passed to openDeleteModal:', itemId);
+  setItemToDelete(itemId);
+  setIsModalOpen(true);
+};
+
+
+  const confirmDelete = async () => {
+  if (!itemToDelete) {
+    toast.error('No product selected for deletion.');
+    return;
+  }
+
+  try {
+    await axios.delete(`http://localhost:8080/product/delete/${itemToDelete}`);
+    fetchProducts();
+    toast.success('Product deleted successfully!');
+  } catch (error) {
+    toast.error('Failed to delete product!');
+  } finally {
+    setIsModalOpen(false);
+    setItemToDelete(null);
+  }
+};
+
+
+  const cancelDelete = () => {
+    setIsModalOpen(false);
+    setItemToDelete(null);
   };
+
 
   const handleProductAdded = (newProduct) => {
     setProducts((prev) => [...prev, newProduct]);
@@ -83,7 +107,7 @@ const Products = () => {
               <td className="px-6 py-4 text-sm text-gray-700">{index + 1}</td>
               <td className="px-6 py-4 text-sm font-medium text-gray-900">{product.name}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{product.category}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">${product.price}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">Rs {product.price}</td>
               <td className="px-6 py-4 text-sm text-center">
                 <span className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${product.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                   {product.producttype}
@@ -162,7 +186,7 @@ const Products = () => {
                 </button>
                 <button
                   className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
-                  onClick={() => handleDeleteProduct(product.product_id)}
+                  onClick={() => openDeleteModal(product.product_id)}
                 >
                   Delete
                 </button>
@@ -189,6 +213,14 @@ const Products = () => {
           onUpdate={fetchProducts}
         />
       )}
+
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        title="Delete Item"
+        message="Are you sure you want to remove this item from your cart?"
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+      />
 
       {modalContent && (
         <ProductModel title={modalContent.title} onClose={() => setModalContent(null)}>

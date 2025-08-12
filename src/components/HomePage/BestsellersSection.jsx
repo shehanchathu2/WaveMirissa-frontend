@@ -66,7 +66,7 @@ export default function BestsellersSection({
                 onClick={() => setActiveCategory(t)}
                 aria-pressed={activeCategory === t}
               >
-                {t}
+                 {t.charAt(0).toUpperCase() + t.slice(1)}
               </button>
             ))}
           </div>

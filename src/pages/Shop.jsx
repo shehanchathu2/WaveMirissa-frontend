@@ -195,7 +195,7 @@ const Shop = () => {
                         onChange={() => handleCategoryChange(cat)}
                         className="accent-[#1b4765]"
                       />
-                      {cat}
+                      {cat.charAt(0).toUpperCase() + cat.slice(1)}
                     </label>
                   </li>
                 ))}
@@ -218,7 +218,7 @@ const Shop = () => {
                         onChange={() => handletypeChange(t)}
                         className="accent-[#1b4765]"
                       />
-                      {t}
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
                     </label>
                   </li>
                 ))}
@@ -262,7 +262,7 @@ const Shop = () => {
                         onChange={() => handleGenderChange(g)}
                         className="accent-[#1b4765]"
                       />
-                      {g}
+                      {g.charAt(0).toUpperCase() + g.slice(1)}
                     </label>
                   </li>
                 ))}
@@ -325,7 +325,7 @@ const Shop = () => {
                     </motion.button>
                   </div>
                   <div className="pt-3 px-4 py-4">
-                    <h3 className="font-semibold text-gray-800 text-sm">{product.name}</h3>
+                    <h3 className="font-semibold text-gray-800 text-sm">{product.name.charAt(0).toUpperCase() + product.name.slice(1)}</h3>
                     <div className="flex items-center text-yellow-400 text-xs">
                       {[...Array(5)].map((_, i) => (
                         <AiFillStar key={i} className={i < 4 ? '' : 'text-gray-300'} />

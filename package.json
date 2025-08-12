@@ -19,6 +19,7 @@
     "cloudinary": "^2.7.0",
     "framer-motion": "^12.16.0",
     "lucide-react": "^0.515.0",
+    "partycles": "^1.2.6",
     "payhere-embed-sdk": "^0.7.7",
     "payhere-js-sdk": "^1.0.2",
     "react": "^19.1.0",
