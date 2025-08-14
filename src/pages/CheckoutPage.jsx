@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { FaMoneyCheckAlt } from 'react-icons/fa';
 import AddAddressModal from '../components/AddAddressModal ';
 import axios from 'axios';
-
+import toast from 'react-hot-toast';
 import Payment from '../components/Payment';
 import { useAuth } from '../context/AuthContext';
 
@@ -52,10 +52,10 @@ const CheckoutPage = () => {
       const response = await axios.post('http://localhost:8080/api/admin/orders', orderData);
 
       console.log('Order saved:', response.data);
-      alert('Order saved successfully!');
+      toast.success('Order saved successfully!');
     } catch (error) {
       console.error('Error saving order:', error);
-      alert('Failed to save order.');
+      toast.error('Failed to save order.');
     }
   };
 

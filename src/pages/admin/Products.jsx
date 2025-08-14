@@ -20,6 +20,7 @@ const Products = () => {
     try {
       const res = await axios.get('http://localhost:8080/product/Allproducts');
       setProducts(res.data);
+      console.log(res.data);
     } catch (error) {
       console.error('Error fetching products:', error);
       toast.error('Failed to fetch products.');
@@ -36,29 +37,29 @@ const Products = () => {
   const [itemToDelete, setItemToDelete] = useState(null);
 
   const openDeleteModal = (itemId) => {
-  console.log('itemId passed to openDeleteModal:', itemId);
-  setItemToDelete(itemId);
-  setIsModalOpen(true);
-};
+    console.log('itemId passed to openDeleteModal:', itemId);
+    setItemToDelete(itemId);
+    setIsModalOpen(true);
+  };
 
 
   const confirmDelete = async () => {
-  if (!itemToDelete) {
-    toast.error('No product selected for deletion.');
-    return;
-  }
+    if (!itemToDelete) {
+      toast.error('No product selected for deletion.');
+      return;
+    }
 
-  try {
-    await axios.delete(`http://localhost:8080/product/delete/${itemToDelete}`);
-    fetchProducts();
-    toast.success('Product deleted successfully!');
-  } catch (error) {
-    toast.error('Failed to delete product!');
-  } finally {
-    setIsModalOpen(false);
-    setItemToDelete(null);
-  }
-};
+    try {
+      await axios.delete(`http://localhost:8080/product/delete/${itemToDelete}`);
+      fetchProducts();
+      toast.success('Product deleted successfully!');
+    } catch (error) {
+      toast.error('Failed to delete product!');
+    } finally {
+      setIsModalOpen(false);
+      setItemToDelete(null);
+    }
+  };
 
 
   const cancelDelete = () => {
@@ -154,19 +155,28 @@ const Products = () => {
                                 <span className="text-sm font-semibold text-gray-800 block mb-1">Material</span>
                                 <span className="text-gray-700">{product.material}</span>
                               </div>
-                              {/* <div className="bg-gray-50 p-3 rounded-md">
-                                <span className="text-sm font-semibold text-gray-800 block mb-1">Quantity</span>
-                                <span className="text-gray-700 font-medium">{product.quantity}</span>
-                              </div> */}
-                            </div>
-                            <div className="bg-gray-50 p-3 rounded-md">
+                             <div className="bg-gray-50 p-3 rounded-md">
                               <span className="text-sm font-semibold text-gray-800 block mb-1">Customization</span>
                               <span className="text-gray-700">{product.customization}</span>
                             </div>
+                            </div>
+                            
                             <div className="bg-gray-50 p-3 rounded-md">
                               <span className="text-sm font-semibold text-gray-800 block mb-1">Description</span>
                               <p className="text-gray-700 leading-relaxed">{product.description}</p>
                             </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="bg-gray-50 p-3 rounded-md">
+                                <span className="text-sm font-semibold text-gray-800 block mb-1">Face Shape</span>
+                                <p className="text-gray-700 leading-relaxed">{product.faceShapeTags}</p>
+                              </div>
+                               <div className="bg-gray-50 p-3 rounded-md">
+                                <span className="text-sm font-semibold text-gray-800 block mb-1">Skine Tone</span>
+                                <span className="text-gray-700 font-medium">{product.skinToneTags}</span>
+                              </div>
+                            </div>
+
                           </div>
                         </div>
                       )

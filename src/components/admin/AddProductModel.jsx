@@ -26,6 +26,8 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
         image_url3: '',
         previewUrls: [],
         customizations: [],
+        faceShape: '',
+        skinTone: ''
     });
 
     const [customizations, setCustomizations] = useState([]);
@@ -84,37 +86,39 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
     };
 
     const handleSubmit = async () => {
-        if (formData.previewUrls.length < 1) {
-            toast.error('Please upload at least one image before submitting.');
-            return;
-        }
+    if (formData.previewUrls.length < 1) {
+        toast.error('Please upload at least one image before submitting.');
+        return;
+    }
 
-        const selectedIds = (formData.customizations || []).map((id) => parseInt(id, 10));
+    const selectedIds = (formData.customizations || []).map((id) => parseInt(id, 10));
 
-        const payload = {
-            ...formData,
-            producttype: formData.producttype ? formData.producttype.toLowerCase() : null,
-            price: parseFloat(formData.price),
-            customizations: customizations
-                .filter((c) => selectedIds.includes(c.id))
-                .map((c) => ({ item_id: c.id })),
-        };
-
-        console.log('Submitting payload:', payload);
-
-        try {
-            const res = await axios.post('http://localhost:8080/product/addproducts', payload, {
-                headers: { 'Content-Type': 'application/json' },
-            });
-
-            onProductAdded(res.data);
-            onClose();
-            toast.success('Product added successfully!');
-        } catch (err) {
-            console.error(err);
-            toast.error('Failed to add product.');
-        }
+    const payload = {
+        ...formData,
+        faceShapeTags: formData.faceShape || null,  // Map to backend field
+        skinToneTags: formData.skinTone || null,    // Map to backend field
+        producttype: formData.producttype ? formData.producttype.toLowerCase() : null,
+        price: parseFloat(formData.price),
+        customizations: customizations
+            .filter((c) => selectedIds.includes(c.id))
+            .map((c) => ({ item_id: c.id })),
     };
+
+    console.log('Submitting payload:', payload);
+
+    try {
+        const res = await axios.post('http://localhost:8080/product/addproducts', payload, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        onProductAdded(res.data);
+        onClose();
+        toast.success('Product added successfully!');
+    } catch (err) {
+        console.error(err);
+        toast.error('Failed to add product.');
+    }
+};
 
     return (
         <motion.div
@@ -231,6 +235,37 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="unisex">Unisex</option>
+                    </select>
+
+
+                    {/* Face Shape Dropdown */}
+                    <select
+                        name="faceShape"
+                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md"
+                        value={formData.faceShape}
+                        onChange={handleChange}
+                    >
+                        <option value="">Select Face Shape</option>
+                        <option value="Oval">Oval</option>
+                        <option value="Round">Round</option>
+                        <option value="Heart">Heart</option>
+                        <option value="Square">Square</option>
+                        <option value="Diamond">Diamond</option>
+                    </select>
+
+                    {/* Skin Tone Dropdown */}
+                    <select
+                        name="skinTone"
+                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md"
+                        value={formData.skinTone}
+                        onChange={handleChange}
+                    >
+                        <option value="">Select Skin Tone</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Deep">Deep</option>
+                        <option value="Warm">Warm</option>
+                        <option value="Cool">Cool</option>
                     </select>
 
                     <label htmlFor="image-upload" className="flex items-center justify-center gap-2 w-full p-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-100 transition">
