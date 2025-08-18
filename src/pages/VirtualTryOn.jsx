@@ -34,63 +34,70 @@ const VirtualTryOn = () => {
 
 
 
-  const fetchQuestions = useCallback(async () => {
+    const fetchQuestions = useCallback(async () => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      const response = await fetch("http://localhost:8080/virtual_try_on/api/questions"); // Spring Boot endpoint
+      const data = await response.json();
 
-    const mockQuestions = [
-      {
-        id: '1',
-        text: 'Describe your ideal evening and what makes it perfect for you.',
-        type: 'text',
-        placeholder: 'Share what your perfect evening looks like...'
-      },
-      {
-        id: '2',
-        text: 'What draws you to jewelry and accessories? Explain your connection to them.',
-        type: 'text',
-        placeholder: 'Tell us about your relationship with jewelry...'
-      },
-      {
-        id: '3',
-        text: 'How important is it for you to stand out in a crowd? Describe your approach to being noticed.',
-        type: 'text',
-        placeholder: 'Share your thoughts on standing out...'
-      },
-      {
-        id: '4',
-        text: 'Describe your personal style and what influences your fashion choices.',
-        type: 'text',
-        placeholder: 'Tell us about your unique style...'
-      },
-      {
-        id: '5',
-        text: 'What role does tradition play in your life? How do you balance tradition with innovation?',
-        type: 'text',
-        placeholder: 'Share your perspective on tradition and change...'
-      }
-      
-    ];
+      // Shuffle function
+      const shuffleArray = (arr) => arr
+        .map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
 
-    setQuestions(mockQuestions);
-    setIsLoading(false);
+      // Randomize questions
+      const randomized = shuffleArray(data.questions);
+
+      // Transform backend response into your frontend format
+      const formattedQuestions = randomized.map((q, index) => ({
+        id: (index + 1).toString(),
+        text: q,
+        type: 'text',
+        placeholder: 'Write your answer here...'
+      }));
+
+      setQuestions(formattedQuestions);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+
 
   const submitAnswers = useCallback(async (answers) => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // Send answers to backend
+      const response = await fetch("http://localhost:8080/virtual_try_on/api/answers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(answers)
+      });
 
-    const mockPersonality = {
-      personality: 'Open-Hearted & Creative',
-      
-      description: 'You are highly creative, curious, and open to new experiences. You appreciate beauty and artistic expression in all its forms, with a natural inclination toward meaningful connections and authentic self-expression.'
-    };
+      const result = await response.text();
+      console.log("Backend response:", result);
 
-    setPersonality(mockPersonality);
-    setAnswers(answers);
-    setCurrentStep('upload');
-    setIsLoading(false);
+      // Mock personality detection for now
+      const mockPersonality = {
+        personality: 'Open-Hearted & Creative',
+        description: 'You are highly creative, curious, and open to new experiences...'
+      };
+
+      setPersonality(mockPersonality);
+      setAnswers(answers);
+      setCurrentStep('upload');
+    } catch (error) {
+      console.error("Error submitting answers:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
 
  
 
