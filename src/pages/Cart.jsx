@@ -44,6 +44,8 @@ const Cart = () => {
           initialSelected[item.id] = true;
         });
 
+        console.log(res.data);
+
         setQuantities(initialQuantities);
         setSelectedItems(initialSelected);
       }
@@ -117,14 +119,18 @@ const Cart = () => {
     if (!cart?.items) return;
 
     const selectedItemsData = cart.items
-      .filter(item => selectedItems[item.id])
+      .filter(item => selectedItems[item.id]) 
       .map(item => ({
-        ...item,
+        productId: item.productId,   
+        productName: item.productName,
+        price: item.price,
+        imageUrl: item.imageUrl,
         quantity: quantities[item.id] ?? item.quantity,
         size: item.size,
         customMaterial: item.customMaterial,
       }));
 
+    console.log("selected ids", selectedItemsData.map(item => item.productId));
     navigate('/checkout', {
       state: {
         selectedItems: selectedItemsData,

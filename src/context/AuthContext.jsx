@@ -39,10 +39,10 @@ export const AuthProvider = ({ children }) => {
       console.log(loggedInUser)
       localStorage.setItem('user', JSON.stringify(loggedInUser));
 
-      if (loggedInUser.role === 'admin') {
+      if (loggedInUser.role === 'ADMIN') {
         navigate('/admin');
         toast.success('Admin login successful!');
-      } else if(loggedInUser.role === 'user'){
+      } else if(loggedInUser.role === 'USER'){
         navigate('/');
         toast.success('Login successful!');
       } else {
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'ADMIN';
 
   const logout = () => {
     setUser(null);
