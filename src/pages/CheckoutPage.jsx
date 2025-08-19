@@ -21,7 +21,7 @@ const CheckoutPage = () => {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // ✅ Added loading state
+
   const [loading, setLoading] = useState(false);
 
   const shippingAmount = 299.99; // Fixed shipping amount
@@ -60,7 +60,7 @@ const CheckoutPage = () => {
         productIds: selectedItems.map(item => item.productId),
         payhereRef: payhereRef,
         items: selectedItems.map(item => ({
-          productId: item.productId,  // ✅ correct product reference
+          productId: item.productId, 
           quantity: item.quantity,
           size: item.size,
           customMaterial: item.customMaterial,
@@ -79,7 +79,7 @@ const CheckoutPage = () => {
       console.error('Error saving order:', error);
       alert('Failed to save order.');
     } finally {
-      setLoading(false);  // ✅ reset loading after request
+      setLoading(false);  
     }
   };
 
