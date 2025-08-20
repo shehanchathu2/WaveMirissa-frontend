@@ -19,7 +19,9 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
             setFormData({
                 ...product,
                 faceShapeTags: product.faceShapeTags || "",
-                skinToneTags: product.skinToneTags || "",
+                skinToneTags: product.skinToneTags
+                    ? product.skinToneTags.charAt(0).toUpperCase() + product.skinToneTags.slice(1).toLowerCase()
+                    : "",
                 previewUrls: [
                     product.image_url1 || "",
                     product.image_url2 || "",
@@ -30,12 +32,12 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
         console.log("Product data loaded:", product);
     }, [product]);
 
-
     useEffect(() => {
         const fetchCustomizations = async () => {
             try {
-                const response = await axios.get("http://localhost:8080/customizations");
+                const response = await axios.get(`http://localhost:8080/customizations`);
                 setCustomizations(response.data);
+                console.log(response.data)
             } catch (error) {
                 console.error("Error fetching customizations:", error);
             }
@@ -96,18 +98,30 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
     };
 
     const handleSubmit = async () => {
+        // Prepare payload
         const payload = {
             ...formData,
-            price: parseFloat(formData.price),
+            price: parseFloat(formData.price) || 0,
+            faceShapeTags: formData.faceShapeTags || "",
+            skinToneTags: formData.skinToneTags || "",
+            personalize: formData.personalize || "",
             producttype: formData.producttype ? formData.producttype.toLowerCase() : null,
         };
+
+        // Handle type-specific fields
         if (formData.producttype === "ring") {
             payload.size = parseFloat(formData.size || 0);
         } else if (formData.producttype === "neckless") {
             payload.length = parseFloat(formData.length || 0);
         }
 
+        // Map image preview URLs to correct fields
+        payload.image_url1 = formData.previewUrls[0] || "";
+        payload.image_url2 = formData.previewUrls[1] || "";
+        payload.image_url3 = formData.previewUrls[2] || "";
+
         try {
+            console.log("Payload to update:", payload); // debug: check payload
             await axios.put(`http://localhost:8080/product/update/${formData.product_id}`, payload);
             toast.success("Product updated!");
             onUpdate();
@@ -171,40 +185,7 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                                 className="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 rounded-md"
                                 placeholder="Material"
                             />
-                            <label className="block text-sm font-medium text-gray-700">
-                                Face Shape
-                            </label>
-                            <select
-                                name="faceShapeTags"
-                                value={formData.faceShapeTags || ""}
-                                onChange={handleChange}
-                                className="border border-gray-300 p-2 w-full rounded-md focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="">Select Face Shape</option>
-                                <option value="Oval">Oval</option>
-                                <option value="Round">Round</option>
-                                <option value="Square">Square</option>
-                                <option value="Heart">Heart</option>
-                                <option value="Diamond">Diamond</option>
-                            </select>
 
-                            <label className="block text-sm font-medium text-gray-700">
-                                Skin Tone
-                            </label>
-                            <select
-                                name="skinToneTags"
-                                value={formData.skinToneTags || ""}
-                                onChange={handleChange}
-                                className="border border-gray-300 p-2 w-full rounded-md focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="">Select Skin Tone</option>
-                                <option value="Fair">Fair</option>
-                                <option value="Light">Light</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Tan">Tan</option>
-                                <option value="Deep">Deep</option>
-                                <option value="Cool">Cool</option>
-                            </select>
 
 
                             {/* Product Type */}
@@ -299,6 +280,56 @@ export default function EditProductModal({ isOpen, onClose, product, onUpdate })
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                                 <option value="unisex">Unisex</option>
+                            </select>
+
+                            <label className="block text-sm font-medium text-gray-700">
+                                Face Shape
+                            </label>
+                            <select
+                                name="faceShapeTags"
+                                value={formData.faceShapeTags || ""}
+                                onChange={handleChange}
+                                className="border border-gray-300 p-2 w-full rounded-md focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="">Select Face Shape</option>
+                                <option value="Oval">Oval</option>
+                                <option value="Round">Round</option>
+                                <option value="Square">Square</option>
+                                <option value="Heart">Heart</option>
+                                <option value="Diamond">Diamond</option>
+                            </select>
+
+                            <label className="block text-sm font-medium text-gray-700">
+                                Skin Tone
+                            </label>
+                            <select
+                                name="skinToneTags"
+                                value={formData.skinToneTags || ""}
+                                onChange={handleChange}
+                                className="border border-gray-300 p-2 w-full rounded-md focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="">Select Skin Tone</option>
+                                <option value="Fair">Fair</option>
+                                <option value="Light">Light</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Tan">Tan</option>
+                                <option value="Deep">Deep</option>
+                                <option value="Cool">Cool</option>
+                            </select>
+
+                            <label className="block text-sm font-medium text-gray-700">Personalize</label>
+                            <select
+                                name="personalize"
+                                value={formData.personalize}
+                                onChange={handleChange}
+                                className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
+                            >
+                                <option value="NONE">None</option>
+                                <option value="elegant&minimalist">elegant&minimalist</option>
+                                <option value="bold&confident">bold&confident</option>
+                                <option value="nature-loving&earthy">nature-loving&earthy</option>
+                                <option value="trendy&chic">trendy&chic</option>
+                                <option value="artistic&creative">artistic&creative</option>
                             </select>
 
                             {/* Image Previews */}
