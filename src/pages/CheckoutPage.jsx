@@ -8,6 +8,8 @@ import { calculateFinalPrice } from "../utils/calcPrice";
 
 import Payment from '../components/Payment';
 import { useAuth } from '../context/AuthContext';
+import { v4 as uuidv4 } from 'uuid'; 
+
 
 const CheckoutPage = () => {
   const { user } = useAuth();
@@ -17,10 +19,11 @@ const CheckoutPage = () => {
   const totalPrice = state?.totalPrice || 0;
 
   const [showModal, setShowModal] = useState(false);
-  const [orderID, setOrderID] = useState('');
+
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const [orderID, setOrderID] = useState(`ORD-${uuidv4().slice(0,8).toUpperCase()}`);
 
   const [loading, setLoading] = useState(false);
 
