@@ -1,17 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import {
-  Sparkles,
-  ArrowLeft
-} from 'lucide-react';
+import { Sparkles, ArrowLeft } from 'lucide-react';
 import QuestionStep from '../components/PersonalityVirtualTryon/QuestionStep';
 import ImageUploadStep from '../components/PersonalityVirtualTryon/ImageUploadStep';
 import ResultsStep from '../components/PersonalityVirtualTryon/ResultsStep';
 import ProgressBar from '../components/PersonalityVirtualTryon/ProgressBar';
 import sampleimg from '../assets/sampleProducts/CowrieShell-Black_01.jpeg';
-import {SizeSelectionModal} from '../components/ProductPreview/SizeSelectionModal';
-
-
-
+import { SizeSelectionModal } from '../components/ProductPreview/SizeSelectionModal';
 
 const VirtualTryOn = () => {
   const [currentStep, setCurrentStep] = useState('questionnaire');
@@ -23,103 +17,99 @@ const VirtualTryOn = () => {
   const [processedImage, setProcessedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSizeModal, setShowSizeModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  const isSizeModalOpen = showSizeModal; // Alias for clarity
+  const isSizeModalOpen = showSizeModal;
   const handleCloseSizeModal = () => setShowSizeModal(false);
+
   const handleCheckout = () => {
-    // Add your checkout logic here
     console.log("Proceed to checkout with:", jewelry);
     setShowSizeModal(false);
   };
 
-
+  const handleAnswerChange = (questionId, value) => {
+    setAnswers(prev =>
+      prev.map(a => (a.id === questionId ? { ...a, answer: value } : a))
+    );
+  };
 
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      const res = await fetch("http://localhost:8080/virtual_try_on/api/questions");
+      const data = await res.json();
 
-    const mockQuestions = [
-      {
-        id: '1',
-        text: 'Describe your ideal evening and what makes it perfect for you.',
-        type: 'text',
-        placeholder: 'Share what your perfect evening looks like...'
-      },
-      {
-        id: '2',
-        text: 'What draws you to jewelry and accessories? Explain your connection to them.',
-        type: 'text',
-        placeholder: 'Tell us about your relationship with jewelry...'
-      },
-      {
-        id: '3',
-        text: 'How important is it for you to stand out in a crowd? Describe your approach to being noticed.',
-        type: 'text',
-        placeholder: 'Share your thoughts on standing out...'
-      },
-      {
-        id: '4',
-        text: 'Describe your personal style and what influences your fashion choices.',
-        type: 'text',
-        placeholder: 'Tell us about your unique style...'
-      },
-      {
-        id: '5',
-        text: 'What role does tradition play in your life? How do you balance tradition with innovation?',
-        type: 'text',
-        placeholder: 'Share your perspective on tradition and change...'
+      if (data && data.questions) {
+        const formatted = data.questions
+          .map((q, idx) => ({
+            id: String(idx + 1),
+            text: q,
+            type: 'text',
+            placeholder: 'Your answer here...',
+            answer: ''
+          }))
+          .sort(() => Math.random() - 0.5);
+
+        setQuestions(formatted);
+        setAnswers(formatted);
       }
-      
-    ];
-
-    setQuestions(mockQuestions);
+    } catch (err) {
+      console.error("Error fetching questions:", err);
+    }
     setIsLoading(false);
   }, []);
 
-  const submitAnswers = useCallback(async (answers) => {
+  const submitAnswers = useCallback(async () => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    setErrorMessage(null);
+    try {
+      const payload = answers.map(a => ({
+        questionId: a.id,
+        questionText: a.text,
+        answer: a.answer?.trim() || ''
+      }));
 
-    const mockPersonality = {
-      personality: 'Open-Hearted & Creative',
-      
-      description: 'You are highly creative, curious, and open to new experiences. You appreciate beauty and artistic expression in all its forms, with a natural inclination toward meaningful connections and authentic self-expression.'
-    };
+      console.log("📤 Sending answers to backend:", payload);
 
-    setPersonality(mockPersonality);
-    setAnswers(answers);
-    setCurrentStep('upload');
+      const res = await fetch("http://localhost:8080/virtual_try_on/api/answers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+
+      if (data && data.personality) {
+        setPersonality({ personality: data.personality });
+        setCurrentStep('upload');
+      } else {
+        setErrorMessage("Cannot find personality, please try again.");
+        setCurrentStep('error');
+      }
+
+    } catch (err) {
+      console.error("Error submitting answers:", err);
+      setErrorMessage("Cannot find personality, please try again.");
+      setCurrentStep('error');
+    }
     setIsLoading(false);
-  }, []);
-
- 
+  }, [answers]);
 
   const processImage = useCallback(async (imageData) => {
     setIsLoading(true);
     setUploadedImage(imageData);
     await new Promise(resolve => setTimeout(resolve, 3000));
 
-  const JewelryItem = {
-  id: 'classic-necklace',
-  name: 'Cowrie Shell Necklace with Black String',
-  basePrice: 800,
-  image: sampleimg,
-  description: 'Like you, this necklace embodies creativity and openness to the unknown. The moonstone reflects your intuitive nature and love for artistic beauty, while the rose gold speaks to your warm, agreeable personality. Each time light catches the stone, it mirrors your curious spirit exploring new possibilities. This piece perfectly complements your authentic self-expression and appreciation for meaningful beauty.',
-  materials: ['Black String', 'Sea-shells'],
-  type: 'necklace',
-  gender: 'women'
-  
-  
-};
-
-    //const mockJewelry = {
-      //name: 'Celestial Dreams Necklace',
-    //   style: 'Modern Bohemian',
-    //   material: 'Rose Gold with Moonstone',
-    //   description: 'A delicate piece featuring ethereal moonstone gems that catch light beautifully, designed for those who appreciate subtle elegance with mystical undertones.',
-    //   imageUrl: 'https://images.pexels.com/photos/1454169/pexels-photo-1454169.jpeg?auto=compress&cs=tinysrgb&w=400',
-    //   personalizedStory: 'Like you, this necklace embodies creativity and openness to the unknown. The moonstone reflects your intuitive nature and love for artistic beauty, while the rose gold speaks to your warm, agreeable personality. Each time light catches the stone, it mirrors your curious spirit exploring new possibilities. This piece perfectly complements your authentic self-expression and appreciation for meaningful beauty.'
-    // };
+    const JewelryItem = {
+      id: 'classic-necklace',
+      name: 'Cowrie Shell Necklace with Black String',
+      basePrice: 800,
+      image: sampleimg,
+      description: 'Like you, this necklace embodies creativity and openness to the unknown...',
+      materials: ['Black String', 'Sea-shells'],
+      type: 'necklace',
+      gender: 'women'
+    };
 
     setJewelry(JewelryItem);
     setProcessedImage(imageData);
@@ -135,6 +125,7 @@ const VirtualTryOn = () => {
     setJewelry(null);
     setProcessedImage(null);
     setQuestions([]);
+    setErrorMessage(null);
   }, []);
 
   const goToStep = useCallback((step) => {
@@ -152,6 +143,7 @@ const VirtualTryOn = () => {
       case 'questionnaire': return 1;
       case 'upload': return 2;
       case 'results': return 3;
+      case 'error': return 2;
       default: return 1;
     }
   };
@@ -176,13 +168,17 @@ const VirtualTryOn = () => {
         <div className="max-w-4xl mx-auto mt-8">
           {currentStep === 'questionnaire' && (
             <QuestionStep
-              questionnaire={questionnaire}
+              questionnaire={questionnaire.map((q, idx) => ({
+                ...q,
+                answer: answers[idx]?.answer || ''
+              }))}
               onSubmit={submitAnswers}
+              onAnswerChange={handleAnswerChange}
               isLoading={isLoading}
             />
           )}
 
-          {currentStep === 'upload' && (
+          {currentStep === 'upload' && personalityType && (
             <ImageUploadStep
               onImageUpload={processImage}
               onBack={() => goToStep('questionnaire')}
@@ -198,42 +194,34 @@ const VirtualTryOn = () => {
               setShowSizeModal={setShowSizeModal}
               processedImage={processedImage}
               onReset={resetJourney}
-              
             />
+          )}
+
+          {currentStep === 'error' && errorMessage && (
+            <div className="max-w-2xl p-8 mx-auto bg-red-50 border border-red-400 text-red-700 rounded-xl text-center">
+              <p className="text-lg font-semibold mb-6">{errorMessage}</p>
+              <button
+                onClick={() => goToStep('questionnaire')}
+                className="px-6 py-3 bg-red-500 text-white rounded-xl font-semibold hover:bg-red-600"
+              >
+                Back to Questions
+              </button>
+            </div>
           )}
         </div>
 
-        {currentStep !== 'questionnaire' && currentStep !== 'results' && (
-          <div className="fixed transform -translate-x-1/2 bottom-8 left-1/2">
-            <div className="flex items-center px-6 py-3 space-x-4 bg-white rounded-full shadow-lg">
-              <button
-                onClick={() => {
-                  if (currentStep === 'upload') goToStep('questionnaire');
-                }}
-                className="flex items-center text-gray-600 transition-colors hover:text-teal-700"
-              >
-                <ArrowLeft className="w-4 h-4 mr-1" />
-                Back
-              </button>
-            </div>
-          </div>
+        {showSizeModal && (
+          <SizeSelectionModal
+            isOpen={isSizeModalOpen}
+            onClose={handleCloseSizeModal}
+            jewelry={jewelry}
+            totalPrice={jewelry.basePrice}
+            onCheckout={handleCheckout}
+          />
         )}
       </div>
-      {showSizeModal && (
-      <SizeSelectionModal
-              isOpen={isSizeModalOpen}
-              onClose={handleCloseSizeModal}
-              
-              jewelry={jewelry}
-              totalPrice={jewelry.basePrice}
-              onCheckout={handleCheckout}
-              
-               
-            />
-      )}
     </div>
-    
   );
-}
+};
 
 export default VirtualTryOn;

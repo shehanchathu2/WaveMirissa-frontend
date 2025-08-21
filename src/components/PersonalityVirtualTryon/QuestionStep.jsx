@@ -1,26 +1,20 @@
 import React, { useState } from 'react';
 import { ArrowRight, Loader, MessageCircle } from 'lucide-react';
 
-const QuestionStep = ({ questionnaire, onSubmit, isLoading }) => {
+const QuestionStep = ({ questionnaire, onSubmit, onAnswerChange, isLoading }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState({});
 
   const currentQuestion = questionnaire[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questionnaire.length - 1;
-  const canProceed = currentQuestion && answers[currentQuestion.id]?.trim().length > 0;
 
-  const handleAnswer = (questionId, value) => {
-    setAnswers(prev => ({ ...prev, [questionId]: value }));
-  };
+  const canProceed = currentQuestion && currentQuestion.answer?.trim().length > 0;
 
   const handleNext = () => {
-    if (isLastQuestion && canProceed) {
-      const answerArray = Object.entries(answers).map(([questionId, value]) => ({
-        questionId,
-        value
-      }));
-      onSubmit(answerArray);
-    } else if (canProceed) {
+    if (!canProceed) return;
+
+    if (isLastQuestion) {
+      onSubmit();
+    } else {
       setCurrentQuestionIndex(prev => prev + 1);
     }
   };
@@ -29,6 +23,10 @@ const QuestionStep = ({ questionnaire, onSubmit, isLoading }) => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
     }
+  };
+
+  const handleChange = (value) => {
+    onAnswerChange(currentQuestion.id, value);
   };
 
   if (isLoading && questionnaire.length === 0) {
@@ -72,19 +70,17 @@ const QuestionStep = ({ questionnaire, onSubmit, isLoading }) => {
         <h2 className="mb-6 text-2xl font-bold leading-relaxed text-gray-900">
           {currentQuestion.text}
         </h2>
-
-        {/* Text Answer */}
         <div className="space-y-4">
           <textarea
-            value={answers[currentQuestion.id] || ''}
-            onChange={(e) => handleAnswer(currentQuestion.id, e.target.value)}
+            value={currentQuestion.answer || ''}
+            onChange={(e) => handleChange(e.target.value)}
             placeholder={currentQuestion.placeholder || 'Share your thoughts...'}
             className="w-full h-32 p-4 transition-colors duration-200 border-2 border-gray-200 resize-none rounded-xl focus:border-teal-600 focus:outline-none"
             rows={4}
           />
           <div className="flex items-center justify-between text-sm text-gray-500">
             <span>Take your time to express yourself authentically</span>
-            <span>{answers[currentQuestion.id]?.length || 0} characters</span>
+            <span>{currentQuestion.answer?.length || 0} characters</span>
           </div>
         </div>
       </div>
