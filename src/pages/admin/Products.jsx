@@ -6,6 +6,7 @@ import EditProductModal from '../../components/admin/EditProductModal';
 import { toast } from 'react-toastify';
 import ProductModel from '../../components/admin/ProductModel';
 import WaveMirissaLoader from '../../components/WaveMirissaLoader';
+import ConfirmationModal from '../../components/admin/ConfirmationModal';
 
 const Products = () => {
   const [modalContent, setModalContent] = useState(null);
@@ -19,6 +20,7 @@ const Products = () => {
     try {
       const res = await axios.get('http://localhost:8080/product/Allproducts');
       setProducts(res.data);
+      console.log(res.data);
     } catch (error) {
       console.error('Error fetching products:', error);
       toast.error('Failed to fetch products.');
@@ -31,17 +33,40 @@ const Products = () => {
     fetchProducts();
   }, []);
 
-  const handleDeleteProduct = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) return;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+
+  const openDeleteModal = (itemId) => {
+    console.log('itemId passed to openDeleteModal:', itemId);
+    setItemToDelete(itemId);
+    setIsModalOpen(true);
+  };
+
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) {
+      toast.error('No product selected for deletion.');
+      return;
+    }
 
     try {
-      await axios.delete(`http://localhost:8080/product/delete/${id}`);
+      await axios.delete(`http://localhost:8080/product/delete/${itemToDelete}`);
       fetchProducts();
       toast.success('Product deleted successfully!');
     } catch (error) {
       toast.error('Failed to delete product!');
+    } finally {
+      setIsModalOpen(false);
+      setItemToDelete(null);
     }
   };
+
+
+  const cancelDelete = () => {
+    setIsModalOpen(false);
+    setItemToDelete(null);
+  };
+
 
   const handleProductAdded = (newProduct) => {
     setProducts((prev) => [...prev, newProduct]);
@@ -83,7 +108,7 @@ const Products = () => {
               <td className="px-6 py-4 text-sm text-gray-700">{index + 1}</td>
               <td className="px-6 py-4 text-sm font-medium text-gray-900">{product.name}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{product.category}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">${product.price}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">Rs {product.price}</td>
               <td className="px-6 py-4 text-sm text-center">
                 <span className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${product.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                   {product.producttype}
@@ -130,19 +155,28 @@ const Products = () => {
                                 <span className="text-sm font-semibold text-gray-800 block mb-1">Material</span>
                                 <span className="text-gray-700">{product.material}</span>
                               </div>
-                              {/* <div className="bg-gray-50 p-3 rounded-md">
-                                <span className="text-sm font-semibold text-gray-800 block mb-1">Quantity</span>
-                                <span className="text-gray-700 font-medium">{product.quantity}</span>
-                              </div> */}
-                            </div>
-                            <div className="bg-gray-50 p-3 rounded-md">
+                             <div className="bg-gray-50 p-3 rounded-md">
                               <span className="text-sm font-semibold text-gray-800 block mb-1">Customization</span>
                               <span className="text-gray-700">{product.customization}</span>
                             </div>
+                            </div>
+                            
                             <div className="bg-gray-50 p-3 rounded-md">
                               <span className="text-sm font-semibold text-gray-800 block mb-1">Description</span>
                               <p className="text-gray-700 leading-relaxed">{product.description}</p>
                             </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="bg-gray-50 p-3 rounded-md">
+                                <span className="text-sm font-semibold text-gray-800 block mb-1">Face Shape</span>
+                                <p className="text-gray-700 leading-relaxed">{product.faceShapeTags}</p>
+                              </div>
+                               <div className="bg-gray-50 p-3 rounded-md">
+                                <span className="text-sm font-semibold text-gray-800 block mb-1">Skine Tone</span>
+                                <span className="text-gray-700 font-medium">{product.skinToneTags}</span>
+                              </div>
+                            </div>
+
                           </div>
                         </div>
                       )
@@ -162,7 +196,7 @@ const Products = () => {
                 </button>
                 <button
                   className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
-                  onClick={() => handleDeleteProduct(product.product_id)}
+                  onClick={() => openDeleteModal(product.product_id)}
                 >
                   Delete
                 </button>
@@ -189,6 +223,14 @@ const Products = () => {
           onUpdate={fetchProducts}
         />
       )}
+
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        title="Delete Item"
+        message="Are you sure you want to remove this item from your cart?"
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+      />
 
       {modalContent && (
         <ProductModel title={modalContent.title} onClose={() => setModalContent(null)}>

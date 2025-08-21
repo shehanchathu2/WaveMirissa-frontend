@@ -26,6 +26,9 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
         image_url3: '',
         previewUrls: [],
         customizations: [],
+        faceShape: '',
+        skinTone: '',
+        personalize: ''
     });
 
     const [customizations, setCustomizations] = useState([]);
@@ -93,6 +96,9 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
 
         const payload = {
             ...formData,
+            faceShapeTags: formData.faceShape || null,  // Map to backend field
+            skinToneTags: formData.skinTone || null,    // Map to backend field
+            personalize: formData.personalize || null,
             producttype: formData.producttype ? formData.producttype.toLowerCase() : null,
             price: parseFloat(formData.price),
             customizations: customizations
@@ -109,7 +115,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
 
             onProductAdded(res.data);
             onClose();
-            toast.success('Product added successfully!');
+            // toast.success('Product added successfully!');
         } catch (err) {
             console.error(err);
             toast.error('Failed to add product.');
@@ -143,13 +149,13 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
 
                 <div className="overflow-y-auto px-6 py-6 space-y-5 scrollbar-hide">
                     <label className="block text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" name="name" placeholder="Name" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.name} onChange={handleChange} />
+                    <input type="text" name="name" placeholder="Name" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.name} onChange={handleChange} />
 
                     <label className="block text-sm font-medium text-gray-700">Material</label>
-                    <input type="text" name="material" placeholder="Material" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.material} onChange={handleChange} />
+                    <input type="text" name="material" placeholder="Material" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.material} onChange={handleChange} />
 
                     <label className="block text-sm font-medium text-gray-700">Type</label>
-                    <select name="producttype" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.producttype} onChange={handleChange}>
+                    <select name="producttype" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.producttype} onChange={handleChange}>
                         <option value="">Select Type</option>
                         <option value="ring">Ring</option>
                         <option value="neckless">Neckless</option>
@@ -160,12 +166,12 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                     </select>
 
                     <label className="block text-sm font-medium text-gray-700">Price</label>
-                    <input type="number" name="price" placeholder="Price" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.price} onChange={handleChange} />
+                    <input type="number" name="price" placeholder="Price" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.price} onChange={handleChange} />
 
-                    <label className="block text-sm font-medium text-gray-700">Category</label>
+                    <label className="block text-sm font-medium text-gray-700 ">Category</label>
                     <select
                         name="category"
-                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md"
+                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
                         value={formData.category}
                         onChange={handleChange}
                     >
@@ -176,7 +182,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                     </select>
 
                     <label className="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea name="description" placeholder="Description" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.description} onChange={handleChange}></textarea>
+                    <textarea name="description" placeholder="Description" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.description} onChange={handleChange}></textarea>
 
                     <label className="block text-sm font-medium text-gray-700 mb-2">Customizations</label>
                     <div className="space-y-2">
@@ -189,7 +195,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                                         updated[index] = e.target.value;
                                         setFormData((prev) => ({ ...prev, customizations: updated }));
                                     }}
-                                    className="border border-gray-300 p-2 rounded-md w-full"
+                                    className="border border-gray-300 p-2 rounded-md w-full focus:outline-none"
                                 >
                                     <option value="">Select a Customization</option>
                                     {customizations.map((item) => (
@@ -225,12 +231,66 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         </button>
                     </div>
 
-                    <label className="block text-sm font-medium text-gray-700">Gender</label>
-                    <select name="gender" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.gender} onChange={handleChange}>
+                    <label className="block text-sm font-medium text-gray-700 ">Gender</label>
+                    <select name="gender" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.gender} onChange={handleChange}>
                         <option value="">Select Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="unisex">Unisex</option>
+                    </select>
+
+                    
+
+
+                    {/* Face Shape Dropdown */}
+                    <label className="block text-sm font-medium text-gray-700 ">Face Shape</label>
+                    <select
+                        name="faceShape"
+                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
+                        value={formData.faceShape}
+                        onChange={handleChange}
+                    >
+                        <option value="">Select Face Shape</option>
+                        <option value="Oval">Oval</option>
+                        <option value="Round">Round</option>
+                        <option value="Heart">Heart</option>
+                        <option value="Square">Square</option>
+                        <option value="Diamond">Diamond</option>
+                    </select>
+
+                    
+
+                    {/* Skin Tone Dropdown */}
+                    <label className="block text-sm font-medium text-gray-700">Skin Tone</label>
+                    <select
+                        name="skinTone"
+                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
+                        value={formData.skinTone}
+                        onChange={handleChange}
+                    >
+                        <option value="">Select Skin Tone</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Deep">Deep</option>
+                        <option value="Warm">Warm</option>
+                        <option value="Cool">Cool</option>
+                    </select>
+
+                    
+
+                    <label className="block text-sm font-medium text-gray-700">Personalize</label>
+                    <select
+                        name="personalize" 
+                        value={formData.personalize}
+                        onChange={handleChange}
+                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
+                    >
+                        <option value="NONE">None</option>
+                        <option value="elegant&minimalist">elegant&minimalist</option>
+                        <option value="bold&confident">bold&confident</option>
+                        <option value="nature-loving&earthy">nature-loving&earthy</option>
+                        <option value="trendy&chic">trendy&chic</option>
+                        <option value="artistic&creative">artistic&creative</option>
                     </select>
 
                     <label htmlFor="image-upload" className="flex items-center justify-center gap-2 w-full p-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-100 transition">

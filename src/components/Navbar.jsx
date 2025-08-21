@@ -90,13 +90,13 @@ const Navbar = () => {
               <div className="flex items-center space-x-4">
                 <button
                   onClick={openLogin}
-                  className="text-gray-700 hover:text-[#1B4965] focus:outline-none"
+                  className="text-gray-700 hover:text-[#1B4965] focus:outline-none cursor-pointer"
                 >
                   Login
                 </button>
                 <button
                   onClick={openSignup}
-                  className="bg-[#1B4965] text-white rounded-xs px-4 py-1 hover:bg-[#003e64] focus:outline-none"
+                 className="bg-[#1B4965] text-white rounded-xs px-4 py-1 hover:bg-[#003e64] focus:outline-none cursor-pointer"
                 >
                   Sign Up
                 </button>

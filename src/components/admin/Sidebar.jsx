@@ -118,13 +118,7 @@ const Sidebar = () => {
       {/* Footer Section */}
       <div className="px-6 py-8 border-t border-[#2d5a7b]/50 bg-gradient-to-t from-black/10 to-transparent">
         {/* Logout Button */}
-        <button className="group w-full flex items-center gap-3 px-4 py-3 mb-6 text-[#b8d4e6] hover:text-white transition-all duration-300 hover:bg-white/10 rounded-xl
-         " onClick={handleLogout}>
-          <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-red-500/20 group-hover:bg-red-500/30 transition-colors duration-300">
-            <FaSignOutAlt className="text-sm text-red-400" />
-          </div>
-          Logout
-        </button>
+       
 
 
 
@@ -138,7 +132,13 @@ const Sidebar = () => {
           Back to User Site
         </button>
 
-
+ <button className="group w-full flex items-center gap-3 px-4 py-3 mb-6 text-[#b8d4e6] hover:text-white transition-all duration-300 hover:bg-white/10 rounded-xl
+         " onClick={handleLogout}>
+          <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-red-500/20 group-hover:bg-red-500/30 transition-colors duration-300">
+            <FaSignOutAlt className="text-sm text-red-400" />
+          </div>
+          Logout
+        </button>
 
         {/* User Profile */}
         <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 cursor-pointer group">

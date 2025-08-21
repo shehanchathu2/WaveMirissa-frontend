@@ -32,7 +32,8 @@ const OrderCard = ({ order, onReviewSubmit }) => {
   };
 
   const getStatusText = () => {
-    switch (order.status) {
+    const status = order.orderStatus?.toLowerCase(); // convert to lowercase
+    switch (status) {
       case 'processing':
         return 'Processing';
       case 'shipped':
@@ -45,7 +46,8 @@ const OrderCard = ({ order, onReviewSubmit }) => {
   };
 
   const getStatusColor = () => {
-    switch (order.status) {
+    const status = order.orderStatus?.toLowerCase(); // convert to lowercase
+    switch (status) {
       case 'processing':
         return 'text-orange-600 bg-orange-50';
       case 'shipped':
@@ -56,6 +58,8 @@ const OrderCard = ({ order, onReviewSubmit }) => {
         return 'text-gray-600 bg-gray-50';
     }
   };
+
+  console.log("order card ", order);
 
   const openReviewModal = (product) => {
     setSelectedProduct(product);
@@ -80,8 +84,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
     );
   };
 
-  const totalItems = order.products.reduce((sum, product) => sum + product.quantity, 0);
-
+  const totalItems = order.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
   return (
     <>
       <div className="overflow-hidden transition-shadow duration-200 border border-gray-100 shadow-sm bg-stone-100 rounded-xl hover:shadow-md">
@@ -89,24 +92,24 @@ const OrderCard = ({ order, onReviewSubmit }) => {
         <div className="p-6 border-b bg-stone-100 border-stone-200">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Order #{order.orderNumber}</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Order #{order.orderId}</h3>
               <p className="text-sm text-gray-600">Placed on {new Date(order.date).toLocaleDateString()}</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-[#1b4965] mb-1">${order.total}</div>
+              <div className="text-2xl font-bold text-[#1b4965] mb-1">${order.amount}</div>
               <div className="text-sm text-gray-600">{totalItems} item{totalItems !== 1 ? 's' : ''}</div>
             </div>
           </div>
         </div>
 
         {/* Processing Orders - Table Layout */}
-        {(order.status === 'processing' || order.status === 'shipped') && (
+        {(order.orderStatus === 'PROCESSING' || order.orderStatus === 'SHIPPED') && (
           <div className="p-6">
             {/* Table Header */}
             <div className="grid grid-cols-3 gap-6 pb-3 mb-4 border-b border-stone-200">
               <div className="flex items-center gap-2 font-medium text-gray-900">
                 <Package size={18} className="text-[#1b4965]" />
-                Items
+                {order.orderStatus === 'PROCESSING' ? 'Processing Items' : 'Shipped Items'} 
               </div>
               <div className="font-medium text-center text-gray-900">Status</div>
               <div className="font-medium text-center text-gray-900">Tracking</div>
@@ -116,29 +119,29 @@ const OrderCard = ({ order, onReviewSubmit }) => {
             <div className="grid items-start grid-cols-3 gap-6">
               {/* Column 1: Items with Review Buttons */}
               <div className="space-y-4">
-                {order.products.map((product) => (
-                  <div key={product.id} className="p-4 border rounded-lg bg-stone-50 border-stone-200">
+                {order.items.map((item) => (
+                  <div key={item.id} className="p-4 border rounded-lg bg-stone-50 border-stone-200">
                     <div className="flex items-center gap-3 mb-3">
                       <img
-                        src={product.image}
-                        alt={product.name}
+                        src={item.productImageUrl}
+                        alt={item.productName}
                         className="object-cover w-20 h-20 rounded-lg shadow-sm"
                       />
                       <div className="flex-1">
-                        <h5 className="text-sm font-medium text-gray-900">{product.name}</h5>
+                        <h5 className="text-sm font-medium text-gray-900">{item.productName}</h5>
                         <div className="flex items-center gap-3 mt-1">
-                          <p className="text-xs text-gray-600">Qty: {product.quantity}</p>
-                          <p className="text-xs font-semibold text-[#1b4965]">${product.price}</p>
+                          <p className="text-xs text-gray-600">Qty: {item.quantity}</p>
+                          <p className="text-xs font-semibold text-[#1b4965]">${item.price}</p>
                         </div>
                       </div>
                     </div>
-                    {/* <button
+                    <button
                       onClick={() => openReviewModal(product)}
                       className="w-full inline-flex items-center justify-center gap-2 text-xs text-[#1b4965] hover:text-white hover:bg-[#1b4965] font-medium transition-colors bg-white border border-[#1b4965] px-3 py-2 rounded-lg"
                     >
                       <MessageCircle size={12} />
                       Add Review
-                    </button> */}
+                    </button>
                   </div>
                 ))}
               </div>
@@ -201,61 +204,61 @@ const OrderCard = ({ order, onReviewSubmit }) => {
             <div className="p-6">
               <h4 className="flex items-center gap-2 mb-4 font-medium text-gray-900">
                 <Package size={18} className="text-[#1b4965]" />
-                Items ({order.products.length})
+                Items ({order.items.length})
               </h4>
               <div className="pl-2 space-y-4">
-                {order.products.map((product) => (
-                  <div key={product.id} className="flex items-center gap-4 p-4 border rounded-lg bg-stone-50 border-stone-200">
+                {order.items.map((item) => (
+                  <div key={item.id} className="flex items-center gap-4 p-4 border rounded-lg bg-stone-50 border-stone-200">
                     <img
-                      src={product.image}
-                      alt={product.name}
+                      src={item.image}
+                      alt={item.productName}
                       className="object-cover w-20 h-20 rounded-lg shadow-sm"
                     />
                     <div className="flex-1">
-  <div className="flex items-start justify-between gap-4">
-    {/* Left Side: Product Info */}
-    <div>
-      <h5 className="font-medium text-gray-900">{product.name}</h5>
-      <div className="flex items-center gap-4 mt-1">
-        <p className="text-sm text-gray-600">Qty: {product.quantity}</p>
-        <p className="text-sm font-semibold text-[#1b4965]">${product.price}</p>
-      </div>
-    </div>
+                      <div className="flex items-start justify-between gap-4">
+                        {/* Left Side: Product Info */}
+                        <div>
+                          <h5 className="font-medium text-gray-900">{product.productName}</h5>
+                          <div className="flex items-center gap-4 mt-1">
+                            <p className="text-sm text-gray-600">Qty: {product.quantity}</p>
+                            <p className="text-sm font-semibold text-[#1b4965]">${product.price}</p>
+                          </div>
+                        </div>
 
-    {/* Right Side: Review Section */}
-    <div className="pr-8 mt-1 text-right">
-      {product.review ? (
-        <div className="space-y-2">
-          <div className="flex items-center justify-end gap-2">
-            {renderStars(product.review.rating)}
-            <span className="text-xs text-gray-500">
-              {new Date(product.review.date).toLocaleDateString()}
-            </span>
-          </div>
-          {product.review.comment && (
-            <p className="text-xs text-gray-700 bg-white p-2 rounded border-l-4 border-[#1b4965]">
-              "{product.review.comment}"
-            </p>
-          )}
-          <button
-            onClick={() => openReviewModal(product)}
-            className="text-xs text-[#1b4965] hover:text-[#0d3548] font-medium transition-colors"
-          >
-            Edit Review
-          </button>
-        </div>
-      ) : (
-        <button
-          onClick={() => openReviewModal(product)}
-          className="inline-flex items-center gap-2 text-sm text-[#1b4965] hover:text-[#0d3548] font-medium transition-colors"
-        >
-          <MessageCircle size={14} />
-          Write a Review
-        </button>
-      )}
-    </div>
-  </div>
-</div>
+                        {/* Right Side: Review Section */}
+                        <div className="pr-8 mt-1 text-right">
+                          {product.review ? (
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-end gap-2">
+                                {renderStars(product.review.rating)}
+                                <span className="text-xs text-gray-500">
+                                  {new Date(product.review.date).toLocaleDateString()}
+                                </span>
+                              </div>
+                              {product.review.comment && (
+                                <p className="text-xs text-gray-700 bg-white p-2 rounded border-l-4 border-[#1b4965]">
+                                  "{product.review.comment}"
+                                </p>
+                              )}
+                              <button
+                                onClick={() => openReviewModal(product)}
+                                className="text-xs text-[#1b4965] hover:text-[#0d3548] font-medium transition-colors"
+                              >
+                                Edit Review
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => openReviewModal(product)}
+                              className="inline-flex items-center gap-2 text-sm text-[#1b4965] hover:text-[#0d3548] font-medium transition-colors"
+                            >
+                              <MessageCircle size={14} />
+                              Write a Review
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
 
                   </div>
                 ))}
@@ -298,7 +301,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
           <div className="px-6 pt-6 pb-6 border-t border-stone-200">
             <div className="p-4 border rounded-lg bg-stone-50 border-stone-200">
               <h5 className="mb-4 font-medium text-gray-900">Order Details</h5>
-              
+
               {/* Shipping Address */}
               <div className="mb-4">
                 <div className="flex items-start gap-2 mb-2">
@@ -306,9 +309,9 @@ const OrderCard = ({ order, onReviewSubmit }) => {
                   <div>
                     <p className="text-sm font-medium text-gray-900">Shipping Address</p>
                     <div className="mt-1 text-sm text-gray-700">
-                      <p>{order.shippingAddress.name}</p>
-                      <p>{order.shippingAddress.street}</p>
-                      <p>{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}</p>
+                      {/* <p>{order.shippingAddress.name}</p> */}
+                      {/* <p>{order.shippingAddress.street}</p>
+                      <p>{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}</p> */}
                     </div>
                   </div>
                 </div>
@@ -317,16 +320,16 @@ const OrderCard = ({ order, onReviewSubmit }) => {
               {/* Order Summary */}
               <div className="pt-4 border-t border-stone-300">
                 <div className="space-y-2">
-                  {order.products.map((product) => (
-                    <div key={product.id} className="flex justify-between text-sm">
-                      <span className="text-gray-700">{product.name} × {product.quantity}</span>
-                      <span className="font-medium text-gray-900">${(product.price * product.quantity).toFixed(2)}</span>
+                  {order.items.map((item) => (
+                    <div key={item.id} className="flex justify-between text-sm">
+                      <span className="text-gray-700">{item.productName} × {item.quantity}</span>
+                      <span className="font-medium text-gray-900">${(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
                   <div className="pt-2 mt-3 border-t border-stone-300">
                     <div className="flex justify-between font-semibold">
                       <span className="text-gray-900">Total</span>
-                      <span className="text-[#1b4965] text-lg">${order.total}</span>
+                      <span className="text-[#1b4965] text-lg">${order.amount}</span>
                     </div>
                   </div>
                 </div>

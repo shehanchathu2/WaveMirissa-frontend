@@ -1,12 +1,13 @@
+// src/pages/AI_Suggestion.jsx
 import React, { useState } from 'react';
-import { Upload, Camera, CheckCircle, AlertCircle, Sparkles, User, Palette, Eye, Star } from 'lucide-react';
+import { FaUpload, FaCheckCircle, FaExclamationCircle, FaEye, FaStar } from 'react-icons/fa';
+import { HiSparkles } from 'react-icons/hi';
 import FaceImageUpload from '../components/AI_suggestion/FaceImageUpload';
 import AnalysisResults from '../components/AI_suggestion/AnalysisResults';
 import JewelryRecommendations from '../components/AI_suggestion/JewelryRecommendations';
 import LoadingSpinner from '../components/AI_suggestion/LoadingSpinner';
 
-
-  function AI_Suggetion() {
+function AI_Suggestion() {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
@@ -19,24 +20,28 @@ import LoadingSpinner from '../components/AI_suggestion/LoadingSpinner';
     setError(null);
 
     try {
-      // Simulate API call - replace with actual backend integration
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      // Mock analysis results - replace with actual API response
-      const mockData = {
-        faceShape: 'Oval',
-        skinTone: 'Warm',
-        confidence: 0.89,
-        features: {
-          jawline: 'Soft',
-          cheekbones: 'Prominent',
-          foreheadWidth: 'Balanced'
-        }
-      };
-      
-      setAnalysisData(mockData);
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      const response = await fetch('http://localhost:8080/api/recommendations/analyze', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errMsg = await response.text();
+        throw new Error(errMsg || 'Failed to analyze image.');
+      }
+
+      const data = await response.json(); // { faceShape, skinTone, products[] }
+
+      setAnalysisData({
+        faceShape: data.faceShape,
+        skinTone: data.skinTone,
+        recommendedProducts: data.products
+      });
     } catch (err) {
-      setError('Failed to analyze image. Please try again.');
+      setError(err.message);
     } finally {
       setIsAnalyzing(false);
     }
@@ -57,20 +62,20 @@ import LoadingSpinner from '../components/AI_suggestion/LoadingSpinner';
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-r from-[#1B4965] to-[#2563EB] rounded-xl flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-white" />
+                <HiSparkles className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-slate-900">AI Facial Analysis</h1>
                 <p className="text-sm text-slate-600">Personalized jewelry recommendations</p>
               </div>
             </div>
-            
+
             {uploadedImage && (
               <button
                 onClick={handleReset}
-                className="flex items-center px-4 py-2 space-x-2 transition-colors duration-200 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700"
+                className="flex items-center px-4 py-2 space-x-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700"
               >
-                <Upload className="w-4 h-4" />
+                <FaUpload className="w-4 h-4" />
                 <span>New Analysis</span>
               </button>
             )}
@@ -88,27 +93,27 @@ import LoadingSpinner from '../components/AI_suggestion/LoadingSpinner';
             <div className="flex items-center justify-center mb-8 space-x-8">
               <div className="flex items-center space-x-2">
                 <div className="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full">
-                  <CheckCircle className="w-5 h-5 text-white" />
+                  <FaCheckCircle className="w-5 h-5 text-white" />
                 </div>
                 <span className="font-medium text-green-600">Photo Uploaded</span>
               </div>
-              
+
               <div className="w-16 h-1 rounded bg-slate-200">
                 <div className={`h-1 bg-[#1B4965] rounded transition-all duration-1000 ${
                   isAnalyzing || analysisData ? 'w-full' : 'w-0'
                 }`}></div>
               </div>
-              
+
               <div className="flex items-center space-x-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 ${
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   analysisData ? 'bg-green-500' : isAnalyzing ? 'bg-[#1B4965]' : 'bg-slate-300'
                 }`}>
                   {analysisData ? (
-                    <CheckCircle className="w-5 h-5 text-white" />
+                    <FaCheckCircle className="w-5 h-5 text-white" />
                   ) : isAnalyzing ? (
-                    <Eye className="w-5 h-5 text-white animate-pulse" />
+                    <FaEye className="w-5 h-5 text-white animate-pulse" />
                   ) : (
-                    <Eye className="w-5 h-5 text-slate-500" />
+                    <FaEye className="w-5 h-5 text-slate-500" />
                   )}
                 </div>
                 <span className={`font-medium ${
@@ -117,21 +122,21 @@ import LoadingSpinner from '../components/AI_suggestion/LoadingSpinner';
                   {analysisData ? 'Analysis Complete' : isAnalyzing ? 'Analyzing...' : 'Analysis Pending'}
                 </span>
               </div>
-              
+
               <div className="w-16 h-1 rounded bg-slate-200">
                 <div className={`h-1 bg-[#1B4965] rounded transition-all duration-1000 delay-500 ${
                   analysisData ? 'w-full' : 'w-0'
                 }`}></div>
               </div>
-              
+
               <div className="flex items-center space-x-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 ${
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   analysisData ? 'bg-green-500' : 'bg-slate-300'
                 }`}>
                   {analysisData ? (
-                    <CheckCircle className="w-5 h-5 text-white" />
+                    <FaCheckCircle className="w-5 h-5 text-white" />
                   ) : (
-                    <Star className="w-5 h-5 text-slate-500" />
+                    <FaStar className="w-5 h-5 text-slate-500" />
                   )}
                 </div>
                 <span className={`font-medium ${
@@ -144,7 +149,6 @@ import LoadingSpinner from '../components/AI_suggestion/LoadingSpinner';
 
             {/* Image and Analysis */}
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-              {/* Uploaded Image */}
               <div className="p-6 bg-white shadow-lg rounded-2xl">
                 <h2 className="mb-4 text-xl font-semibold text-slate-900">Your Photo</h2>
                 <div className="relative">
@@ -164,11 +168,10 @@ import LoadingSpinner from '../components/AI_suggestion/LoadingSpinner';
                 </div>
               </div>
 
-              {/* Analysis Status */}
               <div className="space-y-6">
                 {error && (
                   <div className="flex items-center p-6 space-x-3 border border-red-200 bg-red-50 rounded-xl">
-                    <AlertCircle className="flex-shrink-0 w-6 h-6 text-red-500" />
+                    <FaExclamationCircle className="w-6 h-6 text-red-500" />
                     <p className="text-red-700">{error}</p>
                   </div>
                 )}
@@ -183,7 +186,7 @@ import LoadingSpinner from '../components/AI_suggestion/LoadingSpinner';
                       </div>
                     </div>
                     <div className="w-full h-2 bg-blue-200 rounded-full">
-                      <div className="h-2 bg-blue-600 rounded-full animate-pulse" style={{width: '60%'}}></div>
+                      <div className="h-2 bg-blue-600 rounded-full animate-pulse" style={{ width: '60%' }}></div>
                     </div>
                   </div>
                 )}
@@ -194,11 +197,11 @@ import LoadingSpinner from '../components/AI_suggestion/LoadingSpinner';
               </div>
             </div>
 
-            {/* Jewelry Recommendations */}
             {analysisData && (
-              <JewelryRecommendations 
+              <JewelryRecommendations
                 faceShape={analysisData.faceShape}
                 skinTone={analysisData.skinTone}
+                products={analysisData.recommendedProducts}
               />
             )}
           </div>
@@ -208,4 +211,4 @@ import LoadingSpinner from '../components/AI_suggestion/LoadingSpinner';
   );
 }
 
-export default AI_Suggetion;
+export default AI_Suggestion;
