@@ -44,7 +44,7 @@ const Delivery = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[#f9fbfd]">
       <h1 className="text-3xl font-bold mb-4">Manage Delivery</h1>
       <p className="text-gray-600 mb-6">
         Update shipment details, tracking visibility, and email tracking info.

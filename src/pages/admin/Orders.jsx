@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import OrderModal from '../../components/admin/OrderModel';
 import ConfirmationModal from '../../components/admin/ConfirmationModal';
 import SendEmailModal from '../../components/admin/SendEmailModel';
+import axios from 'axios';
 
 const Orders = () => {
   const [modalContent, setModalContent] = useState(null);
@@ -69,8 +70,47 @@ const Orders = () => {
     setShowConfirmModal(false);
   };
 
+
+
+  const loginUser = JSON.parse(localStorage.getItem("user"));
+  const token = loginUser.jwt;
+  console.log(token)
+  const newRole = loginUser.role;
+
+  const getPaidOrders = async () => {
+    // setLoading(true);
+    try {
+      const res = await axios.get("http://localhost:8080/api/admin/orders/paid", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      setOrders(res.data);
+    } catch (err) {
+      console.error("Failed to fetch paid orders", err);
+      alert("Failed to fetch paid orders. Make sure you are logged in as Admin.");
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getPaidOrders();
+  }, []);
+
+
+
+
+
+
+
+
+
+
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[#f9fbfd] h-full">
       <h1 className="text-3xl font-bold mb-4">Manage Orders</h1>
       <p className="text-gray-600 mb-6">View and process customer orders here.</p>
 
@@ -320,7 +360,7 @@ const Orders = () => {
 
                       <td className="border-b px-6 py-4 space-x-2">
 
-                        
+
                         <button
                           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
                           onClick={() => setIsEmailModalOpen(true)}
@@ -393,7 +433,7 @@ const Orders = () => {
         </ConfirmationModal>
       )}
 
-       <SendEmailModal
+      <SendEmailModal
         isOpen={isEmailModalOpen}
         onClose={() => setIsEmailModalOpen(false)}
         data={Data}

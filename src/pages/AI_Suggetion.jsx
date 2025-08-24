@@ -6,12 +6,19 @@ import FaceImageUpload from '../components/AI_suggestion/FaceImageUpload';
 import AnalysisResults from '../components/AI_suggestion/AnalysisResults';
 import JewelryRecommendations from '../components/AI_suggestion/JewelryRecommendations';
 import LoadingSpinner from '../components/AI_suggestion/LoadingSpinner';
+import axios from 'axios';
+import ErrorModal from '../components/AI_suggestion/ErrorModal';
+import Confetti from "react-confetti";
+
 
 function AI_Suggestion() {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
   const [error, setError] = useState(null);
+  const [showCongrats, setShowCongrats] = useState(false);
+
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const handleImageUpload = async (imageFile) => {
     const imageUrl = URL.createObjectURL(imageFile);
@@ -23,29 +30,57 @@ function AI_Suggestion() {
       const formData = new FormData();
       formData.append('image', imageFile);
 
-      const response = await fetch('http://localhost:8080/api/recommendations/analyze', {
-        method: 'POST',
-        body: formData
-      });
+      const response = await axios.post(
+        'http://localhost:8080/api/recommendations/analyze',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
 
-      if (!response.ok) {
-        const errMsg = await response.text();
-        throw new Error(errMsg || 'Failed to analyze image.');
-      }
+      // Axios automatically parses JSON into response.data
+      const data = response.data; // ✅ { faceShape, skinTone, products }
 
-      const data = await response.json(); // { faceShape, skinTone, products[] }
+      console.log(data);
+      console.log("face shpae : ", data.faceShape)
 
       setAnalysisData({
         faceShape: data.faceShape,
         skinTone: data.skinTone,
-        recommendedProducts: data.products
+        recommendedProducts: data.products,
       });
+      setShowCongrats(true);
+      setTimeout(() => setShowCongrats(false), 10000); // Stop confetti after 5 seconds
     } catch (err) {
-      setError(err.message);
+      if (err.response) {
+        const serverMessage = err.response.data?.message;
+
+        if (serverMessage?.toLowerCase().includes("no face")) {
+          setError("No face detected. Please upload a clear photo of your face.");
+        } else if (err.response.status === 400) {
+          setError("Invalid request. Please check the uploaded image and try again.");
+        } else if (err.response.status === 415) {
+          setError("Unsupported file format. Please upload a valid image (JPG, PNG).");
+        } else if (err.response.status === 500) {
+          setError("Server error while analyzing your image. Please try again later.");
+        } else {
+          setError(serverMessage || "Something went wrong on the server.");
+        }
+      } else if (err.request) {
+        setError("No response from server. Please check your internet connection.");
+      } else {
+        setError("Unexpected error: " + err.message);
+      }
     } finally {
       setIsAnalyzing(false);
     }
   };
+
+
+
+  console.log("analydata : ", analysisData);
 
   const handleReset = () => {
     setUploadedImage(null);
@@ -99,15 +134,13 @@ function AI_Suggestion() {
               </div>
 
               <div className="w-16 h-1 rounded bg-slate-200">
-                <div className={`h-1 bg-[#1B4965] rounded transition-all duration-1000 ${
-                  isAnalyzing || analysisData ? 'w-full' : 'w-0'
-                }`}></div>
+                <div className={`h-1 bg-[#1B4965] rounded transition-all duration-1000 ${isAnalyzing || analysisData ? 'w-full' : 'w-0'
+                  }`}></div>
               </div>
 
               <div className="flex items-center space-x-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  analysisData ? 'bg-green-500' : isAnalyzing ? 'bg-[#1B4965]' : 'bg-slate-300'
-                }`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${analysisData ? 'bg-green-500' : isAnalyzing ? 'bg-[#1B4965]' : 'bg-slate-300'
+                  }`}>
                   {analysisData ? (
                     <FaCheckCircle className="w-5 h-5 text-white" />
                   ) : isAnalyzing ? (
@@ -116,32 +149,28 @@ function AI_Suggestion() {
                     <FaEye className="w-5 h-5 text-slate-500" />
                   )}
                 </div>
-                <span className={`font-medium ${
-                  analysisData ? 'text-green-600' : isAnalyzing ? 'text-[#1B4965]' : 'text-slate-500'
-                }`}>
+                <span className={`font-medium ${analysisData ? 'text-green-600' : isAnalyzing ? 'text-[#1B4965]' : 'text-slate-500'
+                  }`}>
                   {analysisData ? 'Analysis Complete' : isAnalyzing ? 'Analyzing...' : 'Analysis Pending'}
                 </span>
               </div>
 
               <div className="w-16 h-1 rounded bg-slate-200">
-                <div className={`h-1 bg-[#1B4965] rounded transition-all duration-1000 delay-500 ${
-                  analysisData ? 'w-full' : 'w-0'
-                }`}></div>
+                <div className={`h-1 bg-[#1B4965] rounded transition-all duration-1000 delay-500 ${analysisData ? 'w-full' : 'w-0'
+                  }`}></div>
               </div>
 
               <div className="flex items-center space-x-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  analysisData ? 'bg-green-500' : 'bg-slate-300'
-                }`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${analysisData ? 'bg-green-500' : 'bg-slate-300'
+                  }`}>
                   {analysisData ? (
                     <FaCheckCircle className="w-5 h-5 text-white" />
                   ) : (
                     <FaStar className="w-5 h-5 text-slate-500" />
                   )}
                 </div>
-                <span className={`font-medium ${
-                  analysisData ? 'text-green-600' : 'text-slate-500'
-                }`}>
+                <span className={`font-medium ${analysisData ? 'text-green-600' : 'text-slate-500'
+                  }`}>
                   Recommendations
                 </span>
               </div>
@@ -165,15 +194,32 @@ function AI_Suggestion() {
                       </div>
                     </div>
                   )}
+
+
+
+
+                  {/* 🎉 Show confetti after success */}
+                  {/* {showCongrats && (
+                    <div className="absolute inset-0 pointer-events-none">
+                      <Confetti
+                        width={400}   // Adjust to match your image box width
+                        height={320}  // Adjust to match your image box height
+                        recycle={false}
+                        numberOfPieces={300}
+                      />
+                    </div>
+                  )} */}
+
                 </div>
               </div>
 
               <div className="space-y-6">
                 {error && (
-                  <div className="flex items-center p-6 space-x-3 border border-red-200 bg-red-50 rounded-xl">
-                    <FaExclamationCircle className="w-6 h-6 text-red-500" />
-                    <p className="text-red-700">{error}</p>
-                  </div>
+                  <ErrorModal
+                    error={error}
+                    uploadedImage={uploadedImage}
+                    handleReset={handleReset}
+                  />
                 )}
 
                 {isAnalyzing && (
@@ -206,7 +252,25 @@ function AI_Suggestion() {
             )}
           </div>
         )}
+
+        {/* {showCongrats && (
+          <div className="absolute inset-0 pointer-events-none">
+            <Confetti
+              width={window.innerWidth}
+              height={window.innerHeight}
+              recycle={false}
+              numberOfPieces={5000}   // reduce pieces for smoother/faster
+              // gravity={1.2}          // make it fall faster
+              initialVelocityY={20}  // increase starting drop speed
+            // tweenDuration={100}    // speeds up animation end
+            />
+          </div>
+        )} */}
+
       </div>
+      {/* 🎉 Show confetti after success */}
+
+
     </div>
   );
 }

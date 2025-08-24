@@ -61,7 +61,7 @@ const Customization = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[#f9fbfd]">
       <h1 className="text-3xl font-bold mb-4">Customization</h1>
       <p className="text-gray-600 mb-6">
         Here you can add, edit, or delete products.

@@ -12,20 +12,43 @@ const Users = () => {
   const [loading, setLoading] = useState(false)
 
 
+  // const getAllUsers = async () => {
+  //   setLoading(true)
+  //   try {
+  //     const res = await axios.get("http://localhost:8080/users");
+  //     const onlyUsers = res.data.filter((u) => u.role === "USER");
+  //     setUsers(res.data);
+  //     console.log(onlyUsers);
+  //   } catch (error) {
+  //     console.error('Error fetching users:', error);
+  //     alert('Failed to fetch users.');
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // };
+
+
   const getAllUsers = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const res = await axios.get("http://localhost:8080/users");
-      const onlyUsers = res.data.filter((u) => u.role === "USER");
-      setUsers(res.data);
-      console.log(onlyUsers);
+      const onlyUsers = res.data.filter((u) => u.role === "USER" || u.role === "ADMIN");
+
+      // Preserve order by id (or any stable key)
+      setUsers((prev) => {
+        const prevOrder = prev.map((u) => u.id);
+        return onlyUsers.sort(
+          (a, b) => prevOrder.indexOf(a.id) - prevOrder.indexOf(b.id)
+        );
+      });
     } catch (error) {
-      console.error('Error fetching users:', error);
-      alert('Failed to fetch users.');
+      console.error("Error fetching users:", error);
+      alert("Failed to fetch users.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
+
 
 
   useEffect(() => {
@@ -49,7 +72,7 @@ const Users = () => {
 
   if (loading) return <WaveMirissaLoader />;
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[#f9fbfd]">
       <h1 className="text-3xl font-bold mb-4">Manage Users</h1>
       <p className="text-gray-600">View and manage registered users here.</p>
 
@@ -83,7 +106,7 @@ const Users = () => {
                 >
                   Edit
                 </button>
-               
+
               </td>
             </tr>
           ))}
