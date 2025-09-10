@@ -7,57 +7,17 @@ import axios from 'axios';
 const Orders = () => {
   const [modalContent, setModalContent] = useState(null);
   const [confimationModalCon, setConfimationModalCon] = useState(null);
-  const [activeTab, setActiveTab] = useState('Pending');
-  const [orders, setOrders] = useState([
-    {
-      id: 1,
-      customerName: 'shehan',
-      status: 'Pending',
-      trackingNumber: '',
-      date: '2025-06-10',
-      total: '$120.00',
-    },
-    {
-      id: 2,
-      customerName: 'yasindu',
-      status: 'Shipped',
-      trackingNumber: 'TRK123456',
-      date: '2025-06-09',
-      total: '$89.50',
-    },
-    {
-      id: 3,
-      customerName: 'hansi',
-      status: 'Delivered',
-      trackingNumber: 'TRK789101',
-      date: '2025-06-08',
-      total: '$49.99',
-    },
-    {
-      id: 4,
-      customerName: 'hansi',
-      status: 'Processing',
-      trackingNumber: 'TRK789101',
-      date: '2025-06-08',
-      total: '$49.99',
-    },
-  ]);
+  const [activeTab, setActiveTab] = useState('PAID');
+  const [orders, setOrders] = useState([]);
 
-  const statusTabs = ['Pending', 'Processing', 'Shipped', 'Delivered'];
+  const statusTabs = ['PAID', 'Processing', 'Shipped', 'Delivered'];
 
-  const filteredOrders = orders.filter((order) => order.status === activeTab);
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
 
-  const Data = {
-    name: 'shehan chathu',
-    email: 'shehan@gmail.com',
-    id: '2222222222222222',
-    details: ' Ring,Gold Bracelet',
-  };
 
 
   const handleMarkAsCompleted = () => {
@@ -74,7 +34,6 @@ const Orders = () => {
 
   const loginUser = JSON.parse(localStorage.getItem("user"));
   const token = loginUser.jwt;
-  console.log(token)
   const newRole = loginUser.role;
 
   const getPaidOrders = async () => {
@@ -88,6 +47,7 @@ const Orders = () => {
         withCredentials: true,
       });
       setOrders(res.data);
+      console.log("paid orders", res.data);
     } catch (err) {
       console.error("Failed to fetch paid orders", err);
       alert("Failed to fetch paid orders. Make sure you are logged in as Admin.");
@@ -96,6 +56,9 @@ const Orders = () => {
     }
   };
 
+  const filteredOrders = orders.filter((order) => order.status === activeTab);
+  console.log(filteredOrders)
+
   useEffect(() => {
     getPaidOrders();
   }, []);
@@ -103,6 +66,9 @@ const Orders = () => {
 
 
 
+  console.log('Active Tab:', activeTab);
+  console.log('Orders:', orders);
+  console.log('Filtered Orders:', filteredOrders);
 
 
 
@@ -133,7 +99,7 @@ const Orders = () => {
         <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-50 text-gray-700 text-sm uppercase tracking-wide">
             <tr className="bg-[#f1f5f9] text-gray-700 text-sm uppercase tracking-wider">
-              {activeTab === 'Pending' && (
+              {activeTab === 'PAID' && (
                 <>
                   <th className="px-6 py-3 text-left">Order Num</th>
                   <th className="px-6 py-3 text-left">Customer Detail</th>
@@ -180,7 +146,7 @@ const Orders = () => {
             {filteredOrders.length > 0 ? (
               filteredOrders.map((order) => (
                 <tr key={order.id} className="hover:bg-gray-50 transition">
-                  {activeTab === 'Pending' && (
+                  {activeTab === 'PAID' && (
                     <>
                       <td className="border-b px-6 py-4">{order.id}</td>
                       <td className="border-b px-6 py-4">
@@ -189,12 +155,38 @@ const Orders = () => {
                             setModalContent({
                               title: 'Customer Detail',
                               content: (
-                                <>
-                                  <p><strong>Name:</strong> {order.customerName}</p>
-                                  <p><strong>Email:</strong> shehan@email.com</p>
-                                  <p><strong>Address:</strong> 123 Main Street, Colombo</p>
-                                  <p><strong>Phone:</strong> +94 77 123 4567</p>
-                                </>
+                                <div
+                                  style={{
+                                    border: '1px solid #ddd',
+                                    borderRadius: '8px',
+                                    padding: '1rem',
+                                    marginBottom: '1rem',
+                                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                                    backgroundColor: '#fafafa',
+                                  }}
+                                >
+                                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#2c3e50', marginBottom: '0.5rem' }}>
+                                    Customer Information
+                                  </div>
+
+                                  <div style={{ marginBottom: '0.25rem' }}>
+                                    <strong style={{ color: '#34495e' }}>Name:</strong>{' '}
+                                    <span style={{ color: '#2c3e50' }}>{order.user.name}</span>
+                                  </div>
+                                  <div style={{ marginBottom: '0.25rem' }}>
+                                    <strong style={{ color: '#34495e' }}>Email:</strong>{' '}
+                                    <span style={{ color: '#2c3e50' }}>{order.user.email}</span>
+                                  </div>
+                                  <div style={{ marginBottom: '0.25rem' }}>
+                                    <strong style={{ color: '#34495e' }}>Address:</strong>{' '}
+                                    <span style={{ color: '#2c3e50' }}>123 Main Street, Colombo</span>
+                                  </div>
+                                  <div>
+                                    <strong style={{ color: '#34495e' }}>Phone:</strong>{' '}
+                                    <span style={{ color: '#2c3e50' }}>+94 77 123 4567</span>
+                                  </div>
+                                </div>
+
                               ),
                             })
                           }
@@ -211,11 +203,66 @@ const Orders = () => {
                               title: 'Order Detail',
                               content: (
                                 <>
-                                  <p><strong>Item:</strong> Gold ring</p>
-                                  <p><strong>Size:</strong> 7</p>
-                                  <p><strong>Material:</strong> 24K</p>
-                                  <p><strong>Engraving:</strong> "Forever Yours"</p>
+                                  {order.products.map((p, index) => (
+                                    <div
+                                      key={index}
+                                      style={{
+                                        border: '1px solid #ddd',
+                                        borderRadius: '8px',
+                                        padding: '1rem',
+                                        marginBottom: '1rem',
+                                        boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                                        backgroundColor: '#fafafa',
+                                      }}
+                                    >
+                                      {/* Header: Product Name & Price */}
+                                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0" }}>
+                                        <div>
+                                          <div style={{ fontSize: "0.85rem", color: "#7f8c8d" }}>
+                                            Order #{order.orderId} • Item {index + 1}
+                                          </div>
+                                          <div style={{ fontSize: "1.1rem", fontWeight: "600", color: "#2c3e50", marginTop: "4px" }}>
+                                            {p.name}
+                                          </div>
+                                        </div>
+                                        <div style={{ fontWeight: "600", color: "#27ae60", fontSize: "1rem" }}>
+                                          {p.price.toLocaleString()} LKR
+                                        </div>
+                                      </div>
+
+                                      {/* Customizations */}
+                                      {p.customizations.length > 0 && (
+                                        <div style={{ marginTop: '0.75rem' }}>
+                                          <em style={{ fontSize: '0.9rem', color: '#34495e' }}>Customizations items:</em>
+                                          <div
+                                            style={{
+                                              marginTop: '0.25rem',
+                                              display: 'flex',
+                                              flexWrap: 'wrap',
+                                              gap: '0.5rem',
+                                            }}
+                                          >
+                                            {p.customizations.map((c, i) => (
+                                              <span
+                                                key={i}
+                                                style={{
+                                                  backgroundColor: '#e0f7fa',
+                                                  padding: '0.25rem 0.5rem',
+                                                  borderRadius: '12px',
+                                                  fontSize: '0.85rem',
+                                                  color: '#00796b',
+                                                }}
+                                              >
+                                                {c}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
                                 </>
+
                               ),
                             })
                           }
@@ -226,8 +273,17 @@ const Orders = () => {
                       </td>
 
 
-                      <td className="border-b px-6 py-4">{order.total}</td>
-                      <td className="border-b px-6 py-4">{order.date}</td>
+                      <td className="border-b px-6 py-4">{order.amount}</td>
+                      <td className="border-b px-6 py-4">
+                        {new Date(order.createdAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </td>
+
+
+
                       <td className="border-b px-6 py-4 space-x-2">
                         <button className="bg-green-500 text-white px-3 py-1 rounded">
                           Accept
@@ -433,11 +489,7 @@ const Orders = () => {
         </ConfirmationModal>
       )}
 
-      <SendEmailModal
-        isOpen={isEmailModalOpen}
-        onClose={() => setIsEmailModalOpen(false)}
-        data={Data}
-      />
+
     </div>
   );
 };
