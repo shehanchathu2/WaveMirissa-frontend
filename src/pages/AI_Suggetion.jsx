@@ -41,7 +41,7 @@ function AI_Suggestion() {
       );
 
       // Axios automatically parses JSON into response.data
-      const data = response.data; // ✅ { faceShape, skinTone, products }
+      const data = response.data; //{ faceShape, skinTone, products }
 
       console.log(data);
       console.log("face shpae : ", data.faceShape)

@@ -9,7 +9,7 @@ export const CustomizationModal = ({
   onCheckout,
   openedViaCustomize,
   setCustomMaterial,
-  customizationOptions = [] // 👈 dynamic customizations from backend
+  customizationOptions = [] // dynamic customizations from backend
 }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
 

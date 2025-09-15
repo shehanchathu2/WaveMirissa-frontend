@@ -18,21 +18,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import CartModal from '../components/CartModal';
-
-
-const JewelryItem = {
-  id: 'classic-necklace',
-  name: 'Cowrie Shell Necklace with Black String',
-  price: 800,
-  image1: sampleimg1,
-  image2: sampleimg2,
-  image3: sampleimg3,
-  description: 'Bohemian and Beach Style Choker Necklace',
-  materials: ['Black String', 'Sea-shells'],
-  producttype: 'neckless',
-  gender: 'women',
-
-};
+import AISuggestionModal from '../components/ProductPreview/AISuggestionModal';
 
 const ProductDetail = () => {
   const { user } = useAuth();
@@ -41,6 +27,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
 
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
+  const [isAISuggestionModalOpen, setAISuggestionModalOpen] = useState(false);
   const [isSizeModalOpen, setIsSizeModalOpen] = useState(false);
   const [openedViaCustomize, setOpenedViaCustomize] = useState(false);
   const [openedViaAddtoCart, setOpenedViaAddtoCart] = useState(false);
@@ -69,6 +56,7 @@ const ProductDetail = () => {
         const productData = res.data;
 
         setProduct(productData);
+        console.log(productData)
 
         // Store customization array
         if (productData.customizations && Array.isArray(productData.customizations)) {
@@ -132,6 +120,12 @@ const ProductDetail = () => {
     setIsCustomizeOpen(true);
   };
 
+  const handleAICustomizationClick = () => {
+    setIsCustomizeOpen(false);
+    setCartModalOpen(false);
+    setAISuggestionModalOpen(true);
+  };
+
   const handleBuyNowClick = () => {
     const type = product?.producttype?.toLowerCase();
 
@@ -151,6 +145,10 @@ const ProductDetail = () => {
     setIsCustomizeOpen(false);
     setCustomMaterial('');
     setTotalPrice(product.price);
+  };
+
+  const handleCloseAISuggetion = () => {
+    setAISuggestionModalOpen(false);
   };
 
 
@@ -225,7 +223,7 @@ const ProductDetail = () => {
 
 
   const handleAddToCart = () => {
-     if (!user) {
+    if (!user) {
       toast.error("Please log in to add to cart.");
       return;
     }
@@ -484,6 +482,18 @@ const ProductDetail = () => {
               Buy Now
             </button>
           </div>
+
+
+          <div className="w-full max-w-md mt-1">
+            <button
+              onClick={handleAICustomizationClick}
+              className="w-full bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300"
+            >
+              AI Customization
+            </button>
+          </div>
+
+
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow text-[#1B4D3E]">
@@ -574,6 +584,19 @@ const ProductDetail = () => {
         openedViaCustomize={openedViaCustomize}
         setCustomMaterial={setCustomMaterial}
         customizationOptions={customizations}
+      />
+
+     
+
+      <AISuggestionModal
+        isOpen={isAISuggestionModalOpen}
+        onClose={handleCloseAISuggetion}
+        jewelry={product}
+        onNext={(intersectionCustomizations) => {
+          setCustomizations(intersectionCustomizations);
+          setAISuggestionModalOpen(false);
+          setIsCustomizeOpen(true);
+        }}
       />
 
       {/* Size Selection Modal */}

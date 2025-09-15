@@ -1,7 +1,7 @@
 import React from 'react';
 import { Star, Heart, ShoppingBag, Sparkles } from 'lucide-react';
 
-const JewelryRecommendations = ({ faceShape, skinTone, products }) => {
+const JewelryRecommendationsModal = ({ faceShape, skinTone, Customizations }) => {
   // Mock data - replace with actual API call
   
   return (
@@ -20,17 +20,17 @@ const JewelryRecommendations = ({ faceShape, skinTone, products }) => {
         </div>
         
         <div className="text-right">
-          <p className="text-2xl font-bold text-[#1B4965]">{products.length}</p>
+          <p className="text-2xl font-bold text-[#1B4965]">{Customizations.length}</p>
           <p className="text-sm text-slate-600">Perfect matches</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {products.map((item) => (
-          <div key={item.id} className="p-4 transition-shadow duration-200 bg-slate-50 rounded-xl hover:shadow-md">
+        {Customizations.map((item) => (
+          <div key={item.item_id} className="p-4 transition-shadow duration-200 bg-slate-50 rounded-xl hover:shadow-md">
             <div className="relative mb-4">
               <img
-                src={item.image_url1}
+                src={item.imageUrl}
                 alt={item.name}
                 className="object-cover w-full h-48 rounded-lg"
               />
@@ -84,4 +84,4 @@ const JewelryRecommendations = ({ faceShape, skinTone, products }) => {
   );
 };
 
-export default JewelryRecommendations;
+export default JewelryRecommendationsModal;
