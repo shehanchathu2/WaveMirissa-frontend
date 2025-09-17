@@ -9,6 +9,7 @@ import { calculateFinalPrice } from "../utils/calcPrice";
 import Payment from '../components/Payment';
 import { useAuth } from '../context/AuthContext';
 import { v4 as uuidv4 } from 'uuid'; 
+import toast from 'react-hot-toast';
 
 
 const CheckoutPage = () => {
@@ -77,15 +78,16 @@ const CheckoutPage = () => {
       const response = await api.post(endpoint, orderData);
 
       console.log('Order saved:', response.data);
-      alert('Order saved successfully!');
+      toast.success('Order placed successfully!');
     } catch (error) {
       console.error('Error saving order:', error);
-      alert('Failed to save order.');
+      toast.error('Failed to save order.');
     } finally {
       setLoading(false);  
     }
   };
 
+  clg("selected items:", selectedItems);
   // Callback after successful payment
   const handlePaymentSuccess = (payhereRef) => {
     setPaymentSuccess(true);

@@ -28,9 +28,9 @@ export const CustomizationModal = ({
         : [...prev, optionId]
     );
   };
-  
 
-  
+
+
 
   const calculateTotalPrice = () => {
     const addOnPrice = selectedOptions.reduce((total, optionId) => {
@@ -93,11 +93,10 @@ export const CustomizationModal = ({
               {customizationOptions.map((option) => (
                 <div
                   key={option.item_id}
-                  className={`relative rounded-xl border-2 transition-all duration-300 cursor-pointer group ${
-                    selectedOptions.includes(option.item_id)
-                      ? 'border-teal-500 bg-teal-50 shadow-lg transform scale-105'
-                      : 'border-gray-200 bg-white hover:border-[#1b4965] hover:shadow-md'
-                  }`}
+                  className={`relative rounded-xl border-2 transition-all duration-300 cursor-pointer group ${selectedOptions.includes(option.item_id)
+                    ? 'border-teal-500 bg-teal-50 shadow-lg transform scale-105'
+                    : 'border-gray-200 bg-white hover:border-[#1b4965] hover:shadow-md'
+                    }`}
                   onClick={() => handleOptionToggle(option.item_id)}
                 >
                   <div className="p-4">
@@ -105,11 +104,10 @@ export const CustomizationModal = ({
                       <img src={option.imageUrl} alt={option.name} className="object-cover w-full h-24 rounded-lg" />
                       <div className="absolute top-2 right-2">
                         <div
-                          className={`w-6 h-6 rounded-full border-2 transition-all duration-200 flex items-center justify-center ${
-                            selectedOptions.includes(option.item_id)
-                              ? 'bg-teal-500 border-teal-500'
-                              : 'bg-white border-gray-300 group-hover:border-[#1b4965]'
-                          }`}
+                          className={`w-6 h-6 rounded-full border-2 transition-all duration-200 flex items-center justify-center ${selectedOptions.includes(option.item_id)
+                            ? 'bg-teal-500 border-teal-500'
+                            : 'bg-white border-gray-300 group-hover:border-[#1b4965]'
+                            }`}
                         >
                           {selectedOptions.includes(option.item_id) && <Check size={16} className="text-white" />}
                         </div>
@@ -135,12 +133,15 @@ export const CustomizationModal = ({
               <button
                 className="flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition duration-300 shadow-lg bg-[#1b4965] hover:bg-[#1b4965]/90 text-white hover:shadow-xl transform hover:scale-105"
                 onClick={() => {
-                  const selectedMaterialString = selectedOptions
-                    .map((id) => customizationOptions.find((opt) => opt.item_id === id)?.name)
-                    .filter(Boolean)
-                    .join(', ');
-                  setCustomMaterial(selectedMaterialString);
-                  onCheckout(selectedMaterialString, calculateTotalPrice());
+                  if (selectedOptions.length > 0) {
+                    // User selected some customizations
+                    setCustomMaterial(selectedOptions); // pass array
+                    onCheckout(selectedOptions, calculateTotalPrice());
+                  } else {
+                    // User selected none
+                    setCustomMaterial([]); // empty array
+                    onCheckout([], jewelry.price);
+                  }
                 }}
               >
                 <ShoppingCart size={20} />
@@ -154,6 +155,7 @@ export const CustomizationModal = ({
                 Next
               </button>
             )}
+
           </div>
         </div>
       </div>
