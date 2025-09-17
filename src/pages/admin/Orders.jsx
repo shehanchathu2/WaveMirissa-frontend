@@ -5,30 +5,37 @@ import SendEmailModal from '../../components/admin/SendEmailModel';
 import axios from 'axios';
 import WaveMirissaLoader from '../../components/WaveMirissaLoader';
 import { toast } from 'react-toastify';
-import { motion, AnimatePresence } from "framer-motion"; // ✅ add import
+import { motion, AnimatePresence } from "framer-motion";
 import PendingOrdersTable from './ordertables/PendingOrdersTable';
 import ProcessingOrdersTable from './ordertables/ProcessingOrdersTable';
 import ShippedOrdersTable from './ordertables/ShippedOrdersTable';
 import DeliveredOrdersTable from './ordertables/DeliveredOrdersTable';
+import { Search, Filter, Download, Eye, Edit, Trash2, User, Package, CreditCard, Phone, Mail } from 'lucide-react';
+import AllOrdersTable from './ordertables/AllOrdersTable';
 
 const Orders = () => {
   const [modalContent, setModalContent] = useState(null);
   const [confimationModalCon, setConfimationModalCon] = useState(null);
-  const [activeTab, setActiveTab] = useState('Pendding');
+  const [activeTab, setActiveTab] = useState('All');
   const [orders, setOrders] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [count, setCount] = useState(0);
 
-  const statusTabs = ['Pendding', 'Processing', 'Shipped', 'Delivered'];
 
+  const statusTabs = [
+    { key: 'All', label: 'All', count: count,color:'bg-blue-600' },
+    { key: 'Pendding', label: 'Pendding',   color: 'bg-gray-200' },
+    { key: 'Processing', label: 'Processing', color: 'bg-gray-200' },
+    { key: 'Shipped', label: 'Shipped', color: 'bg-gray-200' },
+    { key: 'Delivered', label: 'Delivered', color: 'bg-gray-200' },
+  ];
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
-
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
   const handleMarkAsCompleted = () => {
-    // You can update status or make an API call here
     setOrders((prevOrders) =>
       prevOrders.map((order) =>
         order.id === selectedOrderId ? { ...order, status: 'Shipped' } : order
@@ -37,11 +44,8 @@ const Orders = () => {
     setShowConfirmModal(false);
   };
 
-
-
   const loginUser = JSON.parse(localStorage.getItem("user"));
   const token = loginUser.jwt;
-  const newRole = loginUser.role;
 
   const getPaidOrders = async () => {
     setLoading(true);
@@ -54,7 +58,7 @@ const Orders = () => {
         withCredentials: true,
       });
       setOrders(res.data);
-      console.log("Pendding orders", res.data);
+      setCount(res.data.length);
     } catch (err) {
       console.error("Failed to fetch paid orders", err);
       alert("Failed to fetch paid orders. Make sure you are logged in as Admin.");
@@ -66,20 +70,17 @@ const Orders = () => {
   const filteredOrders = orders.filter(
     (order) => order.orderStatus.toLowerCase() === activeTab.toLowerCase()
   );
-  console.log(filteredOrders)
+
 
   useEffect(() => {
     getPaidOrders();
-  }, []);
-
-
-
+  }, [activeTab]);
 
   const handleAccept = async (orderId) => {
     try {
       const response = await axios.post(
         `http://localhost:8080/api/admin/orders/${orderId}/status?status=PROCESSING`,
-        {}, // empty request body
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -90,8 +91,6 @@ const Orders = () => {
       );
 
       const updatedOrder = response.data;
-
-      // Update local state
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
           order.id === updatedOrder.id ? updatedOrder : order
@@ -104,15 +103,12 @@ const Orders = () => {
       toast.error("Failed to update order status.");
     }
   };
-
-
-
 
   const handleReadyToShipped = async (orderId) => {
     try {
       const response = await axios.post(
         `http://localhost:8080/api/admin/orders/${orderId}/status?status=SHIPPED`,
-        {}, // empty request body
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -123,8 +119,6 @@ const Orders = () => {
       );
 
       const updatedOrder = response.data;
-
-      // Update local state
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
           order.id === updatedOrder.id ? updatedOrder : order
@@ -138,145 +132,168 @@ const Orders = () => {
     }
   };
 
-
-
-  console.log('Active Tab:', activeTab);
-  console.log('Orders:', orders);
-  console.log('Filtered Orders:', filteredOrders);
-
-
-
-
   if (loading) return <WaveMirissaLoader />;
 
   return (
-    <div className="p-6 bg-[#f9fbfd] h-full">
-      <h1 className="text-3xl font-bold mb-4">Manage Orders</h1>
-      <p className="text-gray-600 mb-6">View and process customer orders here.</p>
+    <div className="p-6 bg-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Order Management</h1>
+          <p className="text-gray-600 mt-1">Manage and track all customer orders</p>
+        </div>
+        
+        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2 transition-colors">
+          <Download className="w-4 h-4" />
+          <span>Export Orders</span>
+        </button>
+      </div>
 
-      <div className="flex gap-4 mb-6">
+      {/* Search and Filter
+      <div className="flex justify-between items-center mb-6">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search orders by order number, customer name, or email..."
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        
+        <button className="ml-4 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-lg font-medium flex items-center space-x-2 hover:bg-gray-50 transition-colors">
+          <Filter className="w-4 h-4" />
+          <span>Filter</span>
+        </button>
+      </div> */}
+
+      {/* Status Tabs */}
+      <div className="flex space-x-1 mb-6">
         {statusTabs.map((tab) => (
           <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded-full font-semibold ${activeTab === tab
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-              }`}
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2 transition-colors ${
+              activeTab === tab.key
+                ? 'bg-blue-600 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+            }`}
           >
-            {tab} Orders
+            <span>{tab.label}</span>
+            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+              activeTab === tab.key 
+                ? 'bg-blue-500 text-white' 
+                : 'bg-gray-100 text-gray-600'
+            }`}>
+              {tab.count}
+            </span>
           </button>
         ))}
       </div>
 
-      <div className="overflow-x-auto bg-white shadow rounded-lg">
-        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-          <thead className="bg-gray-50 text-gray-700 text-sm uppercase tracking-wide">
-            <tr className="bg-[#f1f5f9] text-gray-700 text-sm uppercase tracking-wider">
-              {activeTab === 'Pendding' && (
-                <>
-                  <th className="px-6 py-3 text-left">Order Num</th>
-                  <th className="px-6 py-3 text-left">Customer Detail</th>
-                  <th className="px-6 py-3 text-left">Order Details</th>
-                  <th className="px-6 py-3 text-left">Total</th>
-                  <th className="px-6 py-3 text-left">Date</th>
-                  <th className="px-6 py-3 text-left">Actions</th>
-                </>
-              )}
-              {activeTab === 'Processing' && (
-                <>
-                  <th className="px-6 py-3 text-left">Order Num</th>
-                  <th className="px-6 py-3 text-left">Customer</th>
-                  <th className="px-6 py-3 text-left">Order Details</th>
-                  <th className="px-6 py-3 text-left">Total</th>
-                  <th className="px-6 py-3 text-left">Date</th>
-                  <th className="px-6 py-3 text-left">Action</th>
-                </>
-              )}
-              {activeTab === 'Shipped' && (
-                <>
-                  <th className="px-6 py-3 text-left">Order Num</th>
-                  <th className="px-6 py-3 text-left">Customer</th>
-                  <th className="px-6 py-3 text-left">Order Details</th>
-                  <th className="px-6 py-3 text-left">Tracking #</th>
-                  <th className="px-6 py-3 text-left">Est. Delivery</th>
-                  <th className="px-6 py-3 text-left">Actions</th>
-                </>
-              )}
-              {activeTab === 'Delivered' && (
-                <>
-                  <th className="px-6 py-3 text-left">Order Num</th>
-                  <th className="px-6 py-3 text-left">Customer</th>
-                  <th className="px-6 py-3 text-left">Order Details</th>
-                  <th className="px-6 py-3 text-left">Delivery Date</th>
-                  <th className="px-6 py-3 text-left">Total</th>
-                  <th className="px-6 py-3 text-left">Status</th>
-                </>
-              )}
-            </tr>
-          </thead>
+      {/* Orders Table */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Order Num
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Customer Detail
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Order Details
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Total(Rs.)
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            
+            <tbody className="bg-white divide-y divide-gray-200">
+              <AnimatePresence>
 
-          <tbody>
-            {activeTab === "Pendding" && (
-              <PendingOrdersTable
-                setModalContent={setModalContent}
-                handleAccept={handleAccept}
-              />
-            )}
-            {activeTab === "Processing" && (
-              <ProcessingOrdersTable
-                filteredOrders={filteredOrders}
-                setModalContent={setModalContent}
-                handleReadyToShipped={handleReadyToShipped}
-              />
-            )}
-            {activeTab === "Shipped" && (
-              <ShippedOrdersTable
-                setModalContent={setModalContent}
-                setIsEmailModalOpen={setIsEmailModalOpen}
-                setConfimationModalCon={setConfimationModalCon}
-                setSelectedOrderId={setSelectedOrderId}
-                setShowConfirmModal={setShowConfirmModal}
-              />
-            )}
-            {activeTab === "Delivered" && (
-              <DeliveredOrdersTable filteredOrders={filteredOrders} />
-            )}
-          </tbody>
-        </table>
+                {activeTab === "All" && (
+                  <AllOrdersTable
+                    setModalContent={setModalContent}
+                    handleAccept={handleAccept}
+                    handleReadyToShipped={handleReadyToShipped}
+                    setIsEmailModalOpen={setIsEmailModalOpen}
+                    setConfimationModalCon={setConfimationModalCon}
+                    setSelectedOrderId={setSelectedOrderId}
+                    setShowConfirmModal={setShowConfirmModal}
+                    filteredOrders={orders}
+                  />
+                )}
+                {activeTab === "Pendding" && (
+                  <PendingOrdersTable
+                    setModalContent={setModalContent}
+                    handleAccept={handleAccept}
+                  />
+                )}
+                {activeTab === "Processing" && (
+                  <ProcessingOrdersTable
+                    filteredOrders={filteredOrders}
+                    setModalContent={setModalContent}
+                    handleReadyToShipped={handleReadyToShipped}
+                  />
+                )}
+                {activeTab === "Shipped" && (
+                  <ShippedOrdersTable
+                    setModalContent={setModalContent}
+                    setIsEmailModalOpen={setIsEmailModalOpen}
+                    setConfimationModalCon={setConfimationModalCon}
+                    setSelectedOrderId={setSelectedOrderId}
+                    setShowConfirmModal={setShowConfirmModal}
+                  />
+                )}
+                {activeTab === "Delivered" && (
+                  <DeliveredOrdersTable filteredOrders={filteredOrders} />
+                )}
+              </AnimatePresence>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Modal */}
-      {
-        modalContent && (
-          <OrderModal
-            title={modalContent.title}
-            onClose={() => setModalContent(null)}
-          >
-            {modalContent.content}
-          </OrderModal>
-        )
-      }
+      {/* Modals */}
+      {modalContent && (
+        <OrderModal
+          title={modalContent.title}
+          onClose={() => setModalContent(null)}
+        >
+          {modalContent.content}
+        </OrderModal>
+      )}
 
+      {confimationModalCon && (
+        <ConfirmationModal
+          isOpen={showConfirmModal}
+          title="Mark as Completed"
+          message="Are you sure you want to mark this order as completed?"
+          onCancel={() => setShowConfirmModal(false)}
+          onConfirm={handleMarkAsCompleted}
+        >
+          {confimationModalCon.content}
+        </ConfirmationModal>
+      )}
 
-
-      {/* Confimation model */}
-      {
-        confimationModalCon && (
-          <ConfirmationModal
-            isOpen={showConfirmModal}
-            title="Mark as Completed"
-            message="Are you sure you want to mark this order as completed?"
-            onCancel={() => setShowConfirmModal(false)}
-            onConfirm={handleMarkAsCompleted}
-          >
-            {confimationModalCon.content}
-          </ConfirmationModal>
-        )
-      }
-
-
-    </div >
+      {isEmailModalOpen && (
+        <SendEmailModal
+          isOpen={isEmailModalOpen}
+          onClose={() => setIsEmailModalOpen(false)}
+        />
+      )}
+    </div>
   );
 };
 
