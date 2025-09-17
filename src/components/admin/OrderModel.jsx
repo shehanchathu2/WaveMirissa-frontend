@@ -9,14 +9,21 @@ const backdrop = {
 };
 
 const modal = {
-  hidden: { y: '-50px', opacity: 0 },
-  visible: { y: '0', opacity: 1 },
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.3, ease: "easeInOut" },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.3, ease: "easeInOut" }, // match duration for smooth fade-out
+  },
 };
 
 const OrderModal = ({ title, children, onClose }) => {
   return (
     <motion.div
-      className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50"
+      className="fixed top-0 left-0 w-full h-full bg-white-50 inset-0 bg-black/30  bg-opacity-50 flex justify-center items-center z-50"
       variants={backdrop}
       initial="hidden"
       animate="visible"
