@@ -12,6 +12,7 @@ import ShippedOrdersTable from './ordertables/ShippedOrdersTable';
 import DeliveredOrdersTable from './ordertables/DeliveredOrdersTable';
 import { Search, Filter, Download, Eye, Edit, Trash2, User, Package, CreditCard, Phone, Mail } from 'lucide-react';
 import AllOrdersTable from './ordertables/AllOrdersTable';
+import OrderConfirmationModal from '../../components/admin/OrderConfirmationModal';
 
 const Orders = () => {
   const [modalContent, setModalContent] = useState(null);
@@ -20,11 +21,32 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [count, setCount] = useState(0);
+  const [message, setMessage] = useState("Are you sure you want to update this order status?");
 
+  const [showOrderConfirmModal, setShowOrderConfirmModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+
+  const confirmAccept = (orderId) => {
+    setConfirmAction(() => () => handleAccept(orderId));
+    setShowOrderConfirmModal(true);
+    setMessage("Are you sure you want to accept this order and move it to Processing?");
+  };
+
+  const confirmReadyToShipped = (orderId) => {
+    setConfirmAction(() => () => handleReadyToShipped(orderId));
+    setShowOrderConfirmModal(true);
+    setMessage("Are you sure you want to mark this order as Ready to Shipped?");
+  };
+
+  const confirmMarkAsDelivered = (orderId) => {
+    setConfirmAction(() => () => markAsDelivered(orderId));
+    setShowOrderConfirmModal(true);
+    setMessage("Are you sure you want to mark this order as Delivered?");
+  };
 
   const statusTabs = [
-    { key: 'All', label: 'All', count: count,color:'bg-blue-600' },
-    { key: 'Pendding', label: 'Pendding',   color: 'bg-gray-200' },
+    { key: 'All', label: 'All', count: count, color: 'bg-blue-600' },
+    { key: 'Pendding', label: 'Pendding', color: 'bg-gray-200' },
     { key: 'Processing', label: 'Processing', color: 'bg-gray-200' },
     { key: 'Shipped', label: 'Shipped', color: 'bg-gray-200' },
     { key: 'Delivered', label: 'Delivered', color: 'bg-gray-200' },
@@ -96,7 +118,7 @@ const Orders = () => {
           order.id === updatedOrder.id ? updatedOrder : order
         )
       );
-      toast.success("Order status updated successfully!");
+      toast.success("Order status updated to Processing!");
       await getPaidOrders();
     } catch (err) {
       console.error("Error updating order status:", err);
@@ -124,7 +146,36 @@ const Orders = () => {
           order.id === updatedOrder.id ? updatedOrder : order
         )
       );
-      toast.success("Order status updated successfully!");
+      toast.success("Order status updated to Shipped!");
+      await getPaidOrders();
+    } catch (err) {
+      console.error("Error updating order status:", err);
+      toast.error("Failed to update order status.");
+    }
+  };
+
+
+  const markAsDelivered = async (orderId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/api/admin/orders/${orderId}/status?status=DELIVERED`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      const updatedOrder = response.data;
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === updatedOrder.id ? updatedOrder : order
+        )
+      );
+      toast.success("Order status updated to Delivered!");
       await getPaidOrders();
     } catch (err) {
       console.error("Error updating order status:", err);
@@ -142,11 +193,8 @@ const Orders = () => {
           <h1 className="text-2xl font-bold text-gray-900">Order Management</h1>
           <p className="text-gray-600 mt-1">Manage and track all customer orders</p>
         </div>
-        
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2 transition-colors">
-          <Download className="w-4 h-4" />
-          <span>Export Orders</span>
-        </button>
+
+       
       </div>
 
       {/* Search and Filter
@@ -169,23 +217,21 @@ const Orders = () => {
       </div> */}
 
       {/* Status Tabs */}
-      <div className="flex space-x-1 mb-6">
+      <div className="flex space-x-1 mb-6 bg-gray-100 p-2 rounded-lg w-min overflow-x-auto">
         {statusTabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2 transition-colors ${
-              activeTab === tab.key
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-            }`}
+            className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2 transition-colors ${activeTab === tab.key
+              ? 'bg-blue-600 text-white'
+              : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+              }`}
           >
             <span>{tab.label}</span>
-            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-              activeTab === tab.key 
-                ? 'bg-blue-500 text-white' 
-                : 'bg-gray-100 text-gray-600'
-            }`}>
+            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${activeTab === tab.key
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-100 text-gray-600'
+              }`}>
               {tab.count}
             </span>
           </button>
@@ -218,7 +264,7 @@ const Orders = () => {
                 </th>
               </tr>
             </thead>
-            
+
             <tbody className="bg-white divide-y divide-gray-200">
               <AnimatePresence>
 
@@ -237,27 +283,30 @@ const Orders = () => {
                 {activeTab === "Pendding" && (
                   <PendingOrdersTable
                     setModalContent={setModalContent}
-                    handleAccept={handleAccept}
+                    handleAccept={confirmAccept}
                   />
                 )}
                 {activeTab === "Processing" && (
                   <ProcessingOrdersTable
                     filteredOrders={filteredOrders}
                     setModalContent={setModalContent}
-                    handleReadyToShipped={handleReadyToShipped}
+                    handleReadyToShipped={confirmReadyToShipped}
                   />
+
                 )}
                 {activeTab === "Shipped" && (
                   <ShippedOrdersTable
                     setModalContent={setModalContent}
-                    setIsEmailModalOpen={setIsEmailModalOpen}
                     setConfimationModalCon={setConfimationModalCon}
-                    setSelectedOrderId={setSelectedOrderId}
                     setShowConfirmModal={setShowConfirmModal}
+                    markAsDelivered={confirmMarkAsDelivered}
                   />
                 )}
                 {activeTab === "Delivered" && (
-                  <DeliveredOrdersTable filteredOrders={filteredOrders} />
+                  <DeliveredOrdersTable
+                    filteredOrders={filteredOrders}
+                    setModalContent={setModalContent}
+                  />
                 )}
               </AnimatePresence>
             </tbody>
@@ -293,6 +342,20 @@ const Orders = () => {
           onClose={() => setIsEmailModalOpen(false)}
         />
       )}
+
+      <OrderConfirmationModal
+        isOpen={showOrderConfirmModal}
+        onClose={() => setShowOrderConfirmModal(false)}
+        onConfirm={() => {
+          if (confirmAction) confirmAction();
+          setShowOrderConfirmModal(false);
+        }}
+        title="Confirm Order Action"
+        message={message}
+        confirmText="Yes, Confirm"
+        cancelText="Cancel"
+        type="warning"
+      />
     </div>
   );
 };

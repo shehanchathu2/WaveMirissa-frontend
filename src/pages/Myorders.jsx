@@ -1,146 +1,16 @@
+// src/pages/Myorders.jsx
 import React, { useEffect, useState } from 'react';
-import { ShoppingBag, Package, CheckCircle } from 'lucide-react';
+import { ShoppingBag, Search } from 'lucide-react';
 import OrderCard from '../components/MyOrder/OrderCard';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
-// const mockOrders = [
-//   {
-//     id: '1',
-//     orderNumber: 'ORD-2024-001',
-//     date: '2024-12-10',
-//     status: 'delivered',
-//     deliveryDate: '2024-12-15',
-//     total: 159.99,
-//     products: [
-//       {
-//         id: 'p1',
-//         name: 'Cowrie Shell Bracelet',
-//         price: 79.99,
-//         quantity: 1,
-//         image: 'https://img.drz.lazcdn.com/static/lk/p/fa5aa44bf0333c2bde83caf34c8f8ea9.jpg_720x720q80.jpg',
-//       },
-//       {
-//         id: 'p2',
-//         name: 'Sea Shell Earrings',
-//         price: 39.99,
-//         quantity: 2,
-//         image: 'https://content.instructables.com/FMV/OPR5/I916FEWJ/FMVOPR5I916FEWJ.jpg?auto=webp'
-//       }
-//     ],
-//     shippingAddress: {
-//       name: 'John Doe',
-//       street: '123 Main Street',
-//       city: 'San Francisco',
-//       state: 'CA',
-//       zipCode: '94102'
-//     }
-//   },
-//   {
-//     id: '2',
-//     orderNumber: 'ORD-2024-002',
-//     date: '2024-12-18',
-//     status: 'shipped',
-//     total: 299.99,
-//     trackingNumber: 'TRK123456789',
-//     courierService: 'FedEx',
-//     courierUrl: 'https://www.fedex.com/fedextrack/?trknbr=TRK123456789',
-//     products: [
-//       {
-//         id: 'p3',
-//         name: 'Cowrie Shell Earrings',
-//         price: 299.99,
-//         quantity: 1,
-//         image: 'https://i.etsystatic.com/8631638/r/il/253304/3739954298/il_570xN.3739954298_o2jb.jpg'
-//       }
-//     ],
-//     shippingAddress: {
-//       name: 'John Doe',
-//       street: '123 Main Street',
-//       city: 'San Francisco',
-//       state: 'CA',
-//       zipCode: '94102'
-//     }
-//   },
-//   {
-//     id: '3',
-//     orderNumber: 'ORD-2024-003',
-//     date: '2024-12-20',
-//     status: 'processing',
-//     total: 89.99,
-//     products: [
-//       {
-//         id: 'p4',
-//         name: 'Cone Shell Ring',
-//         price: 29.99,
-//         quantity: 2,
-//         image: 'https://i.etsystatic.com/36875758/r/il/c26f8a/5660862413/il_340x270.5660862413_3x83.jpg'
-//       },
-//       {
-//         id: 'p5',
-//         name: 'Multicolor beaded seashell anklet',
-//         price: 59.99,
-//         quantity: 1,
-//         image: 'https://classywomencollection.com/cdn/shop/products/Multicolor-beaded-seashell-anklet-on-ankle.jpg?v=1602692795'
-//       }
-//     ],
-//     shippingAddress: {
-//       name: 'John Doe',
-//       street: '123 Main Street',
-//       city: 'San Francisco',
-//       state: 'CA',
-//       zipCode: '94102'
-//     }
-//   },
-//   {
-//     id: '4',
-//     orderNumber: 'ORD-2024-004',
-//     date: '2024-11-25',
-//     status: 'delivered',
-//     deliveryDate: '2024-11-30',
-//     total: 449.99,
-//     products: [
-//       {
-//         id: 'p6',
-//         name: 'Clover Necklace',
-//         price: 149.99,
-//         quantity: 1,
-//         image: 'https://i.ebayimg.com/images/g/vyUAAOSwAiVf3qQM/s-l1600.jpg',
-//         review: {
-//           rating: 5,
-//           comment: 'Excellent keyboard! Very responsive and great build quality.',
-//           date: '2024-12-01'
-//         }
-//       },
-//       {
-//         id: 'p7',
-//         name: 'Pink Beads Bracelet',
-//         price: 89.99,
-//         quantity: 1,
-//         image: 'https://www.azilaa.com/pics/Lotus-om-pink-gemstone-beaded-handmade-bracelet-42041_1_full.jpg'
-//       },
-//       {
-//         id: 'p8',
-//         name: 'Cone shell Earrings',
-//         price: 69.99,
-//         quantity: 3,
-//         image: 'https://i.etsystatic.com/25088563/r/il/c9a29a/2567827705/il_fullxfull.2567827705_thya.jpg'
-//       }
-//     ],
-//     shippingAddress: {
-//       name: 'John Doe',
-//       street: '123 Main Street',
-//       city: 'San Francisco',
-//       state: 'CA',
-//       zipCode: '94102'
-//     }
-//   }
-// ];
-
 const mockOrders = [];
+
 function Myorders() {
   const [orders, setOrders] = useState(mockOrders);
-  const [activeTab, setActiveTab] = useState('processing');
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -154,10 +24,9 @@ function Myorders() {
         setLoading(true);
         const response = await axios.get(
           `http://localhost:8080/api/user/orders/my-orders/${user.id}`,
-          { withCredentials: true } 
+          { withCredentials: true }
         );
         setOrders(response.data);
-        console.log(response.data);
       } catch (err) {
         console.error(err);
         setError("Failed to fetch orders");
@@ -169,170 +38,147 @@ function Myorders() {
     fetchOrders();
   }, [user]);
 
-  const processingOrders = orders.filter(order => order.orderStatus === 'PROCESSING' || order.status === 'processing');
-  const shippedOrders = orders.filter(order => order.status === 'SHIPPED' || order.status === 'shipped');
-  const deliveredOrders = orders.filter(order => order.status === 'DELIVERED' || order.status === 'delivered');
-
   const handleReviewSubmit = (orderId, productId, rating, comment) => {
     setOrders(prevOrders =>
       prevOrders.map(order =>
         order.id === orderId
           ? {
-            ...order,
-            products: order.products.map(product =>
-              product.id === productId
-                ? {
-                  ...product,
-                  review: {
-                    rating,
-                    comment,
-                    date: new Date().toISOString().split('T')[0]
-                  }
-                }
-                : product
-            )
-          }
+              ...order,
+              products: order.products.map(product =>
+                product.id === productId
+                  ? { ...product, review: { rating, comment, date: new Date().toISOString().split("T")[0] } }
+                  : product
+              )
+            }
           : order
       )
     );
   };
 
+  const filteredOrders = orders.filter(order => {
+    const status = order.orderStatus?.toLowerCase() || order.status?.toLowerCase();
+    const matchesStatus = filterStatus === "all" || status === filterStatus;
+    const matchesSearch =
+      order.orderId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.items?.some(item => item.productName?.toLowerCase().includes(searchTerm.toLowerCase()));
+    return matchesStatus && matchesSearch;
+  });
 
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-stone-50 via-amber-50 to-stone-100">
-      {/* Header */}
-      <div className="bg-white border-b shadow-sm border-stone-200">
-        <div className="max-w-6xl px-4 py-6 mx-auto">
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-gradient-to-br from-[#1b4965] to-[#0d3548] rounded-xl shadow-lg">
-              <ShoppingBag className="text-white" size={24} />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
-              <p className="text-gray-600">Track and manage your purchases</p>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="flex items-center justify-center py-20">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading your orders...</p>
             </div>
           </div>
         </div>
       </div>
+    );
+  }
 
-      {/* Main Content */}
-      <div className="max-w-6xl px-4 py-8 mx-auto">
-        {/* Tab Navigation */}
-        <div className="mb-8 bg-white border shadow-sm rounded-xl border-stone-200">
-          <div className="flex">
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Header Section */}
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+            <div>
+              <h1 className="flex items-center text-2xl font-semibold text-gray-900 gap-3">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <ShoppingBag size={24} className="text-blue-600" />
+                </div>
+                My Orders
+              </h1>
+              <p className="text-gray-600 mt-1">Track and manage your orders</p>
+            </div>
             
-            
-            
-            
-            <button
-              onClick={() => setActiveTab('processing')}
-              className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 font-medium transition-all duration-200 rounded-l-xl ${activeTab === 'processing'
-                  ? 'bg-gradient-to-r from-[#1b4965] to-[#0d3548] text-white shadow-sm'
-                  : 'text-gray-600 hover:text-[#1b4965] hover:bg-stone-50'
-                }`}
-            >
-              <Package size={20} />
-              Processing Orders ({processingOrders.length})
-            </button>
-
-
-
-
-            <button
-              onClick={() => setActiveTab('delivered')}
-              className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 font-medium transition-all duration-200 rounded-r-xl ${activeTab === 'delivered'
-                  ? 'bg-gradient-to-r from-[#1b4965] to-[#0d3548] text-white shadow-sm'
-                  : 'text-gray-600 hover:text-[#1b4965] hover:bg-stone-50'
-                }`}
-            >
-              <CheckCircle size={20} />
-              Delivered Orders ({deliveredOrders.length})
-            </button>
-
-
-
-
-            
+            {/* Search and Filter */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                  type="text"
+                  placeholder="Search orders or products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-sm w-full sm:w-64 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                />
+              </div>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="border border-gray-300 rounded-lg px-4 py-2.5 text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              >
+                <option value="all">All Orders</option>
+                <option value="pendding">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        {/* Orders Grid */}
-        <div className="space-y-6">
-          {activeTab === 'processing' ? (
-            processingOrders.length > 0 ? (
-              processingOrders.map(order => (
-                <OrderCard
-                  key={order.id}
-                  order={order}
-                  onReviewSubmit={handleReviewSubmit}
-                />
-              ))
-            ) : (
-              <div className="py-16 text-center">
-                <div className="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full bg-stone-100">
-                  <Package className="text-stone-400" size={32} />
-                </div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900">No Processing Orders</h3>
-                <p className="text-gray-600">You don't have any orders being processed at the moment.</p>
-              </div>
-            )
+        {/* Order Count */}
+        {filteredOrders.length > 0 && (
+          <div className="mb-4">
+            <p className="text-gray-600 text-sm">
+              Showing {filteredOrders.length} of {orders.length} orders
+            </p>
+          </div>
+        )}
+
+        {/* Orders List */}
+        <div className="space-y-4">
+          {filteredOrders.length > 0 ? (
+            filteredOrders.map(order => (
+              <OrderCard key={order.id} order={order} onReviewSubmit={handleReviewSubmit} />
+            ))
           ) : (
-            deliveredOrders.length > 0 ? (
-              deliveredOrders.map(order => (
-                <OrderCard
-                  key={order.id}
-                  order={order}
-                  onReviewSubmit={handleReviewSubmit}
-                />
-              ))
-            ) : (
-              <div className="py-16 text-center">
-                <div className="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full bg-stone-100">
-                  <CheckCircle className="text-stone-400" size={32} />
+            <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+              <div className="max-w-md mx-auto">
+                <div className="p-4 bg-gray-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <ShoppingBag size={32} className="text-gray-400" />
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900">No Delivered Orders</h3>
-                <p className="text-gray-600">You don't have any delivered orders yet.</p>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  {searchTerm ? "No matching orders found" : `No ${filterStatus} orders`}
+                </h3>
+                <p className="text-gray-500 mb-6">
+                  {searchTerm 
+                    ? `We couldn't find any orders matching "${searchTerm}". Try adjusting your search.`
+                    : filterStatus === "all" 
+                      ? "You haven't placed any orders yet. Start shopping to see your orders here!"
+                      : `You don't have any ${filterStatus} orders at the moment.`
+                  }
+                </p>
+                {!searchTerm && filterStatus === "all" && (
+                  <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Start Shopping
+                  </button>
+                )}
               </div>
-            )
+            </div>
           )}
         </div>
 
-        {/* Summary Stats */}
-        <div className="grid grid-cols-1 gap-6 mt-12 md:grid-cols-3">
-          <div className="p-6 bg-white border shadow-sm rounded-xl border-stone-200">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="flex items-center justify-center w-10 h-10 bg-orange-100 rounded-lg">
-                <Package className="text-orange-600" size={20} />
+        {/* Summary Card */}
+        {orders.length > 0 && (
+          <div className="bg-white rounded-lg shadow-sm p-6 mt-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">Order Summary</h2>
+                <p className="text-gray-600 text-sm">Your order history at a glance</p>
               </div>
-              <span className="font-medium text-gray-900">Processing</span>
-            </div>
-            <p className="text-2xl font-bold text-gray-900">{processingOrders.length}</p>
-            <p className="text-sm text-gray-600">Orders in progress</p>
-          </div>
-
-          <div className="p-6 bg-white border shadow-sm rounded-xl border-stone-200">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-lg">
-                <CheckCircle className="text-green-600" size={20} />
+              <div className="text-right">
+                <div className="text-2xl font-bold text-gray-900">{orders.length}</div>
+                <div className="text-sm text-gray-500">Total Orders</div>
               </div>
-              <span className="font-medium text-gray-900">Delivered</span>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{deliveredOrders.length}</p>
-            <p className="text-sm text-gray-600">Successfully delivered</p>
           </div>
-
-          <div className="p-6 bg-white border shadow-sm rounded-xl border-stone-200">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#1b4965] to-[#0d3548] bg-opacity-10 rounded-lg flex items-center justify-center">
-                <ShoppingBag className="text-[#b1cfe2]" size={20} />
-              </div>
-              <span className="font-medium text-gray-900">Total Orders</span>
-            </div>
-            <p className="text-2xl font-bold text-gray-900">{orders.length}</p>
-            <p className="text-sm text-gray-600">All time orders</p>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

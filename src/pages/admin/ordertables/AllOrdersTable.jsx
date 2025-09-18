@@ -346,7 +346,7 @@ const AllOrdersTable = ({
                     className="hover:bg-gray-50 border-b border-gray-100"
                 >
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                        ORD-2024-{String(index + 1).padStart(3, '0')}
+                        {order.orderId}
                         <div className="text-xs text-gray-500 mt-1">
                             {new Date(order.createdAt).toLocaleDateString()}
                         </div>

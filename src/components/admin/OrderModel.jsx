@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FiX } from 'react-icons/fi';
@@ -16,14 +15,14 @@ const modal = {
   },
   exit: {
     opacity: 0,
-    transition: { duration: 0.3, ease: "easeInOut" }, // match duration for smooth fade-out
+    transition: { duration: 0.3, ease: "easeInOut" },
   },
 };
 
 const OrderModal = ({ title, children, onClose }) => {
   return (
     <motion.div
-      className="fixed top-0 left-0 w-full h-full bg-white-50 inset-0 bg-black/30  bg-opacity-50 flex justify-center items-center z-50"
+      className="fixed inset-0 bg-black/30 flex justify-center items-center z-50 p-4"
       variants={backdrop}
       initial="hidden"
       animate="visible"
@@ -31,18 +30,25 @@ const OrderModal = ({ title, children, onClose }) => {
       onClick={onClose}
     >
       <motion.div
-        className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative"
+        className="bg-white rounded-lg shadow-lg w-full max-w-2xl relative flex flex-col max-h-[80vh]"
         variants={modal}
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
-          onClick={onClose}
-        >
-          <FiX size={24} />
-        </button>
-        <h2 className="text-xl font-semibold mb-4">{title}</h2>
-        <div className="text-gray-700">{children}</div>
+        {/* Header */}
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-lg font-semibold">{title}</h2>
+          <button
+            className="text-gray-500 hover:text-gray-800"
+            onClick={onClose}
+          >
+            <FiX size={20} />
+          </button>
+        </div>
+
+        {/* Scrollable Content with hidden scrollbar */}
+        <div className="p-6 overflow-y-auto scrollbar-hide">
+          {children}
+        </div>
       </motion.div>
     </motion.div>
   );

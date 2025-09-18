@@ -56,7 +56,7 @@ const CheckoutPage = () => {
 
       const orderData = {
         orderId: orderID,
-        amount: totalAmount.toFixed(2),
+        amount: subtotal.toFixed(2),
         currency: 'LKR',
         status: 'PAID',
         paymentMethod: 'PAYHERE',
@@ -87,7 +87,6 @@ const CheckoutPage = () => {
     }
   };
 
-  clg("selected items:", selectedItems);
   // Callback after successful payment
   const handlePaymentSuccess = (payhereRef) => {
     setPaymentSuccess(true);

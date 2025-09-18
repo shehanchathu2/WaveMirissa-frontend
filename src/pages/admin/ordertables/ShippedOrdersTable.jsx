@@ -4,7 +4,7 @@ import WaveMirissaLoader from "../../../components/WaveMirissaLoader";
 import axios from "axios";
 import TrackingModal from "../../../components/admin/TrackingModal";
 import { Search, Filter, Download, Eye, Edit, Trash2, User, Package, CreditCard, Phone, Mail } from 'lucide-react';
-const ShippedOrdersTable = ({ setModalContent, setIsEmailModalOpen, setConfimationModalCon, setSelectedOrderId, setShowConfirmModal }) => {
+const ShippedOrdersTable = ({ setModalContent,  markAsDelivered }) => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('shipped');
@@ -59,7 +59,7 @@ const ShippedOrdersTable = ({ setModalContent, setIsEmailModalOpen, setConfimati
                     className="hover:bg-gray-50 border-b border-gray-100"
                 >
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                        ORD-2024-{String(index + 1).padStart(3, '0')}
+                        {order.orderId}
                         <div className="text-xs text-gray-500 mt-1">
                             {new Date(order.createdAt).toLocaleDateString()}
                         </div>
@@ -105,71 +105,82 @@ const ShippedOrdersTable = ({ setModalContent, setIsEmailModalOpen, setConfimati
                     </td>
 
                     <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2">
-                            <button
-                                onClick={() =>
-                                    setModalContent({
-                                        title: "Order Details",
-                                        content: (
-                                            <div className="space-y-4">
-                                                <div className="bg-gray-50 p-4 rounded-lg">
-                                                    <h3 className="font-semibold text-gray-900 mb-3">Customer Information</h3>
-                                                    <div className="space-y-2">
-                                                        <p><strong>Name:</strong> {order.user.name}</p>
-                                                        <p><strong>Email:</strong> {order.user.email}</p>
-                                                        <p><strong>Address:</strong> 123 Main Street, Colombo</p>
-                                                        <p><strong>Phone:</strong> +94 77 123 4567</p>
+                        <div className="flex items-center justify-center gap-3">
+                            {/* View Details Button */}
+                            <div className="group relative">
+                                <button
+                                    onClick={() =>
+                                        setModalContent({
+                                            title: "Order Details",
+                                            content: (
+                                                <div className="space-y-4">
+                                                    <div className="bg-gray-50 p-4 rounded-lg">
+                                                        <h3 className="font-semibold text-gray-900 mb-3">Customer Information</h3>
+                                                        <div className="space-y-2">
+                                                            <p><strong>Name:</strong> {order.user.name}</p>
+                                                            <p><strong>Email:</strong> {order.user.email}</p>
+                                                            <p><strong>Address:</strong> 123 Main Street, Colombo</p>
+                                                            <p><strong>Phone:</strong> +94 77 123 4567</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                {order.products.map((p, i) => (
-                                                    <div key={i} className="border rounded p-3 mb-2 bg-gray-50 shadow">
-                                                        <h3 className="font-semibold">{p.name}</h3>
-                                                        <p>{p.price.toLocaleString()} LKR</p>
-                                                        {p.customizations.length > 0 && (
-                                                            <div className="mt-2">
-                                                                <span className="font-medium">Customizations:</span>
-                                                                <div className="flex gap-2 flex-wrap mt-1">
-                                                                    {p.customizations.map((c, j) => (
-                                                                        <span key={j} className="bg-teal-100 text-teal-700 px-2 py-1 rounded-full text-sm">
-                                                                            {c}
-                                                                        </span>
-                                                                    ))}
+                                                    {order.products.map((p, i) => (
+                                                        <div key={i} className="border rounded p-3 mb-2 bg-gray-50 shadow">
+                                                            <h3 className="font-semibold">{p.name}</h3>
+                                                            <p>{p.price.toLocaleString()} LKR</p>
+                                                            {p.customizations.length > 0 && (
+                                                                <div className="mt-2">
+                                                                    <span className="font-medium">Customizations:</span>
+                                                                    <div className="flex gap-2 flex-wrap mt-1">
+                                                                        {p.customizations.map((c, j) => (
+                                                                            <span key={j} className="bg-teal-100 text-teal-700 px-2 py-1 rounded-full text-sm">
+                                                                                {c}
+                                                                            </span>
+                                                                        ))}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        ),
-                                    })
-                                }
-                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                            >
-                                <Eye className="w-4 h-4" />
-                            </button>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ),
+                                        })
+                                    }
+                                    className="flex items-center justify-center w-10 h-10 bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 rounded-xl transition-all duration-200 hover:shadow-md hover:scale-105"
+                                    title="View Order Details"
+                                >
+                                    <Eye className="w-5 h-5" />
+                                </button>
+                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                    View Details
+                                </div>
+                            </div>
 
-                            
-
+                            {/* Mark as Delivered Button */}
                             <button
-                                className="inline-flex items-center px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-full transition-colors shadow-sm"
+                                className="inline-flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                                 onClick={() => {
-                                    setConfimationModalCon({
-                                        title: "Mark as Delivered",
-                                        message: "Are you sure you want to mark this order as Delivered?",
-                                    });
-                                    setSelectedOrderId(order.id);
-                                    setShowConfirmModal(true);
+                                    markAsDelivered(order.id);
                                 }}
                             >
-                                Mark as Delivered
+                                
+                                Mark Delivered
                             </button>
 
-                             <button
-                            onClick={() => setTrackingModalOrder(order)}
-                            className="text-blue-600 hover:underline"
-                        >
-                            Add Tracking Number
-                        </button>
+                            {/* Add Tracking Button */}
+                            <div className="group relative">
+                                <button
+                                    onClick={() => setTrackingModalOrder(order)}
+                                    className="flex items-center justify-center w-10 h-10 bg-amber-50 hover:bg-amber-100 text-amber-600 hover:text-amber-700 rounded-xl transition-all duration-200 hover:shadow-md hover:scale-105"
+                                    title="Add Tracking Number"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                </button>
+                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                    Add Tracking
+                                </div>
+                            </div>
                         </div>
                     </td>
 

@@ -103,14 +103,14 @@ const PendingOrdersTable = ({ setModalContent, handleAccept }) => {
             </span>
           </td>
 
-          <td className="px-6 py-4">
+          <td className="px-6 py-4 ">
             <div className="flex items-center space-x-2">
               <button
                 onClick={() =>
-                  setModalContent({
+                  setModalContent({ 
                     title: "Order Details",
                     content: (
-                      <div className="space-y-4">
+                      <div className="space-y-4 ">
                         <div className="bg-gray-50 p-4 rounded-lg">
                           <h3 className="font-semibold text-gray-900 mb-3">Customer Information</h3>
                           <div className="space-y-2">
