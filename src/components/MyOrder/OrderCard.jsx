@@ -21,33 +21,33 @@ const OrderCard = ({ order, onReviewSubmit }) => {
 
   // Status UI mapping
   const statusMap = {
-    pendding: { 
-      text: statusTextMap.pendding, 
-      icon: Package, 
+    pendding: {
+      text: statusTextMap.pendding,
+      icon: Package,
       color: 'bg-yellow-50 text-yellow-700 border-yellow-200',
       dotColor: 'bg-yellow-400'
     },
-    processing: { 
-      text: statusTextMap.processing, 
-      icon: Package, 
+    processing: {
+      text: statusTextMap.processing,
+      icon: Package,
       color: 'bg-blue-50 text-blue-700 border-blue-200',
       dotColor: 'bg-blue-400'
     },
-    shipped: { 
-      text: statusTextMap.shipped, 
-      icon: Truck, 
+    shipped: {
+      text: statusTextMap.shipped,
+      icon: Truck,
       color: 'bg-purple-50 text-purple-700 border-purple-200',
       dotColor: 'bg-purple-400'
     },
-    delivered: { 
-      text: statusTextMap.delivered, 
-      icon: CheckCircle, 
+    delivered: {
+      text: statusTextMap.delivered,
+      icon: CheckCircle,
       color: 'bg-green-50 text-green-700 border-green-200',
       dotColor: 'bg-green-400'
     },
-    cancelled: { 
-      text: statusTextMap.cancelled, 
-      icon: Package, 
+    cancelled: {
+      text: statusTextMap.cancelled,
+      icon: Package,
       color: 'bg-gray-50 text-gray-700 border-gray-200',
       dotColor: 'bg-gray-400'
     },
@@ -89,10 +89,10 @@ const OrderCard = ({ order, onReviewSubmit }) => {
             <div className="flex items-center gap-4 text-sm text-gray-600">
               <div className="flex items-center gap-1">
                 <Calendar size={14} />
-                <span>Ordered {new Date(order.date).toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'short', 
-                  day: 'numeric' 
+                <span>Ordered {new Date(order.createdAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
                 })}</span>
               </div>
               <div className="text-gray-400">•</div>
@@ -106,6 +106,41 @@ const OrderCard = ({ order, onReviewSubmit }) => {
         </div>
       </div>
 
+      {status === 'shipped' && order.trackingNumber && order.estimateDate && (
+        <div className="mx-6 mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-100 border border-blue-200 rounded-xl">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+              <Truck size={16} className="text-blue-600" />
+            </div>
+            <h4 className="font-semibold text-blue-900">Your Package is On the Way!</h4>
+          </div>
+          
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="bg-white/70 rounded-lg p-3 border border-blue-100">
+              <div className="flex items-center gap-2 mb-1">
+                <Truck size={14} className="text-blue-600" />
+                <span className="text-xs font-medium text-blue-700">TRACKING NUMBER</span>
+              </div>
+              <p className="font-mono text-sm font-semibold text-blue-900">{order.trackingNumber}</p>
+            </div>
+            
+            <div className="bg-white/70 rounded-lg p-3 border border-blue-100">
+              <div className="flex items-center gap-2 mb-1">
+                <Calendar size={14} className="text-blue-600" />
+                <span className="text-xs font-medium text-blue-700">ESTIMATED DELIVERY</span>
+              </div>
+              <p className="text-sm font-semibold text-blue-900">
+                {new Date(order.estimateDate).toLocaleDateString('en-US', {
+                  weekday: 'short',
+                  month: 'short',
+                  day: 'numeric'
+                })}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Order Items */}
       <div className="p-6">
         <div className="space-y-4">
@@ -113,13 +148,13 @@ const OrderCard = ({ order, onReviewSubmit }) => {
             <div key={item.id} className={`flex items-center gap-4 ${index !== order.items.length - 1 ? 'pb-4 border-b border-gray-100' : ''}`}>
               {/* Product Image */}
               <div className="flex-shrink-0">
-                <img 
-                  src={item.productImageUrl || item.image} 
-                  alt={item.productName} 
-                  className="w-16 h-16 object-cover rounded-lg border border-gray-200" 
+                <img
+                  src={item.productImageUrl || item.image}
+                  alt={item.productName}
+                  className="w-16 h-16 object-cover rounded-lg border border-gray-200"
                 />
               </div>
-              
+
               {/* Product Info */}
               <div className="flex-1 min-w-0">
                 <h4 className="font-medium text-gray-900 truncate">{item.productName}</h4>
@@ -128,7 +163,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
                   <div className="text-gray-400">•</div>
                   <span className="text-sm font-medium text-gray-900">${item.price}</span>
                 </div>
-                
+
                 {/* Review Section */}
                 {status === 'delivered' && (
                   <div className="mt-2">
@@ -141,8 +176,8 @@ const OrderCard = ({ order, onReviewSubmit }) => {
                         {item.review.comment && (
                           <p className="text-sm text-gray-600 italic">"{item.review.comment}"</p>
                         )}
-                        <button 
-                          onClick={() => openReviewModal(item)} 
+                        <button
+                          onClick={() => openReviewModal(item)}
                           className="text-xs text-blue-600 hover:text-blue-700 underline"
                         >
                           Edit Review

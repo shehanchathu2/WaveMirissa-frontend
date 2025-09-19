@@ -19,6 +19,11 @@ function Myorders() {
   useEffect(() => {
     if (!user) return;
 
+
+
+
+
+
     const fetchOrders = async () => {
       try {
         setLoading(true);
@@ -27,6 +32,7 @@ function Myorders() {
           { withCredentials: true }
         );
         setOrders(response.data);
+        console.log(response.data);
       } catch (err) {
         console.error(err);
         setError("Failed to fetch orders");
@@ -37,6 +43,9 @@ function Myorders() {
 
     fetchOrders();
   }, [user]);
+
+
+
 
   const handleReviewSubmit = (orderId, productId, rating, comment) => {
     setOrders(prevOrders =>
