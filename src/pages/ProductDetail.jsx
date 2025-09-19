@@ -33,6 +33,7 @@ const ProductDetail = () => {
   const [openedViaAddtoCart, setOpenedViaAddtoCart] = useState(false);
   const [custemiztionOptions, setCustomizationOptions] = useState([]);
   const [cartModalOpen, setCartModalOpen] = useState(false);
+  const [review, setReview] = useState([]);
 
   const [customMaterial, setCustomMaterial] = useState('');
 
@@ -101,6 +102,21 @@ const ProductDetail = () => {
       }
     };
     fetchProducts();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/api/reviews/product/${productId}`);
+        setReview(res.data);
+
+        console.log(res.data)
+      } catch (err) {
+        console.error('Error loading products:', err);
+      }
+    };
+    fetchReviews();
   }, []);
 
 
@@ -345,33 +361,36 @@ const ProductDetail = () => {
             ))}
           </div>
 
-          {[1, 2, 3].map((review, idx) => (
+          {review.map((r, idx) => (
             <div key={idx} className="flex mb-6 space-x-4">
               <div className="mt-1 text-gray-400">
                 <FaRegUserCircle size={24} />
               </div>
               <div>
                 <div className="flex items-center space-x-2 text-sm text-gray-700">
-                  <p className="font-semibold">shehan chathuranga</p>
+                  <p className="font-semibold">{r.username}</p>
                   <span className="text-gray-400">on May 29 2025</span>
                 </div>
-                <p className="mt-1 text-sm text-gray-600">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Donec eget ullamcorper purus. Morbi vel purus purus. Nullam
-                  venenatis dui ac facilisis rhoncus. Quisque sed elit
-                  facilisis, posuere lectus id, venenatis turpis. Integer nec
-                  ante dui.
-                </p>
-                <div className="mt-1">
-                  <img
-                    src="/placeholder-image-icon.png"
-                    alt="attachment"
-                    className="inline-block w-5 h-5"
-                  />
+
+                {/* Stars */}
+                <div className="flex mt-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                      key={star}
+                      size={16}
+                      className={star <= r.rating ? "text-yellow-400" : "text-gray-300"}
+                    />
+                  ))}
                 </div>
+
+                {/* Comment */}
+                <p className="mt-1 text-sm text-gray-600">
+                  {r.comment}
+                </p>
               </div>
             </div>
           ))}
+
         </div>
       </div>
 
@@ -586,7 +605,7 @@ const ProductDetail = () => {
         customizationOptions={customizations}
       />
 
-     
+
 
       <AISuggestionModal
         isOpen={isAISuggestionModalOpen}

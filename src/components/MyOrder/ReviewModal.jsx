@@ -1,26 +1,67 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, Star } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import axios from 'axios';
 
 const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
-  const [rating, setRating] = useState(product.review?.rating || 0);
-  const [comment, setComment] = useState(product.review?.comment || '');
+  const { user } = useAuth();
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
   const [hoveredRating, setHoveredRating] = useState(0);
+  const [review, setReview] = useState(null);
+  const productId = product.product_id || product.id;
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   if (!isOpen) return null;
 
-  console.log("product", product);
+  const userId = user?.id;
+
+  // Fetch existing review for this user & product
+  useEffect(() => {
+    if (!userId || !productId) return;
+
+    const fetchReview = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/api/reviews/user/${userId}/product/${productId}`
+        );
+        setReview(res.data);
+        console.log(res.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReview();
+  }, [userId, productId]);
+
+  // Prefill rating and comment when review is fetched
+  useEffect(() => {
+    if (review) {
+      setRating(review.rating);
+      setComment(review.comment);
+    } else {
+      setRating(0);
+      setComment('');
+    }
+  }, [review]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (rating === 0) return;
-    // ✅ product.id is the orderItemId from backend
-    onSubmit(product.product_id, rating, comment);
+
+    // Use review?.id if updating an existing review
+    onSubmit(productId, rating, comment, review?.id);
     onClose();
   };
 
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+      {loading && <p className="absolute top-4 text-white">Loading...</p>}
       <div className="relative w-full max-w-md p-6 bg-white rounded-xl">
         <button
           onClick={onClose}
@@ -30,22 +71,22 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
         </button>
 
         <h3 className="mb-4 text-xl font-semibold text-gray-900">
-          {product.review ? 'Edit Review' : 'Write a Review'}
+          {review ? 'Edit Review' : 'Write a Review'}
         </h3>
 
         <div className="flex items-center gap-3 mb-6">
           <img
-            src={product.productImageUrl || product.image}
+            src={product.productImageUrl || product.imageUrl1 || product.image}
             alt={product.productName || product.name}
             className="object-cover w-16 h-16 rounded-lg"
           />
           <div>
             <h4 className="font-medium text-gray-900">{product.productName || product.name}</h4>
-            <p className="text-sm text-gray-500">${product.price}</p>
+            <p className="text-sm text-gray-500">Rs.{product.price}</p>
           </div>
         </div>
 
-
+        {error && <p className="text-red-500 mb-4">Failed to load review.</p>}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -64,7 +105,7 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
                 >
                   <Star
                     size={24}
-                    className={`$ {
+                    className={`${
                       star <= (hoveredRating || rating)
                         ? 'text-yellow-400 fill-current'
                         : 'text-gray-300'
@@ -90,7 +131,7 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
 
           <div className="flex gap-3">
             <button
-             type="button"
+              type="button"
               onClick={onClose}
               className="flex-1 px-4 py-2 text-gray-700 transition-colors border border-gray-300 rounded-lg hover:bg-gray-50"
             >
@@ -101,7 +142,7 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
               disabled={rating === 0}
               className="flex-1 px-4 py-2 bg-[#1b4965] text-white rounded-lg hover:bg-[#0d3548] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {product.review ? 'Update Review' : 'Submit Review'}
+              {review ? 'Update Review' : 'Submit Review'}
             </button>
           </div>
         </form>
