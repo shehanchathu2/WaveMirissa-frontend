@@ -7,10 +7,13 @@ import SignUp from '../components/SignUp';
 import { useAuth } from '../context/AuthContext';
 import { FaUserCircle } from 'react-icons/fa';
 import UserDropdown from './UserDropdown ';
+import { useCart } from '../context/CartProvider';
 
 const Navbar = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+
+  const { itemCount } = useCart();
 
   const { user } = useAuth();
 
@@ -50,7 +53,6 @@ const Navbar = () => {
               | HANDCRAFTED JEWELRY
             </span>
           </div>
-
           {/* Navigation Links */}
           <div className="hidden md:flex space-x-8 relative">
             {links.map((link) => (
@@ -104,7 +106,12 @@ const Navbar = () => {
             )}
 
             <NavLink to="/cart" className="relative text-gray-700 hover:text-blue-600">
-              <span className="absolute -top-1 -right-1 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+              {itemCount > 0 && (
+    <span className="absolute -top-2 -right-2 flex items-center justify-center 
+                     w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full">
+      {itemCount}
+    </span>
+  )}
               <ShoppingCartOutlinedIcon className="text-gray-700 hover:text-gray-900" />
             </NavLink>
           </div>

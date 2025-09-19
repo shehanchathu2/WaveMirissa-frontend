@@ -368,7 +368,7 @@ const ProductDetail = () => {
               </div>
               <div>
                 <div className="flex items-center space-x-2 text-sm text-gray-700">
-                  <p className="font-semibold">{r.username}</p>
+                  <p className="font-semibold">{r.userName}</p>
                   <span className="text-gray-400">on May 29 2025</span>
                 </div>
 
