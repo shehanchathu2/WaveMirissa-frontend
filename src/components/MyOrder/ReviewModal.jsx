@@ -8,12 +8,16 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
 
   if (!isOpen) return null;
 
+  console.log("product", product);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (rating === 0) return;
-    onSubmit(product.id, rating, comment);
+    // ✅ product.id is the orderItemId from backend
+    onSubmit(product.product_id, rating, comment);
     onClose();
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
@@ -31,15 +35,17 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
 
         <div className="flex items-center gap-3 mb-6">
           <img
-            src={product.image}
-            alt={product.name}
+            src={product.productImageUrl || product.image}
+            alt={product.productName || product.name}
             className="object-cover w-16 h-16 rounded-lg"
           />
           <div>
-            <h4 className="font-medium text-gray-900">{product.name}</h4>
+            <h4 className="font-medium text-gray-900">{product.productName || product.name}</h4>
             <p className="text-sm text-gray-500">${product.price}</p>
           </div>
         </div>
+
+
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -84,7 +90,7 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
 
           <div className="flex gap-3">
             <button
-              type="button"
+             type="button"
               onClick={onClose}
               className="flex-1 px-4 py-2 text-gray-700 transition-colors border border-gray-300 rounded-lg hover:bg-gray-50"
             >

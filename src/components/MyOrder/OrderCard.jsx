@@ -1,4 +1,3 @@
-// src/components/MyOrder/OrderCard.jsx
 import React, { useState } from 'react';
 import { Package, CheckCircle, Star, Truck, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import ReviewModal from './ReviewModal';
@@ -58,20 +57,25 @@ const OrderCard = ({ order, onReviewSubmit }) => {
 
   const openReviewModal = (product) => {
     setSelectedProduct(product);
+    console.log(order)
+    console.log(product)
     setIsReviewModalOpen(true);
   };
-
-  const handleReviewSubmit = (productId, rating, comment) => {
-    onReviewSubmit(order.id, productId, rating, comment);
+  
+  const handleReviewSubmit = (orderItemId, rating, comment) => {
+    const productId = selectedProduct.product_id || selectedProduct.id; 
+    onReviewSubmit(orderItemId, rating, comment, productId);
   };
 
-  const renderStars = (rating) => (
+
+   const renderStars = (rating) => (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((s) => (
         <Star key={s} size={12} className={s <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'} />
       ))}
     </div>
   );
+
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
@@ -246,6 +250,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
       </div>
 
       {/* Review Modal */}
+       {/* Review Modal */}
       {selectedProduct && (
         <ReviewModal
           product={selectedProduct}
