@@ -285,7 +285,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         onChange={handleChange}
                         className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
                     >
-                        <option value="NONE">None</option>
+                        <option value="none">None</option>
                         <option value="elegant&minimalist">elegant&minimalist</option>
                         <option value="bold&confident">bold&confident</option>
                         <option value="nature-loving&earthy">nature-loving&earthy</option>
