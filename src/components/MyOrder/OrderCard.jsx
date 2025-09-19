@@ -61,7 +61,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
     console.log(product)
     setIsReviewModalOpen(true);
   };
-  
+
   const handleReviewSubmit = (orderItemId, rating, comment) => {
     const productId = selectedProduct.product_id || selectedProduct.id; 
     onReviewSubmit(orderItemId, rating, comment, productId);
@@ -104,7 +104,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
             </div>
           </div>
           <div className="text-right">
-            <div className="text-lg font-bold text-gray-900">${order.amount}</div>
+            <div className="text-lg font-bold text-gray-900">Rs.{order.amount}</div>
             <div className="text-sm text-gray-500">Total</div>
           </div>
         </div>
@@ -165,7 +165,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
                 <div className="flex items-center gap-3 mt-1">
                   <span className="text-sm text-gray-600">Qty: {item.quantity}</span>
                   <div className="text-gray-400">•</div>
-                  <span className="text-sm font-medium text-gray-900">${item.price}</span>
+                  <span className="text-sm font-medium text-gray-900">Rs.{item.price}</span>
                 </div>
 
                 {/* Review Section */}
