@@ -16,6 +16,7 @@ import {
   BarElement,
 } from 'chart.js';
 import axios from 'axios';
+import AllOrdersTable from './ordertables/AllOrdersTable';
 
 ChartJS.register(
   CategoryScale,
@@ -106,7 +107,7 @@ const Dashboard = () => {
 
 
 
- 
+
 
 
   const brandData = {
@@ -126,6 +127,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [countUsers, setCountUsers] = useState(0);
 
   const loginUser = JSON.parse(localStorage.getItem("user"));
   const token = loginUser?.jwt; // Safe check
@@ -170,21 +173,22 @@ const Dashboard = () => {
     },
     {
       title: 'Products',
-      value: '8',
+      value: totalProducts ? totalProducts : '0',
       icon: <FaBoxes />,
       color: 'border-blue-500'
     },
-    {
-      title: 'Categories',
-      value: '6',
-      icon: <FaLayerGroup />,
-      color: 'border-green-500'
-    },
+    
     {
       title: 'Orders',
       value: trends.totalOrders ? trends.totalOrders : '0',
       icon: <FaLeaf />,
       color: 'border-purple-500'
+    },
+    {
+      title: 'Users',
+      value: countUsers ? countUsers : '0',
+      icon: <FaUsers />,
+      color: 'border-green-500'
     },
   ];
 
@@ -269,44 +273,114 @@ const Dashboard = () => {
   const [productTypeStats, setProductTypeStats] = useState([]);
 
 
-useEffect(() => {
-  const fetchProductStats = async () => {
+
+  useEffect(() => {
+    const fetchProductStats = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/product/producttype-overview"
+        );
+
+        const response1 = await axios.get(
+          "http://localhost:8080/product/total-products"
+        );
+
+
+        setProductTypeStats(response.data);
+        setTotalProducts(response1.data);
+        console.log("totalProducts", response1.data);
+        console.log("product", response.data);
+      } catch (err) {
+        console.error("Error fetching revenue trends:", err);
+        setError(err.response?.data?.message || err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProductStats();
+  }, []); // removed [token] dependency since token is not needed
+
+
+  const categoryData = {
+    labels: productTypeStats.map(item => item.productType), // ['anklet', 'neckless', 'ring', 'Bracelet', 'earring', 'wristband']
+    datasets: [
+      {
+        label: 'Category Overview',
+        data: productTypeStats.map(item => item.count),      // [1, 1, 2, 2, 1, 1]
+        backgroundColor: [
+          '#3B82F6',
+          '#06B6D4',
+          '#FACC15',
+          '#F472B6',
+          '#8B5CF6',
+          '#6B7280'
+        ]
+      }
+    ]
+  };
+
+  const [orders, setOrders] = useState([]);
+  const [count, setCount] = useState(0);
+
+  const getPaidOrders = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:8080/product/producttype-overview"
-      );
-      setProductTypeStats(response.data);
-      console.log("product", response.data);
+      const res = await axios.get("http://localhost:8080/api/admin/orders/paid", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      setOrders(res.data);
+      console.log(res.data);
+      setCount(res.data.length);
     } catch (err) {
-      console.error("Error fetching revenue trends:", err);
-      setError(err.response?.data?.message || err.message || "Something went wrong");
+      console.error("Failed to fetch paid orders", err);
+      alert("Failed to fetch paid orders. Make sure you are logged in as Admin.");
     } finally {
       setLoading(false);
     }
   };
 
-  fetchProductStats();
-}, []); // removed [token] dependency since token is not needed
 
 
- const categoryData = {
-  labels: productTypeStats.map(item => item.productType), // ['anklet', 'neckless', 'ring', 'Bracelet', 'earring', 'wristband']
-  datasets: [
-    {
-      label: 'Category Overview',
-      data: productTypeStats.map(item => item.count),      // [1, 1, 2, 2, 1, 1]
-      backgroundColor: [
-        '#3B82F6',
-        '#06B6D4',
-        '#FACC15',
-        '#F472B6',
-        '#8B5CF6',
-        '#6B7280'
-      ]
+  useEffect(() => {
+    getPaidOrders();
+  }, []);
+
+
+
+  useEffect(() => {
+    if (!token) {
+      setError("User not logged in");
+      setLoading(false);
+      return;
     }
-  ]
-};
+    const fetchTotalUsers = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/total-users",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setCountUsers(response.data);
+        console.log(response.data);
+      } catch (err) {
+        console.error("Error fetching total users:", err);
+        setError(err.response?.data?.message || err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchTotalUsers();
+  }, [token]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -359,7 +433,7 @@ useEffect(() => {
           <div className="bg-white rounded-lg shadow-sm border">
             <div className="p-4 border-b">
               <h3 className="text-lg font-semibold text-gray-900">Invoice Statistics</h3>
-              <p className="text-sm text-gray-600">Payment status overview</p>
+              <p className="text-sm text-gray-600">Order status overview</p>
             </div>
             <div className="p-4">
               <div className="h-64 flex items-center justify-center">
@@ -408,72 +482,125 @@ useEffect(() => {
         </div>
 
         {/* Recent Invoices */}
-        <div className="bg-white rounded-lg shadow-sm border">
-          <div className="p-4 border-b">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">Recent Invoices</h3>
-                <p className="text-sm text-gray-600">Latest customer orders</p>
-              </div>
-              <button className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors">
-                View All
-              </button>
-            </div>
+        <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 py-4 border-b bg-gray-50">
+            <h2 className="text-lg font-semibold text-gray-800">Recent Orders</h2>
+            <button className="text-sm text-blue-600 hover:underline font-medium">
+              View All
+            </button>
           </div>
 
+          {/* Table */}
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+            <table className="min-w-full text-sm text-left">
+              <thead>
+                <tr className="bg-gray-100 text-gray-600 text-xs uppercase tracking-wider">
+                  <th className="px-6 py-3">No</th>
+                  <th className="px-6 py-3">Order ID</th>
+                  <th className="px-6 py-3">Customer</th>
+                  <th className="px-6 py-3">Items</th>
+                  <th className="px-6 py-3">Date</th>
+                  <th className="px-6 py-3">Status</th>
+                  <th className="px-6 py-3 text-right">Price</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {invoices.map((inv) => (
-                  <tr key={inv.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900">{inv.id}</td>
-                    <td className="px-4 py-3 text-sm text-gray-600">#065499</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center">
-                        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
-                          {inv.customer.split(' ').map(n => n[0]).join('')}
-                        </div>
-                        <div className="ml-3">
-                          <p className="text-sm font-medium text-gray-900">{inv.customer}</p>
-                        </div>
+              <tbody className="divide-y divide-gray-200">
+                {orders.slice(-5).map((order, index) => (
+                  <tr key={order.id} className="hover:bg-gray-50">
+                    {/* No */}
+                    <td className="px-6 py-4 text-gray-700">{index + 1}</td>
+
+                    {/* Order ID */}
+                    <td className="px-6 py-4 font-medium text-gray-800">
+                      {order.orderId}
+                    </td>
+
+                    {/* Customer */}
+                    <td className="px-6 py-4 flex items-center gap-2">
+                      <div className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-500 text-white font-bold">
+                        {order.user?.name
+                          ?.split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .slice(0, 2)
+                          .toUpperCase()}
+                      </div>
+                      <span className="text-gray-700">{order.user?.name}</span>
+                    </td>
+
+                    <td className="px-6 py-6">
+                      <div className="max-w-xs">
+                        {order.products?.slice(0, 2).map((p, idx) => (
+                          <div key={p.productId || idx} className="text-sm text-gray-700 mb-1 flex items-center">
+                            <span className="inline-block w-6 h-6 bg-blue-100 text-blue-600 rounded-full text-xs flex items-center justify-center mr-2 font-semibold">
+                              {p.quantity ? `${p.quantity}x ` : "1x "}
+                            </span>
+                            <span className="truncate">{p.name}</span>
+                          </div>
+                        )) || <span className="text-gray-400">No items</span>}
+                        {order.products?.length > 2 && (
+                          <div className="text-xs text-blue-600 font-medium">
+                            +{order.products.length - 2} more items
+                          </div>
+                        )}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-600">{inv.items}</td>
-                    <td className="px-4 py-3 text-sm text-gray-600">
-                      <div>
-                        <p>{inv.date}</p>
-                        <p className="text-xs text-gray-400">{inv.time}</p>
+
+
+                    <td className="px-6 py-6">
+                      <div className="text-sm text-gray-900 font-medium">
+                        {new Date(order.createdAt).toLocaleDateString("en-GB", {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {new Date(order.createdAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true
+                        })}
                       </div>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${inv.status === 'Paid'
-                        ? 'bg-green-100 text-green-800'
-                        : inv.status === 'Pending'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-red-100 text-red-800'
-                        }`}>
-                        {inv.status}
+
+                    {/* Status */}
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium
+      ${order.orderStatus === "PAID"
+                            ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white"
+                            : order.orderStatus === "PENDDING"
+                              ? "bg-gradient-to-r from-amber-400 to-yellow-500 text-white"
+                              : order.orderStatus === "PROCESSING"
+                                ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white"
+                                : order.orderStatus === "SHIPPED"
+                                  ? "bg-gradient-to-r from-cyan-400 to-blue-500 text-white"
+                                  : "bg-gradient-to-r from-green-400 to-green-500 text-white"
+                          }`}
+                      >
+                        <span className="w-2 h-2 rounded-full bg-white/30 mr-2"></span>
+                        {order.orderStatus}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900">{inv.price}</td>
+
+
+
+
+                    {/* Price */}
+                    <td className="px-6 py-4 font-semibold text-right text-gray-800">
+                      {order.currency} {order.amount.toFixed(2)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         </div>
+
       </div>
+
     </div>
   );
 };

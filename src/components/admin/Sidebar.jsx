@@ -24,10 +24,10 @@ const Sidebar = () => {
     { to: '/admin/products', label: 'Products', icon: <FaBoxOpen /> },
     { to: '/admin/orders', label: 'Orders', icon: <FaShoppingCart /> },
     { to: '/admin/customization', label: 'Customization', icon: <FaPaintBrush /> },
-    { to: '/admin/delivery', label: 'Delivery & Tracking', icon: <FaTruck /> },
-    { to: '/admin/payment', label: 'Payment', icon: <FaCreditCard /> },
+    // { to: '/admin/delivery', label: 'Delivery & Tracking', icon: <FaTruck /> },
+    // { to: '/admin/payment', label: 'Payment', icon: <FaCreditCard /> },
     { to: '/admin/reports', label: 'Reports & Analytics', icon: <FaChartBar /> },
-    // { to: '/admin/content', label: 'Content', icon: <FaFileAlt /> },
+    { to: '/admin/content', label: 'Content', icon: <FaFileAlt /> },
     { to: '/admin/users', label: 'Users', icon: <FaUsers /> },
     // { to: '/admin/settings', label: 'Settings', icon: <FaCog /> },
   ];
