@@ -80,6 +80,7 @@ const Orders = () => {
         withCredentials: true,
       });
       setOrders(res.data);
+      console.log(res.data);
       setCount(res.data.length);
     } catch (err) {
       console.error("Failed to fetch paid orders", err);

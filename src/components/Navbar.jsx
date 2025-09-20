@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Login from '../components/Login';
@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { FaUserCircle } from 'react-icons/fa';
 import UserDropdown from './UserDropdown ';
 import { useCart } from '../context/CartProvider';
+import { Shell } from 'lucide-react';
 
 const Navbar = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -48,10 +49,15 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo and Tagline */}
           <div className="flex items-center space-x-2">
-            <span className="text-blue-900 text-xl font-bold">Wave Mirrissa</span>
-            <span className="text-gray-500 text-xs tracking-widest">
+            <Link to="/">
+              <Shell className="w-8 h-8 text-[#1b4765]" />
+            </Link>
+            <Link to="/">
+              <span className="text-blue-900 text-xl font-bold">Wave Mirrissa</span>
+            </Link>
+            {/* <span className="text-gray-500 text-xs tracking-widest">
               | HANDCRAFTED JEWELRY
-            </span>
+            </span> */}
           </div>
           {/* Navigation Links */}
           <div className="hidden md:flex space-x-8 relative">
@@ -84,9 +90,9 @@ const Navbar = () => {
 
           {/* Auth Buttons and Cart */}
           <div className="flex items-center space-x-4">
-            {user? (
+            {user ? (
               // If user is logged in, show user icon
-             <UserDropdown />
+              <UserDropdown />
             ) : (
               // If not logged in, show Login & Sign Up buttons
               <div className="flex items-center space-x-4">
@@ -98,7 +104,7 @@ const Navbar = () => {
                 </button>
                 <button
                   onClick={openSignup}
-                 className="bg-[#1B4965] text-white rounded-xs px-4 py-1 hover:bg-[#003e64] focus:outline-none cursor-pointer"
+                  className="bg-[#1B4965] text-white rounded-xs px-4 py-1 hover:bg-[#003e64] focus:outline-none cursor-pointer"
                 >
                   Sign Up
                 </button>
@@ -107,11 +113,11 @@ const Navbar = () => {
 
             <NavLink to="/cart" className="relative text-gray-700 hover:text-blue-600">
               {itemCount > 0 && (
-    <span className="absolute -top-2 -right-2 flex items-center justify-center 
+                <span className="absolute -top-2 -right-2 flex items-center justify-center 
                      w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full">
-      {itemCount}
-    </span>
-  )}
+                  {itemCount}
+                </span>
+              )}
               <ShoppingCartOutlinedIcon className="text-gray-700 hover:text-gray-900" />
             </NavLink>
           </div>

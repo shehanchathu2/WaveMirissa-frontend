@@ -493,14 +493,14 @@ const ProductDetail = () => {
             </button>
           </div>
 
-          <div className="w-full max-w-md">
+          {/* <div className="w-full max-w-md">
             <button
               onClick={handleBuyNowClick}
               className="w-full bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300"
             >
               Buy Now
             </button>
-          </div>
+          </div> */}
 
 
           <div className="w-full max-w-md mt-1">

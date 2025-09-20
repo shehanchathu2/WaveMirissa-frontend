@@ -5,6 +5,7 @@ import OrderCard from '../components/MyOrder/OrderCard';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 const mockOrders = [];
 
@@ -179,9 +180,13 @@ function Myorders() {
                   }
                 </p>
                 {!searchTerm && filterStatus === "all" && (
-                  <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                    Start Shopping
-                  </button>
+                  <Link to="/shop">
+                            <button
+                                className="bg-[#1f445f] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#1B4965] transition"
+                            >
+                                Shop Now
+                            </button>
+                        </Link>
                 )}
               </div>
             </div>
