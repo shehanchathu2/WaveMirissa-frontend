@@ -18,7 +18,10 @@
     "axios": "^1.9.0",
     "chart.js": "^4.4.9",
     "cloudinary": "^2.7.0",
+    "file-saver": "^2.0.5",
     "framer-motion": "^12.16.0",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.515.0",
     "partycles": "^1.2.6",
@@ -34,7 +37,8 @@
     "react-spinners": "^0.17.0",
     "react-toastify": "^11.0.5",
     "tailwind-scrollbar-hide": "^4.0.0",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

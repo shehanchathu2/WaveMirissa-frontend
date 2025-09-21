@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaUpload,
   FaCheckCircle,
   FaExclamationCircle,
   FaEye,
   FaStar,
+  FaTimes,
+  FaRedo,
 } from "react-icons/fa";
 import { HiSparkles } from "react-icons/hi";
 import FaceImageUpload from "../../components/AI_suggestion/FaceImageUpload";
@@ -17,6 +19,8 @@ import FaceImageUploadModal from "../../components/ProductPreview/FaceImageUploa
 import AnalysisResultsModal from "../../components/ProductPreview/AnalysisResultsModal";
 import JewelryRecommendationsModal from "../../components/ProductPreview/JewelryRecommendationsModal";
 import { CustomizationModal } from "./CustomizationModal";
+import JewelryRecommendationsModalTwo from "./JewelryRecommendationsModalTwo";
+
 const AISuggestionModal = ({ isOpen, onClose, jewelry, onNext }) => {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -28,8 +32,20 @@ const AISuggestionModal = ({ isOpen, onClose, jewelry, onNext }) => {
   const product = jewelry;
 
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
-
   const [totalPrice, setTotalPrice] = useState(product.price);
+  useEffect(() => {
+    if (!isOpen) {
+      setUploadedImage(null);
+      setIsAnalyzing(false);
+      setAnalysisData(null);
+      setError(null);
+      setCustomizations([]);
+      setCustomMaterial('');
+      setOpenedViaCustomize(false);
+      setIsCustomizeOpen(false);
+      setTotalPrice(jewelry.price);
+    }
+  }, [isOpen, jewelry]);
 
   if (!isOpen) return null;
 
@@ -105,177 +121,206 @@ const AISuggestionModal = ({ isOpen, onClose, jewelry, onNext }) => {
     setIsCustomizeOpen(true);
   };
 
-
   const handleCloseCustomize = () => {
     setIsCustomizeOpen(false);
     setCustomMaterial('');
     setTotalPrice(product.price);
   };
 
-
+  const handleClose = () => {
+    setSelectedOptions([]);        // Clear selected options
+    setCustomMaterial('');         // Clear selected material string
+    onClose();                     // Call parent onClose to close modal
+  };
   const handleNext = (calculatedPrice) => {
     setOpenedViaCustomize(true);
     setTotalPrice(calculatedPrice);
     setIsCustomizeOpen(false);
-
-    // if (product.producttype === 'neckless' || product.producttype === 'ring') {
-    //   setIsSizeModalOpen(true);
-    // }
   };
 
+  
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="relative w-full max-w-5xl p-6 bg-white rounded-2xl shadow-lg overflow-y-auto max-h-[90vh]">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b pb-3 mb-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-[#1B4965] to-[#2563EB] rounded-xl flex items-center justify-center">
-              <HiSparkles className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-slate-900">AI Jewelry Customization</h1>
-              <p className="text-sm text-slate-600">
-                Tailored designs based on your face shape & skin tone
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="px-3 py-1 text-sm bg-slate-100 rounded-lg hover:bg-slate-200"
-          >
-            Close
-          </button>
-        </div>
-
-        {/* Main Content */}
-        {!uploadedImage ? (
-          <FaceImageUploadModal onImageUpload={handleImageUpload} />
-        ) : (
-          <div className="space-y-6">
-            {/* Progress */}
-            <div className="flex items-center justify-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <div className="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full">
-                  <FaCheckCircle className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-green-600 font-medium">Photo Uploaded</span>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 p-2">
+      <div className="relative w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden max-h-[92vh] flex flex-col scrollbar-hide">
+        {/* Simplified Header */}
+        <div className="bg-gradient-to-r from-white to-white px-6 py-4 text-black">
+          <div className="flex items-center justify-between">
+            {/* Left side: Icon + Text */}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                <HiSparkles className="w-6 h-6 text-[#1b4765]" />
               </div>
-              <div className="w-16 h-1 bg-slate-200 rounded">
-                <div
-                  className={`h-1 bg-[#1B4965] rounded transition-all duration-1000 ${isAnalyzing || analysisData ? "w-full" : "w-0"
-                    }`}
-                ></div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div
-                  className={`w-8 h-8 flex items-center justify-center rounded-full ${analysisData
-                    ? "bg-green-500"
-                    : isAnalyzing
-                      ? "bg-[#1B4965]"
-                      : "bg-slate-300"
-                    }`}
-                >
-                  {analysisData ? (
-                    <FaCheckCircle className="text-white w-5 h-5" />
-                  ) : isAnalyzing ? (
-                    <FaEye className="text-white w-5 h-5 animate-pulse" />
-                  ) : (
-                    <FaEye className="text-slate-500 w-5 h-5" />
-                  )}
-                </div>
-                <span
-                  className={`font-medium ${analysisData
-                    ? "text-green-600"
-                    : isAnalyzing
-                      ? "text-[#1B4965]"
-                      : "text-slate-500"
-                    }`}
-                >
-                  {analysisData
-                    ? "Analysis Complete"
-                    : isAnalyzing
-                      ? "Analyzing..."
-                      : "Analysis Pending"}
-                </span>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              {/* <div className="bg-slate-50 p-4 rounded-xl"> */}
-              {/* <h2 className="font-semibold text-slate-900 mb-2">Your Photo</h2> */}
-              {/* <div className="relative"> */}
-              {/* <img
-                    src={uploadedImage}
-                    alt="Uploaded face"
-                    className="w-full h-80 object-cover rounded-xl"
-                  /> */}
-              {/* {isAnalyzing && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-xl">
-                      <LoadingSpinner size="large" />
-                    </div>
-                  )}
-                </div> */}
-              {/* </div> */}
               <div>
-                {error && (
-                  <ErrorModal
-                    error={error}
-                    uploadedImage={uploadedImage}
-                    handleReset={handleReset}
-                  />
-                )}
-                {isAnalyzing && (
-                  <div className="p-4 border bg-blue-50 rounded-xl">
-                    <p className="text-blue-700 font-medium">Analyzing facial features...</p>
-                  </div>
-                )}
-                {analysisData && <AnalysisResultsModal data={analysisData} />}
+                <h1 className="text-xl font-semibold">AI Jewelry Assistant</h1>
+                <p className="text-black text-sm">Personalized recommendations for you</p>
               </div>
             </div>
 
-            {analysisData && (
-              <JewelryRecommendationsModal
-                faceShape={analysisData.faceShape}
-                skinTone={analysisData.skinTone}
-                Customizations={analysisData.recommendedCustomizations}
-              />
-            )}
-
-            <div className="flex justify-end">
-              <button
-                onClick={handleReset}
-                className="px-4 py-2 bg-slate-100 rounded-lg hover:bg-slate-200"
-              >
-                New Analysis
-              </button>
-            </div>
-
+            {/* Right side: Close button */}
             <button
-              onClick={() => {
-                onClose();
-                onNext(customizations); // now only items in both sets
-              }}
-              className="px-4 py-2 bg-[#1b4965] text-white rounded-lg hover:bg-[#1b4965]/90"
+              onClick={onClose}
+              className="w-8 h-8 bg-gray-300 hover:bg-gray-500 rounded-full flex items-center justify-center transition-colors"
             >
-              Next
+              <FaTimes className="w-4 h-4 text-white" />
             </button>
           </div>
+        </div>
+
+
+        {/* Content Area */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-6">
+            {!uploadedImage ? (
+              <div className="max-w-2xl mx-auto">
+                <FaceImageUploadModal onImageUpload={handleImageUpload} />
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Simple Progress Indicator */}
+                <div className="bg-gray-50 p-4 rounded-xl">
+                  <div className="flex items-center justify-between max-w-lg mx-auto">
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full">
+                        <FaCheckCircle className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-green-600 font-medium text-sm">Photo Uploaded</span>
+                    </div>
+
+                    <div className="flex-1 mx-6">
+                      <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full bg-blue-500 rounded-full transition-all duration-1000 ${isAnalyzing || analysisData ? "w-full" : "w-0"
+                            }`}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-all ${analysisData
+                          ? "bg-green-500"
+                          : isAnalyzing
+                            ? "bg-blue-500"
+                            : "bg-gray-300"
+                          }`}
+                      >
+                        {analysisData ? (
+                          <FaCheckCircle className="text-white w-4 h-4" />
+                        ) : isAnalyzing ? (
+                          <FaEye className="text-white w-4 h-4 animate-pulse" />
+                        ) : (
+                          <FaEye className="text-gray-500 w-4 h-4" />
+                        )}
+                      </div>
+                      <span
+                        className={`font-medium text-sm ${analysisData
+                          ? "text-green-600"
+                          : isAnalyzing
+                            ? "text-blue-600"
+                            : "text-gray-500"
+                          }`}
+                      >
+                        {analysisData ? "Complete" : isAnalyzing ? "Analyzing..." : "Pending"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content Layout */}
+                {analysisData ? (
+                  // Full width layout when analysis is complete
+                  <div className="space-y-6">
+                    <div className="bg-white border border-gray-200 rounded-xl">
+                      <AnalysisResultsModal data={analysisData} />
+                    </div>
+                    <div className="bg-white border border-gray-200 rounded-xl">
+                      <JewelryRecommendationsModalTwo
+                        faceShape={analysisData.faceShape}
+                        skinTone={analysisData.skinTone}
+                        Customizations={analysisData.recommendedCustomizations}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  // Two column layout for analysis phase
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      {error && (
+                        <ErrorModal
+                          error={error}
+                          uploadedImage={uploadedImage}
+                          handleReset={handleReset}
+                        />
+                      )}
+
+                      {isAnalyzing && (
+                        <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+                          <div className="flex items-center gap-3">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                            <p className="text-blue-700 font-medium">Analyzing your features...</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-center text-gray-400">
+                      <div className="text-center">
+                        <HiSparkles className="w-12 h-12 mx-auto mb-2" />
+                        <p className="text-sm">Recommendations will appear here</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        {uploadedImage && (
+          <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={handleReset}
+                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+              >
+                <FaRedo className="w-4 h-4" />
+                <span>Try Again</span>
+              </button>
+
+              {analysisData ? (
+                <button
+                  onClick={() => {
+                    onClose();
+                    onNext(customizations);
+                  }}
+                  className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  <HiSparkles className="w-4 h-4" />
+                  <span>Continue with Recommendations</span>
+                </button>
+              ) : (
+                <button
+                  onClick={onClose}
+                  className="flex items-center gap-2 px-6 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors font-medium"
+                >
+                  <span>Close</span>
+                </button>
+              )}
+
+            </div>
+          </div>
         )}
+
+        {/* Customization Modal */}
+        <CustomizationModal
+          isOpen={isCustomizeOpen}
+          onClose={handleCloseCustomize}
+          jewelry={product}
+          onNext={handleNext}
+          customizationOptions={customizations}
+        />
       </div>
-
-      <CustomizationModal
-        isOpen={isCustomizeOpen}
-        onClose={handleCloseCustomize}
-        jewelry={product}
-        onNext={handleNext}
-        // onCheckout={handleDirectCheckout}
-        // openedViaCustomize={openedViaCustomize}
-        // setCustomMaterial={setCustomMaterial}
-        customizationOptions={customizations}
-      />
-
-
     </div>
   );
 };

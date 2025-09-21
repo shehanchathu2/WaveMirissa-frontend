@@ -204,40 +204,94 @@ const Home = () => {
 
 
       {/* Features Section with better spacing */}
-      <section className="py-10 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl font-semibold mb-4 text-[#1B4965]">Why Choose Our Jewelry</h2>
-            <div className="w-16 h-0.5 bg-[#1B4965] mx-auto"></div>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                className="text-center bg-white shadow-lg p-8 rounded-2xl hover:shadow-xl transition-all duration-300"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
-                whileHover={{ y: -5 }}
-              >
-                <div className="bg-teal-50 p-4 rounded-full mb-6 w-20 h-20 flex items-center justify-center mx-auto">
-                  {feature.icon}
-                </div>
-                <h3 className="font-semibold text-lg mb-3 text-[#1B4965]">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-              </motion.div>
-            ))}
+      <section className="py-20 bg-gradient-to-br from-slate-50 via-white to-rose-50 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-0 w-full h-full">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-rose-100 rounded-full opacity-30 blur-xl"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-100 rounded-full opacity-30 blur-xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-amber-50 rounded-full opacity-40 blur-2xl"></div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        {/* Header Section */}
+        <div className="text-center mb-20">
+          <div className="inline-block">
+            <span className="text-sm font-medium text-rose-600 bg-rose-50 px-4 py-2 rounded-full mb-6 inline-block">
+              ✨ Artisan Excellence
+            </span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-slate-800 via-rose-600 to-purple-600 bg-clip-text text-transparent leading-tight">
+            Why Choose Our
+            <br />
+            <span className="italic font-serif">Handcrafted Jewelry</span>
+          </h2>
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            Discover the artistry, quality, and passion that goes into every piece we create
+          </p>
+          <div className="flex justify-center mt-8">
+            <div className="w-24 h-1 bg-gradient-to-r from-rose-400 to-purple-400 rounded-full"></div>
           </div>
         </div>
-      </section>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="group relative"
+            >
+              {/* Card */}
+              <div className="relative h-full bg-white/80 backdrop-blur-sm border border-white/50 rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105">
+                {/* Gradient border effect */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-rose-200 via-purple-200 to-amber-200 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-sm"></div>
+                
+                {/* Icon container */}
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-white to-slate-50 rounded-2xl flex items-center justify-center mx-auto shadow-md group-hover:shadow-lg transition-shadow duration-300 border border-slate-100">
+                    {feature.icon}
+                  </div>
+                  {/* Floating sparkle effect */}
+                  <div className="absolute -top-2 -right-2 w-4 h-4 bg-gradient-to-r from-rose-400 to-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-pulse"></div>
+                </div>
+
+                {/* Content */}
+                <div className="text-center">
+                  <h3 className="font-bold text-xl mb-4 text-slate-800 group-hover:bg-gradient-to-r group-hover:from-rose-600 group-hover:to-purple-600 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
+                    {feature.title}
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed text-sm lg:text-base">
+                    {feature.description}
+                  </p>
+                </div>
+
+                {/* Subtle bottom accent */}
+                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-rose-400 to-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom CTA Section */}
+        <div className="text-center mt-20 relative">
+          <div className="bg-gradient-to-r from-rose-500 to-purple-600 p-8 rounded-3xl shadow-2xl border border-white/20">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              Ready to Find Your Perfect Piece?
+            </h3>
+            <p className="text-rose-100 mb-8 text-lg max-w-2xl mx-auto">
+              Explore our curated collection of handmade jewelry or commission a custom piece that's uniquely yours
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="bg-white text-rose-600 font-semibold px-8 py-4 rounded-full hover:bg-rose-50 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                Shop Collection
+              </button>
+              <button className="border-2 border-white text-white font-semibold px-8 py-4 rounded-full hover:bg-white hover:text-rose-600 transition-all duration-300 transform hover:scale-105">
+                Custom Orders
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
 
 
@@ -349,16 +403,16 @@ const Home = () => {
 
 
                   <Link to="ai_suggetions">
-                  <motion.button
-                    className="bg-[#1B4965] text-white px-6 py-3 rounded-3xl font-medium hover:bg-[#174b6b] transition-colors duration-300 shadow-lg"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    variants={itemVariants}
-                  >
-                    Expore More
-                  </motion.button>
-                </Link>
-     
+                    <motion.button
+                      className="bg-[#1B4965] text-white px-6 py-3 rounded-3xl font-medium hover:bg-[#174b6b] transition-colors duration-300 shadow-lg"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      variants={itemVariants}
+                    >
+                      Expore More
+                    </motion.button>
+                  </Link>
+
                 </div>
               </div>
             </motion.div>
