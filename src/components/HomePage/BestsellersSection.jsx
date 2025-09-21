@@ -89,13 +89,13 @@ export default function BestsellersSection({
                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
               />
 
-              <button
+              {/* <button
                 onClick={() => toggleLike(product.product_id)}
                 className="absolute top-3 right-3 bg-white p-2 rounded-full text-[#1B4965] hover:text-red-500 shadow-sm"
                 aria-label="Toggle like"
               >
                 {likedProducts[product.product_id] ? <FaHeart className="text-red-500" /> : <FaRegHeart />}
-              </button>
+              </button> */}
 
               <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <button

@@ -2,30 +2,32 @@ import React from 'react'
 import img2 from '../../assets/about us/img2.jpg'
 import img3 from '../../assets/story/img2.jpg'
 import img4 from '../../assets/bridal/w.jpg'
+import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion';
 const CategoryGrid = () => {
     const categories2 = [
         {
             label: "Men's Collection",
             image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&crop=face",
-            link: "/mens",
+            link: "/shop",
             description: "Discover premium men's fashion"
         },
         {
             label: "Women's Collection",
             image: img2,
-            link: "/womens",
+            link: "/shop",
             description: "Elegant styles for every occasion"
         },
         {
             label: "Bridal Collection",
             image: img4,
-            link: "/accessories",
+            link: "/shop",
             description: "Complete your perfect look"
         },
         {
             label: "New Arrivals",
             image: img3,
-            link: "/new-arrivals",
+            link: "/shop",
             description: "Fresh styles just for you"
         }
     ];
@@ -116,9 +118,20 @@ const CategoryGrid = () => {
                         <p className="text-slate-600 text-sm mb-6">
                             Browse our complete product catalog
                         </p>
-                        <button className="bg-[#1b4765] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1b4765]/90 transition-colors duration-200 shadow-sm hover:shadow-md w-full md:w-auto">
-                            View All Products
-                        </button>
+                        <Link to="shop">
+                            <motion.button
+                                className="bg-[#1B4965] text-white px-6 py-3 rounded-sm font-medium hover:bg-[#174b6b] transition-colors duration-300 shadow-lg"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.8, delay: 0.4 }}  
+                            >
+                               Shop Now
+                            </motion.button>
+                        </Link>
+
+
+                        
                     </div>
                 </div>
             </div>

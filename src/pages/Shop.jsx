@@ -35,6 +35,7 @@ const Shop = () => {
 
   const [gender, setGender] = useState([]);
   const [selectedGender, setSelectedGender] = useState('All');
+  
 
   useEffect(() => {
     const fetchProducts = async () => {

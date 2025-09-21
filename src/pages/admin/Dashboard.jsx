@@ -240,7 +240,7 @@ const Dashboard = () => {
           }
         );
         setMonthlyRevenue(response.data);
-        // console.log(response.data);
+        console.log("monthly revemue",response.data);
       } catch (err) {
         console.error("Error fetching revenue trends:", err);
         setError(err.response?.data?.message || err.message || "Something went wrong");
