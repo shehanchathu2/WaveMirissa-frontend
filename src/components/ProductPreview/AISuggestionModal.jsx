@@ -238,7 +238,7 @@ const AISuggestionModal = ({ isOpen, onClose, jewelry, onNext }) => {
                       <JewelryRecommendationsModalTwo
                         faceShape={analysisData.faceShape}
                         skinTone={analysisData.skinTone}
-                        Customizations={analysisData.recommendedCustomizations}
+                        Customizations={customizations}
                       />
                     </div>
                   </div>

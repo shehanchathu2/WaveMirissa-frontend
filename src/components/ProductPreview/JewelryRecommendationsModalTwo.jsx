@@ -101,7 +101,7 @@ const JewelryRecommendationsModalTwo = ({ faceShape, skinTone, Customizations })
                   {item.price && (
                     <div className="text-center py-1">
                       <span className="text-lg font-bold text-blue-600">
-                        ${item.price}
+                        LKR {item.price}
                       </span>
                     </div>
                   )}

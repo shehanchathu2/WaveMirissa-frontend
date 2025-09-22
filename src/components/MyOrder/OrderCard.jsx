@@ -7,8 +7,9 @@ const OrderCard = ({ order, onReviewSubmit }) => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [showOrderDetails, setShowOrderDetails] = useState(false);
 
-  const status = order.orderStatus?.toLowerCase() || order.status?.toLowerCase();
 
+  const status = order.orderStatus?.toLowerCase() || order.status?.toLowerCase();
+  console.log(order)
   // User-friendly texts
   const statusTextMap = {
     pendding: "Waiting for admin review",
@@ -63,12 +64,13 @@ const OrderCard = ({ order, onReviewSubmit }) => {
   };
 
   const handleReviewSubmit = (orderItemId, rating, comment) => {
-    const productId = selectedProduct.product_id || selectedProduct.id; 
+    const productId = selectedProduct.product_id || selectedProduct.id;
     onReviewSubmit(orderItemId, rating, comment, productId);
+    console.log(orderItemId, rating, comment, productId)
   };
 
 
-   const renderStars = (rating) => (
+  const renderStars = (rating) => (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((s) => (
         <Star key={s} size={12} className={s <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'} />
@@ -118,7 +120,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
             </div>
             <h4 className="font-semibold text-blue-900">Your Package is On the Way!</h4>
           </div>
-          
+
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="bg-white/70 rounded-lg p-3 border border-blue-100">
               <div className="flex items-center gap-2 mb-1">
@@ -127,7 +129,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
               </div>
               <p className="font-mono text-sm font-semibold text-blue-900">{order.trackingNumber}</p>
             </div>
-            
+
             <div className="bg-white/70 rounded-lg p-3 border border-blue-100">
               <div className="flex items-center gap-2 mb-1">
                 <Calendar size={14} className="text-blue-600" />
@@ -250,7 +252,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
       </div>
 
       {/* Review Modal */}
-       {/* Review Modal */}
+      {/* Review Modal */}
       {selectedProduct && (
         <ReviewModal
           product={selectedProduct}

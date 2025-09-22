@@ -204,94 +204,114 @@ const Home = () => {
 
 
       {/* Features Section with better spacing */}
-      <section className="py-20 bg-gradient-to-br from-slate-50 via-white to-rose-50 relative overflow-hidden">
-      {/* Decorative background elements */}
-      <div className="absolute top-0 left-0 w-full h-full">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-rose-100 rounded-full opacity-30 blur-xl"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-100 rounded-full opacity-30 blur-xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-amber-50 rounded-full opacity-40 blur-2xl"></div>
-      </div>
-      
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Header Section */}
-        <div className="text-center mb-20">
-          <div className="inline-block">
-            <span className="text-sm font-medium text-rose-600 bg-rose-50 px-4 py-2 rounded-full mb-6 inline-block">
-              ✨ Artisan Excellence
-            </span>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-slate-800 via-rose-600 to-purple-600 bg-clip-text text-transparent leading-tight">
-            Why Choose Our
-            <br />
-            <span className="italic font-serif">Handcrafted Jewelry</span>
-          </h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-            Discover the artistry, quality, and passion that goes into every piece we create
-          </p>
-          <div className="flex justify-center mt-8">
-            <div className="w-24 h-1 bg-gradient-to-r from-rose-400 to-purple-400 rounded-full"></div>
-          </div>
-        </div>
+     <section className="py-12 lg:py-20 relative overflow-hidden">
+        {/* Background with subtle gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-50/50 via-white to-blue-50/30"></div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="group relative"
-            >
-              {/* Card */}
-              <div className="relative h-full bg-white/80 backdrop-blur-sm border border-white/50 rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105">
-                {/* Gradient border effect */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-rose-200 via-purple-200 to-amber-200 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-sm"></div>
-                
-                {/* Icon container */}
-                <div className="relative mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-white to-slate-50 rounded-2xl flex items-center justify-center mx-auto shadow-md group-hover:shadow-lg transition-shadow duration-300 border border-slate-100">
-                    {feature.icon}
-                  </div>
-                  {/* Floating sparkle effect */}
-                  <div className="absolute -top-2 -right-2 w-4 h-4 bg-gradient-to-r from-rose-400 to-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-pulse"></div>
-                </div>
+        {/* Decorative elements */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-blue-100/40 to-teal-100/40 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-slate-100/50 to-blue-100/50 rounded-full blur-3xl"></div>
 
-                {/* Content */}
-                <div className="text-center">
-                  <h3 className="font-bold text-xl mb-4 text-slate-800 group-hover:bg-gradient-to-r group-hover:from-rose-600 group-hover:to-purple-600 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
-                    {feature.title}
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed text-sm lg:text-base">
-                    {feature.description}
-                  </p>
-                </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+          {/* Section Header */}
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            {/* Decorative line */}
+            <motion.div
+              initial={{ width: 0 }}
+              whileInView={{ width: 80 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.3 }}
+              className="h-px bg-gradient-to-r from-transparent via-slate-400 to-transparent mx-auto mb-8"
+            ></motion.div>
 
-                {/* Subtle bottom accent */}
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-rose-400 to-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              </div>
-            </div>
-          ))}
-        </div>
+            <h2 className="text-4xl lg:text-5xl font-light text-slate-900 mb-6" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+              Why Choose Our Jewelry
+            </h2>
 
-        {/* Bottom CTA Section */}
-        <div className="text-center mt-20 relative">
-          <div className="bg-gradient-to-r from-rose-500 to-purple-600 p-8 rounded-3xl shadow-2xl border border-white/20">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Ready to Find Your Perfect Piece?
-            </h3>
-            <p className="text-rose-100 mb-8 text-lg max-w-2xl mx-auto">
-              Explore our curated collection of handmade jewelry or commission a custom piece that's uniquely yours
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed" style={{ fontFamily: 'Inter, sans-serif' }}>
+              Discover the artistry and passion behind every piece in our collection
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-rose-600 font-semibold px-8 py-4 rounded-full hover:bg-rose-50 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-                Shop Collection
-              </button>
-              <button className="border-2 border-white text-white font-semibold px-8 py-4 rounded-full hover:bg-white hover:text-rose-600 transition-all duration-300 transform hover:scale-105">
-                Custom Orders
-              </button>
-            </div>
+          </motion.div>
+
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="group relative"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15, duration: 0.8, ease: "easeOut" }}
+                whileHover={{ y: -8 }}
+              >
+                {/* Card Background */}
+                <div className="relative bg-white/80 backdrop-blur-sm border border-slate-200/50 p-8 lg:p-10 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 group-hover:bg-white group-hover:border-slate-300/50">
+
+                  {/* Subtle gradient overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 via-transparent to-teal-50/0 group-hover:from-blue-50/30 group-hover:to-teal-50/20 rounded-3xl transition-all duration-500"></div>
+
+                  <div className="relative z-10 text-center">
+                    {/* Icon Container */}
+                    <motion.div
+                      className="relative mb-8"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className="w-20 h-20 bg-gradient-to-br from-slate-100 to-blue-100 rounded-2xl flex items-center justify-center mx-auto group-hover:from-blue-100 group-hover:to-teal-100 transition-all duration-500 shadow-inner">
+                        <div className="transform group-hover:scale-110 transition-transform duration-300">
+                          {feature.icon}
+                        </div>
+                      </div>
+
+                      {/* Floating decoration */}
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-blue-200/60 to-teal-200/60 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </motion.div>
+
+                    {/* Title */}
+                    <h3 className="font-semibold text-xl lg:text-2xl mb-4 text-slate-900 group-hover:text-slate-800 transition-colors duration-300" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                      {feature.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-slate-600 leading-relaxed text-sm lg:text-base group-hover:text-slate-700 transition-colors duration-300" style={{ fontFamily: 'Inter, sans-serif' }}>
+                      {feature.description}
+                    </p>
+
+                    {/* Bottom accent line */}
+                    <motion.div
+                      className="w-0 h-0.5 bg-gradient-to-r from-blue-400 to-teal-400 mx-auto mt-6 group-hover:w-12 transition-all duration-500"
+                    ></motion.div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
+
+          {/* Bottom decorative element */}
+          {/* <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="text-center mt-2"
+          >
+            <div className="inline-flex items-center space-x-4">
+              <div className="w-8 h-px bg-gradient-to-r from-transparent to-slate-300"></div>
+              <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+              <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
+              <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+              <div className="w-8 h-px bg-gradient-to-l from-transparent to-slate-300"></div>
+            </div>
+          </motion.div> */}
         </div>
-      </div>
-    </section>
+      </section>
 
 
 
@@ -307,66 +327,121 @@ const Home = () => {
 
       {/* AI Recommendations Section */}
       <motion.section
-        className="bg-while py-16 px-4 md:px-8 lg:px-16"
+        className="relative overflow-hidden py-12 lg:py-16 bg-gradient-to-b from-white via-slate-50/50 to-blue-50/30"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
-        <motion.div className="max-w-7xl mx-auto" variants={itemVariants}>
-          {/* Header */}
-          <motion.div className="text-center mb-16" variants={itemVariants}>
-            <h2 className="text-3xl font-semibold mb-2 text-[#1B4965]">
+        {/* Decorative background elements */}
+        <div className="absolute top-20 right-10 w-40 h-40 bg-gradient-to-br from-blue-100/30 to-teal-100/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-32 left-20 w-32 h-32 bg-gradient-to-br from-slate-100/40 to-blue-100/40 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-gradient-to-br from-teal-100/20 to-white/10 rounded-full blur-xl animate-pulse delay-500"></div>
+
+        <motion.div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12" variants={itemVariants}>
+
+          {/* Section Header */}
+          <motion.div className="text-center" variants={itemVariants}>
+            {/* Decorative line */}
+            <motion.div
+              initial={{ width: 0 }}
+              whileInView={{ width: 80 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.3 }}
+              className="h-px bg-gradient-to-r from-transparent via-slate-400 to-transparent mx-auto mb-8"
+            ></motion.div>
+
+            <h2 className="text-4xl lg:text-5xl font-light text-slate-900 mb-6" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
               AI-Powered Jewelry Recommendations
             </h2>
-            <div className="w-16 h-0.5 bg-[#1B4965] mx-auto mt-4"></div>
-            <p className="text-gray-600 max-w-xl mx-auto mt-4">
+
+            <p className="text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed" style={{ fontFamily: 'Inter, sans-serif' }}>
               Experience personalized jewelry recommendations powered by advanced AI technology. Our system analyzes your unique features to suggest pieces that perfectly complement your natural beauty.
             </p>
+
+            {/* Bottom decorative element */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.5 }}
+              className="mt-8"
+            >
+              <div className="inline-flex items-center space-x-4">
+                <div className="w-8 h-px bg-gradient-to-r from-transparent to-slate-300"></div>
+                <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                <div className="w-1 h-1 bg-slate-400 rounded-full"></div>
+                <div className="w-2 h-2 bg-slate-300 rounded-full"></div>
+                <div className="w-8 h-px bg-gradient-to-l from-transparent to-slate-300"></div>
+              </div>
+            </motion.div>
           </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+
             {/* Left Content */}
             <motion.div className="space-y-8" variants={itemVariants}>
               {AIRecommendations.map((item, index) => (
                 <motion.div
                   key={index}
-                  className="flex justify-center  space-x-6 bg-white shadow-xl rounded-lg pt-8 pl-6 pr-6"
+                  className="group relative bg-white/80 backdrop-blur-sm border border-slate-200/50 rounded-3xl p-8 shadow-lg hover:shadow-2xl hover:border-slate-300/50 transition-all duration-500"
                   variants={itemVariants}
-                  whileHover={{ x: 10 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  whileHover={{ x: 12, y: -4 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
                 >
-                  <div className="flex flex-col items-center">
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 via-transparent to-teal-50/0 group-hover:from-blue-50/30 group-hover:to-teal-50/20 rounded-3xl transition-all duration-500"></div>
+
+                  <div className="relative z-10 flex items-start space-x-6">
+                    {/* Icon Container */}
                     <motion.div
-                      className="w-12 h-12 bg-[#1B4965] rounded-full flex items-center justify-center shadow-lg text-white text-xl"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ type: "spring", stiffness: 400 }}
+                      className="relative flex-shrink-0"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 20 }}
                     >
-                      {item.icon}
+                      <div className="w-16 h-16 bg-gradient-to-br from-slate-900 to-blue-900 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                        {item.icon}
+                      </div>
+
+                      {/* Floating decoration */}
+                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-blue-200/60 to-teal-200/60 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </motion.div>
+
+                    {/* Content */}
+                    <div className="flex-1">
+                      <h3 className="text-xl lg:text-2xl font-semibold text-slate-900 mb-4 group-hover:text-slate-800 transition-colors duration-300" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+                        {item.title}
+                      </h3>
+                      <p className="text-slate-600 leading-relaxed group-hover:text-slate-700 transition-colors duration-300" style={{ fontFamily: 'Inter, sans-serif' }}>
+                        {item.description}
+                      </p>
+                    </div>
                   </div>
 
-                  {/* Content */}
-                  <div className="flex-1 pb-8">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                      {item.title}
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">{item.description}</p>
-                  </div>
+                  {/* Bottom accent line */}
+                  <motion.div
+                    className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-blue-400 to-teal-400 rounded-b-3xl group-hover:w-full transition-all duration-700"
+                  ></motion.div>
+
+                  {/* Side accent */}
+                  <div className="absolute right-0 top-0 w-1 h-0 bg-gradient-to-b from-teal-300 to-blue-300 rounded-tr-3xl group-hover:h-20 transition-all duration-500 delay-200"></div>
                 </motion.div>
               ))}
 
               {/* Try AI Assistant Button */}
-
-              <motion.div>
+              <motion.div variants={itemVariants}>
                 <Link to="ai_suggetions">
                   <motion.button
-                    className="bg-[#1B4965] text-white px-6 py-3 rounded-sm font-medium hover:bg-[#174b6b] transition-colors duration-300 shadow-lg"
+                    className="group relative overflow-hidden bg-gradient-to-r from-slate-900 to-blue-900 text-white px-8 py-4 rounded-full font-semibold text-sm uppercase tracking-wide shadow-xl hover:shadow-2xl transition-all duration-300"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     variants={itemVariants}
                   >
-                    Try AI Assistant Now
+                    <span className="relative z-10">Try AI Assistant Now</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-teal-800 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
                   </motion.button>
                 </Link>
               </motion.div>
@@ -374,49 +449,87 @@ const Home = () => {
 
             {/* Right Image with Overlay */}
             <motion.div className="relative" variants={imageVariants}>
-              <div className="relative overflow-hidden rounded-lg shadow-xl group h-[500px]">
+              <div className="relative overflow-hidden rounded-3xl shadow-2xl group h-[500px] lg:h-[600px]">
                 <img
                   src={AIRecommendation}
                   alt="AI Jewelry Recommendation"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 mb-20"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div
-                  className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 flex flex-col items-center justify-center text-center px-6 py-8 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-6 transition-all duration-1000 ease-in-out"
-                >
+
+                {/* Premium gradient overlays */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-900/30 via-transparent to-teal-900/20"></div>
+
+                {/* Content overlay */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 py-12 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 translate-y-8 transition-all duration-700 ease-out">
+
+                  {/* Floating decorative elements */}
+                  <div className="absolute top-8 right-8 w-8 h-8 bg-gradient-to-br from-white/20 to-blue-200/30 rounded-full blur-sm animate-pulse"></div>
+                  <div className="absolute bottom-12 left-8 w-6 h-6 bg-gradient-to-br from-teal-200/30 to-white/20 rounded-full blur animate-pulse delay-500"></div>
+
                   <motion.h3
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="text-white text-3xl font-semibold mb-3 tracking-wide"
+                    className="text-white text-3xl lg:text-4xl font-light mb-6 leading-tight"
+                    style={{ fontFamily: 'Cormorant Garamond, serif' }}
                   >
                     AI Jewelry Recommendation
                   </motion.h3>
 
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
-                    className="text-gray-200 text-base mb-6 max-w-md"
+                    className="text-white/90 text-base lg:text-lg mb-8 max-w-md leading-relaxed"
+                    style={{ fontFamily: 'Inter, sans-serif' }}
                   >
                     Let our intelligent system suggest jewelry that perfectly matches your unique style and preferences. Explore curated collections made just for you!
                   </motion.p>
 
-
                   <Link to="ai_suggetions">
                     <motion.button
-                      className="bg-[#1B4965] text-white px-6 py-3 rounded-3xl font-medium hover:bg-[#174b6b] transition-colors duration-300 shadow-lg"
+                      className="group/btn relative overflow-hidden bg-white/90 backdrop-blur-sm text-slate-900 px-8 py-4 rounded-full font-semibold text-sm uppercase tracking-wide hover:bg-white transition-all duration-300 shadow-lg border border-white/20"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      variants={itemVariants}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.6 }}
                     >
-                      Expore More
+                      <span className="relative z-10">Explore More</span>
                     </motion.button>
                   </Link>
-
                 </div>
+
+                {/* Corner decorative elements */}
+                <div className="absolute top-4 left-4 w-2 h-2 bg-white/40 rounded-full animate-pulse"></div>
+                <div className="absolute bottom-4 right-4 w-3 h-3 bg-gradient-to-br from-blue-300/50 to-teal-300/50 rounded-full animate-pulse delay-1000"></div>
               </div>
+
+              {/* Floating decoration around image */}
+              <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-blue-100/30 to-teal-100/30 rounded-full blur-xl animate-pulse"></div>
+              <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-br from-slate-100/40 to-blue-100/40 rounded-full blur-lg animate-pulse delay-700"></div>
             </motion.div>
           </div>
+
+          {/* Bottom decorative element */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="text-center mt-20"
+          >
+            <div className="inline-flex items-center space-x-6">
+              <div className="w-16 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
+              <div className="flex space-x-3">
+                <div className="w-3 h-3 bg-slate-300 rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-slate-400 rounded-full animate-pulse delay-300"></div>
+                <div className="w-3 h-3 bg-slate-300 rounded-full animate-pulse delay-600"></div>
+              </div>
+              <div className="w-16 h-px bg-gradient-to-l from-transparent via-slate-300 to-transparent"></div>
+            </div>
+          </motion.div>
         </motion.div>
       </motion.section>
 

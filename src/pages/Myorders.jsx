@@ -41,7 +41,7 @@ function Myorders() {
     fetchOrders();
   }, [user]);
 
-  // ✅ updated to send API request & patch state
+
   const handleReviewSubmit = async (orderItemId, rating, comment, productId) => {
     try {
       const payload = {
@@ -55,6 +55,7 @@ function Myorders() {
       const res = await axios.post(
         "http://localhost:8080/api/reviews/submit",
         payload,
+        
         {
           withCredentials: true, // include cookie automatically
         }
@@ -74,7 +75,11 @@ function Myorders() {
           ),
         }))
       );
+
+
     } catch (err) {
+
+
       console.error(err);
       toast.error(err.response?.data?.message || "Failed to submit review");
     }
@@ -160,7 +165,7 @@ function Myorders() {
         <div className="space-y-4">
           {filteredOrders.length > 0 ? (
             filteredOrders.map(order => (
-              <OrderCard key={order.id} order={order} onReviewSubmit={handleReviewSubmit} />
+              <OrderCard key={order.order_id} order={order} onReviewSubmit={handleReviewSubmit} />
             ))
           ) : (
             <div className="bg-white rounded-lg shadow-sm p-12 text-center">

@@ -48,6 +48,7 @@ const ProductDetail = () => {
   const [mainImage, setMainImage] = useState(ProductImages[0]);
   const [customizations, setCustomizations] = useState([]);
 
+  
 
 
   useEffect(() => {
@@ -118,18 +119,6 @@ const ProductDetail = () => {
     };
     fetchReviews();
   }, []);
-
-
-
-
-
-
-
-
-
-
-
-
 
   const handleCustomizeClick = () => {
     setOpenedViaCustomize(false);
@@ -260,6 +249,7 @@ const ProductDetail = () => {
       setTotalPrice(product.price);
       setOpenedViaAddtoCart(true);
       setIsSizeModalOpen(true);
+      setCustomizations('')
       return;
     }
 
@@ -270,6 +260,7 @@ const ProductDetail = () => {
     setOpenedViaCustomize(false);
     setCustomMaterial('');
     setTotalPrice(product.price);
+    
   };
 
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
@@ -9,15 +9,36 @@ import { FaUserCircle } from 'react-icons/fa';
 import UserDropdown from './UserDropdown ';
 import { useCart } from '../context/CartProvider';
 import { Shell } from 'lucide-react';
+import { useEffect } from 'react';
 
 const Navbar = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
 
   const { itemCount } = useCart();
 
   const { user } = useAuth();
 
+  const lastScrollY = useRef(0);
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+        // scrolling down
+        setShowNavbar(false);
+      } else {
+        // scrolling up
+        setShowNavbar(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const openLogin = () => {
     setIsLoginOpen(true);
@@ -44,16 +65,29 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-white shadow-sm mx-10">
-      <div className="max-w-9xl mx-auto px-8 sm:px-6 lg:px-8">
+    <motion.nav
+      className="bg-white shadow-sm fixed top-0 left-0 right-0 z-40 border-b border-gray-200"
+      initial={{ y: 0 }}
+      animate={{ y: showNavbar ? 0 : -100 }} // hide on scroll down
+      transition={{ duration: 0.3 }}
+    >
+      <div className="max-w-9xl mx-10 px-8 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Tagline */}
           <div className="flex items-center space-x-2">
-            <Link to="/">
-              <Shell className="w-8 h-8 text-[#1b4765]" />
-            </Link>
-            <Link to="/">
-              <span className="text-blue-900 text-xl font-bold">Wave Mirrissa</span>
+            <Link to="/" className="group flex items-center space-x-2">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-teal-100 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative w-10 h-10 bg-gradient-to-br from-slate-800 to-blue-900 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                  <Shell className="w-6 h-6 text-white" />
+                </div>
+              </div>
+              <span
+                className="text-blue-900 text-xl font-bold group-hover:text-slate-800 transition-colors duration-300"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                Wave Mirrissa
+              </span>
             </Link>
             {/* <span className="text-gray-500 text-xs tracking-widest">
               | HANDCRAFTED JEWELRY
@@ -126,7 +160,7 @@ const Navbar = () => {
 
       <Login open={isLoginOpen} onClose={closeModals} onSwitchToSignup={openSignup} />
       <SignUp open={isSignupOpen} onClose={closeModals} onSwitchToLogin={openLogin} />
-    </nav>
+    </motion.nav>
   );
 };
 

@@ -470,7 +470,7 @@ const Dashboard = () => {
           </div>
 
           {/* Brand Overview */}
-          <div className="bg-white rounded-lg shadow-sm border">
+          {/* <div className="bg-white rounded-lg shadow-sm border">
             <div className="p-4 border-b">
               <h3 className="text-lg font-semibold text-gray-900">Brand Overview</h3>
               <p className="text-sm text-gray-600">Products by brand</p>
@@ -478,7 +478,7 @@ const Dashboard = () => {
             <div className="p-4">
               <Bar data={brandData} />
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Recent Invoices */}

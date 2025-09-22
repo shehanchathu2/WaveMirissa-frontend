@@ -53,6 +53,7 @@ const App = () => {
       <ToastContainer position="top-right" autoClose={2000} />
       <Toaster position="top-center" reverseOrder={false} />
       {!isAdminRoute && <Navbar />}
+<main className={!isAdminRoute ? "pt-16" : ""}>
 
       <Routes>
 
@@ -128,9 +129,6 @@ const App = () => {
         <Route path="/myorders" element={<Myorders />} />
         <Route path="/profile" element={<UserProfile />} />
 
-
-
-
         {/* Always accessible for suspended users */}
         <Route path="/suspend" element={<SuspendPage />} />
 
@@ -155,9 +153,10 @@ const App = () => {
           <Route path="users" element={<Users />} />
           <Route path="settings" element={<Settings />} />
         </Route>
-      </Routes>
+        </Routes>
+        </main>
 
-      {!isAdminRoute && <ScrollToTopButton />}
+
       {!isAdminRoute && <Footer />}
     </>
   );

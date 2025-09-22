@@ -2,7 +2,7 @@ import React from 'react';
 import { Star, Heart, ShoppingBag, Sparkles } from 'lucide-react';
 
 const JewelryRecommendations = ({ faceShape, skinTone, products }) => {
-  // Mock data - replace with actual API call
+ 
   
   return (
     <div className="p-6 bg-white shadow-lg rounded-2xl">
@@ -63,19 +63,19 @@ const JewelryRecommendations = ({ faceShape, skinTone, products }) => {
               </div>
               
               <div className="flex items-center justify-between">
-                <span className="text-lg font-bold text-[#1B4965]">${item.price}</span>
+                <span className="text-lg font-bold text-[#1B4965]">LKR {item.price}</span>
                 <button className="px-3 py-1 bg-[#1B4965] text-white rounded-lg hover:bg-[#0f3449] transition-colors duration-200 flex items-center space-x-1 text-sm">
                   <ShoppingBag className="w-4 h-4" />
                   <span>Add to Cart</span>
                 </button>
               </div>
               
-              <div className="p-2 mt-3 border border-green-200 rounded-lg bg-green-50">
+              {/* <div className="p-2 mt-3 border border-green-200 rounded-lg bg-green-50">
                 <p className="flex items-center space-x-1 text-xs font-medium text-green-800">
                   <Sparkles className="w-3 h-3" />
                   <span>{item.matchReason}</span>
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
         ))}

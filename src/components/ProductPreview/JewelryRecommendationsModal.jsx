@@ -63,7 +63,7 @@ const JewelryRecommendationsModal = ({ faceShape, skinTone, Customizations }) =>
               </div>
               
               <div className="flex items-center justify-between">
-                <span className="text-lg font-bold text-[#1B4965]">${item.price}</span>
+                <span className="text-lg font-bold text-[#1B4965]">LKR{item.price}</span>
                 <button className="px-3 py-1 bg-[#1B4965] text-white rounded-lg hover:bg-[#0f3449] transition-colors duration-200 flex items-center space-x-1 text-sm">
                   <ShoppingBag className="w-4 h-4" />
                   <span>Add to Cart</span>

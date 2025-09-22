@@ -34,7 +34,7 @@ const UserDropdown = () => {
   }, []);
 
   return (
-    <div className="relative flex items-center space-x-4" ref={dropdownRef}>
+    <div className="relative flex items-center space-x-4 z-50" ref={dropdownRef}>
 
       {/* Clickable circle */}
       <div className='flex items-center p-2 space-x-1 cursor-pointer hover:bg-teal-100 rounded-3xl' onClick={() => setShowMenu((prev) => !prev)}>

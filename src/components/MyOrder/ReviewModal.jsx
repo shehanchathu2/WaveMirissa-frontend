@@ -55,7 +55,8 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
     if (rating === 0) return;
 
     // Use review?.id if updating an existing review
-    onSubmit(productId, rating, comment, review?.id);
+    onSubmit(review.orderItem.id,rating, comment);
+    console.log("remodal",review.orderItem.id,rating, comment)
     onClose();
   };
 
