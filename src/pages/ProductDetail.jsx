@@ -309,7 +309,7 @@ const ProductDetail = () => {
           <img
             src={mainImage}
             alt="Main"
-            className="shadow-md w-96 rounded-2xl"
+            className="shadow-md w-96 rounded-2xl max-h-96"
           />
         </div>
 
@@ -561,12 +561,6 @@ const ProductDetail = () => {
       <div className="mt-10 lg:col-span-2">
         <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-
-
-
-
-
-
           {likeproudct.map((p, i) => (
             <motion.div
               key={i}
@@ -584,6 +578,8 @@ const ProductDetail = () => {
         </div>
       </div>
 
+      
+
       {/* Customization Modal */}
       <CustomizationModal
         isOpen={isCustomizeOpen}
@@ -595,8 +591,6 @@ const ProductDetail = () => {
         setCustomMaterial={setCustomMaterial}
         customizationOptions={customizations}
       />
-
-
 
       <AISuggestionModal
         isOpen={isAISuggestionModalOpen}

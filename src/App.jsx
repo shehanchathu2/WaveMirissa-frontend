@@ -53,108 +53,119 @@ const App = () => {
       <ToastContainer position="top-right" autoClose={2000} />
       <Toaster position="top-center" reverseOrder={false} />
       {!isAdminRoute && <Navbar />}
-<main className={!isAdminRoute ? "pt-16" : ""}>
+      <main className={!isAdminRoute ? "pt-16" : ""}>
 
-      <Routes>
+        <Routes>
 
 
-        {/* Public Routes */}
-        <Route
-          path="/"
-          element={
+          {/* Public Routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedUserRoute>
+                <Home />
+              </ProtectedUserRoute>
+            }
+          />
+          <Route
+            path="/shop"
+            element={
+              <ProtectedUserRoute>
+                <Shop />
+              </ProtectedUserRoute>
+            }
+          />
+          <Route
+            path="/shop/product/:productId"
+            element={
+              <ProtectedUserRoute>
+                <ProductDetail />
+              </ProtectedUserRoute>
+            }
+          />
+          <Route
+            path="/ai_suggetions"
+            element={
+              <ProtectedUserRoute>
+                <AI_Suggetion />
+              </ProtectedUserRoute>
+            }
+          />
+          <Route
+            path="/virtual_try_on"
+            element={
+              <ProtectedUserRoute>
+                <VirtualTryOn />
+              </ProtectedUserRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedUserRoute>
+                <Cart />
+              </ProtectedUserRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedUserRoute>
+                <CheckoutPage />
+              </ProtectedUserRoute>
+            }
+          />
+
+          <Route
+            path="/wishlist"
+            element={
+              <ProtectedUserRoute>
+                <WishlistPage />
+              </ProtectedUserRoute>
+            }
+          />
+
+
+          <Route path="/myorders" element={
             <ProtectedUserRoute>
-              <Home />
+              <Myorders />
             </ProtectedUserRoute>
           }
-        />
-        <Route
-          path="/shop"
-          element={
-            <ProtectedUserRoute>
-              <Shop />
-            </ProtectedUserRoute>
-          }
-        />
-        <Route
-          path="/shop/product/:productId"
-          element={
-            <ProtectedUserRoute>
-              <ProductDetail />
-            </ProtectedUserRoute>
-          }
-        />
-        <Route
-          path="/ai_suggetions"
-          element={
-            <ProtectedUserRoute>
-              <AI_Suggetion />
-            </ProtectedUserRoute>
-          }
-        />
-        <Route
-          path="/virtual_try_on"
-          element={
-            <ProtectedUserRoute>
-              <VirtualTryOn />
-            </ProtectedUserRoute>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <ProtectedUserRoute>
-              <Cart />
-            </ProtectedUserRoute>
-          }
-        />
-        <Route
-          path="/checkout"
-          element={
-            <ProtectedUserRoute>
-              <CheckoutPage />
-            </ProtectedUserRoute>
-          }
-        />
+          />
+          <Route path="/profile"
+            element={
+              <ProtectedUserRoute>
+                <UserProfile />
+              </ProtectedUserRoute>
+            }
+          />
 
-        <Route
-          path="/wishlist"
-          element={
-            <ProtectedUserRoute>
-              <WishlistPage />
-            </ProtectedUserRoute>
-          }
-        />
+          {/* Always accessible for suspended users */}
+          <Route path="/suspend" element={<SuspendPage />} />
 
+          {/* Admin Routes (Protected) */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedAdminRoute>
+                <AdminLayout />
+              </ProtectedAdminRoute>
+            }
+          >
 
-        <Route path="/myorders" element={<Myorders />} />
-        <Route path="/profile" element={<UserProfile />} />
-
-        {/* Always accessible for suspended users */}
-        <Route path="/suspend" element={<SuspendPage />} />
-
-        {/* Admin Routes (Protected) */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedAdminRoute>
-              <AdminLayout />
-            </ProtectedAdminRoute>
-          }
-        >
-
-          <Route index element={<Dashboard />} />
-          <Route path="products" element={<Products />} />
-          <Route path="customization" element={<Customization />} />
-          <Route path="delivery" element={<Delivery />} />
-          <Route path="payment" element={<Payment />} />
-          <Route path="Reports" element={<Reports />} />
-          <Route path="Content" element={<Content />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="users" element={<Users />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
+            <Route index element={<Dashboard />} />
+            <Route path="products" element={<Products />} />
+            <Route path="customization" element={<Customization />} />
+            <Route path="delivery" element={<Delivery />} />
+            <Route path="payment" element={<Payment />} />
+            <Route path="Reports" element={<Reports />} />
+            <Route path="Content" element={<Content />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="users" element={<Users />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
         </Routes>
-        </main>
+      </main>
 
 
       {!isAdminRoute && <Footer />}
