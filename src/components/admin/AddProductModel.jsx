@@ -285,12 +285,12 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         onChange={handleChange}
                         className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
                     >
-                        <option value="NONE">None</option>
-                        <option value="elegant&minimalist">elegant&minimalist</option>
-                        <option value="bold&confident">bold&confident</option>
-                        <option value="nature-loving&earthy">nature-loving&earthy</option>
-                        <option value="trendy&chic">trendy&chic</option>
-                        <option value="artistic&creative">artistic&creative</option>
+                        <option value="none">None</option>
+                        <option value="Agreeableness">Agreeableness</option>
+                        <option value="Conscientiousness">Conscientiousness</option>
+                        <option value="Extraversion">Extraversion</option>
+                        <option value="Neuroticism">Neuroticism</option>
+                        <option value="Openness">Openness</option>
                     </select>
 
                     <label htmlFor="image-upload" className="flex items-center justify-center gap-2 w-full p-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-100 transition">
