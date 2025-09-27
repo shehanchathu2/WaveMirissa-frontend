@@ -1,12 +1,17 @@
 import React from "react";
 import { Sparkles, RotateCcw, Download, User, Gem } from "lucide-react";
 
+
+
+
+
 const ResultsStep = ({
   personalityType,
   jewelry,
   setShowSizeModal,
   processedImage,
   onReset,
+  goToStep, // <-- add this prop
 }) => {
   return (
     <div className="space-y-8">
@@ -142,6 +147,13 @@ const ResultsStep = ({
 
       {/* Action Buttons */}
       <div className="flex flex-col justify-center gap-4 sm:flex-row">
+        <button
+          onClick={() => goToStep("upload")}
+          className="flex items-center justify-center px-8 py-3 space-x-2 font-semibold text-teal-700 transition-all duration-200 bg-white border-2 border-teal-700 rounded-xl hover:bg-teal-50"
+        >
+          Re-upload Image
+        </button>
+
         <button
           onClick={onReset}
           className="flex items-center justify-center px-8 py-3 space-x-2 font-semibold text-teal-700 transition-all duration-200 bg-white border-2 border-teal-700 rounded-xl hover:bg-teal-50"
