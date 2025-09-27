@@ -40,7 +40,7 @@ const Shop = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/product/Allproducts');
+        const res = await axios.get('http://localhost:8080/product/AllproductsWithoutPersonality');
         setProducts(res.data);
         console.log("shop", res.data)
         setFilteredProducts(res.data);
