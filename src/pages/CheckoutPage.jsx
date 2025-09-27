@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaMoneyCheckAlt } from 'react-icons/fa';
 import AddAddressModal from '../components/AddAddressModal ';
@@ -8,13 +8,13 @@ import { calculateFinalPrice } from "../utils/calcPrice";
 
 import Payment from '../components/Payment';
 import { useAuth } from '../context/AuthContext';
-import { v4 as uuidv4 } from 'uuid'; 
+import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
 
 
 const CheckoutPage = () => {
   const { user } = useAuth();
-
+  const navigate = useNavigate();
   const { state } = useLocation();
   const selectedItems = state?.selectedItems || [];
   const totalPrice = state?.totalPrice || 0;
@@ -24,7 +24,7 @@ const CheckoutPage = () => {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const [orderID, setOrderID] = useState(`ORD-${uuidv4().slice(0,8).toUpperCase()}`);
+  const [orderID, setOrderID] = useState(`ORD-${uuidv4().slice(0, 8).toUpperCase()}`);
 
   const [loading, setLoading] = useState(false);
 
@@ -47,12 +47,12 @@ const CheckoutPage = () => {
 
   const totalAmount = subtotal + shippingAmount;
 
-  console.log("subTotal Amount:", subtotal);  
+  console.log("subTotal Amount:", subtotal);
 
   // Save order to backend DB after payment success
   const saveOrderToDB = async (payhereRef) => {
     try {
-      setLoading(true);  
+      setLoading(true);
 
       const orderData = {
         orderId: orderID,
@@ -64,7 +64,7 @@ const CheckoutPage = () => {
         productIds: selectedItems.map(item => item.productId),
         payhereRef: payhereRef,
         items: selectedItems.map(item => ({
-          productId: item.productId, 
+          productId: item.productId,
           quantity: item.quantity,
           size: item.size,
           customMaterial: item.customMaterial,
@@ -78,12 +78,26 @@ const CheckoutPage = () => {
       const response = await api.post(endpoint, orderData);
 
       console.log('Order saved:', response.data);
+
+
+      // ✅ After saving order, remove items from cart
+      await api.delete(`http://localhost:8080/cart/clear/ordered/${user.id}`, {
+        data: selectedItems.map(item => item.cartItemId) // or the actual CartItem id
+
+      });
+      console.log('Ordered items removed from cart', selectedItems.map(item => item.cartItemId));
+
+
       toast.success('Order placed successfully!');
+
+       // Navigate back to cart with hard refresh
+      navigate('/cart')
+      // window.location.reload();  // forces full refresh so cart shows updated items
     } catch (error) {
       console.error('Error saving order:', error);
       toast.error('Failed to save order.');
     } finally {
-      setLoading(false);  
+      setLoading(false);
     }
   };
 
