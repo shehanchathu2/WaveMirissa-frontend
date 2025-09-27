@@ -94,7 +94,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/product/Allproducts');
+        const res = await axios.get('http://localhost:8080/product/AllproductsWithoutPersonality');
         setLikeProducs(res.data);
 
         console.log(likeproudct)

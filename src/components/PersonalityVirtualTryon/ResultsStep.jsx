@@ -1,5 +1,6 @@
 import React from "react";
 import { Sparkles, RotateCcw, Download, User, Gem } from "lucide-react";
+import { Link } from "react-router-dom";
 
 
 
@@ -170,16 +171,16 @@ const ResultsStep = ({
           <span>Buy this</span>
         </button> */}
 
-      {/* Buy this → Product Details Page */}
-        {jewelry?.product_id && (
-          <Link
-            to={`/shop/product/${jewelry.product_id}`}
-            className="flex items-center justify-center space-x-2 px-8 py-3 bg-gradient-to-r from-teal-700 to-cyan-600 text-white rounded-xl font-semibold hover:from-teal-800 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Buy this</span>
-          </Link>
-        )}
+ {/* Buy this → Product Details Page */}
+{jewelry?.id && (
+  <Link
+    to={`/shop/product/${jewelry.id}`}
+    className="flex items-center justify-center space-x-2 px-8 py-3 bg-gradient-to-r from-teal-700 to-cyan-600 text-white rounded-xl font-semibold hover:from-teal-800 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+  >
+    <Sparkles className="w-4 h-4" />
+    <span>Buy this</span>
+  </Link>
+)}
 
 
 
