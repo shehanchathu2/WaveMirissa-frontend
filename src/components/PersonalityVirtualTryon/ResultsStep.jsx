@@ -1,5 +1,10 @@
 import React from "react";
 import { Sparkles, RotateCcw, Download, User, Gem } from "lucide-react";
+import { Link } from "react-router-dom";
+
+
+
+
 
 const ResultsStep = ({
   personalityType,
@@ -7,6 +12,7 @@ const ResultsStep = ({
   setShowSizeModal,
   processedImage,
   onReset,
+  goToStep, // <-- add this prop
 }) => {
   return (
     <div className="space-y-8">
@@ -143,6 +149,13 @@ const ResultsStep = ({
       {/* Action Buttons */}
       <div className="flex flex-col justify-center gap-4 sm:flex-row">
         <button
+          onClick={() => goToStep("upload")}
+          className="flex items-center justify-center px-8 py-3 space-x-2 font-semibold text-teal-700 transition-all duration-200 bg-white border-2 border-teal-700 rounded-xl hover:bg-teal-50"
+        >
+          Re-upload Image
+        </button>
+
+        <button
           onClick={onReset}
           className="flex items-center justify-center px-8 py-3 space-x-2 font-semibold text-teal-700 transition-all duration-200 bg-white border-2 border-teal-700 rounded-xl hover:bg-teal-50"
         >
@@ -150,13 +163,27 @@ const ResultsStep = ({
           <span>Start New Journey</span>
         </button>
 
-        <button
+        {/* <button
           onClick={() => setShowSizeModal(true)}
           className="flex items-center justify-center space-x-2 px-8 py-3 bg-gradient-to-r from-teal-700 to-cyan-600 text-white rounded-xl font-semibold hover:from-teal-800 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
         >
           <Sparkles className="w-4 h-4" />
           <span>Buy this</span>
-        </button>
+        </button> */}
+
+ {/* Buy this → Product Details Page */}
+{jewelry?.id && (
+  <Link
+    to={`/shop/product/${jewelry.id}`}
+    className="flex items-center justify-center space-x-2 px-8 py-3 bg-gradient-to-r from-teal-700 to-cyan-600 text-white rounded-xl font-semibold hover:from-teal-800 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+  >
+    <Sparkles className="w-4 h-4" />
+    <span>Buy this</span>
+  </Link>
+)}
+
+
+
       </div>
     </div>
   );

@@ -249,6 +249,7 @@ const VirtualTryOn = () => {
               setShowSizeModal={setShowSizeModal}
               onReset={resetJourney}
               enableDownload={true}
+              goToStep={goToStep} // <-- add this line
             />
           )}
 
