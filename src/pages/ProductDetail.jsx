@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { FaHeart, FaTruck, FaMoneyBillWave, FaUndo, FaStar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { SiShell } from "react-icons/si";
@@ -19,6 +19,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import CartModal from '../components/CartModal';
 import AISuggestionModal from '../components/ProductPreview/AISuggestionModal';
+import WaveMirissaLoader from '../components/WaveMirissaLoader';
 
 const ProductDetail = () => {
   const { user } = useAuth();
@@ -47,36 +48,49 @@ const ProductDetail = () => {
   ];
   const [mainImage, setMainImage] = useState(ProductImages[0]);
   const [customizations, setCustomizations] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  
 
 
   useEffect(() => {
     const fetchProduct = async () => {
+
       try {
         const res = await axios.get(`http://localhost:8080/product/${productId}`);
+        setLoading(true);
         const productData = res.data;
 
         setProduct(productData);
-        console.log(productData)
 
-        // Store customization array
         if (productData.customizations && Array.isArray(productData.customizations)) {
           setCustomizations(productData.customizations);
         }
-        console.log("customizations", customizations);
 
-        // Set default image
         const defaultImg =
           productData.image_url1 || productData.image_url2 || productData.image_url3;
         setMainImage(defaultImg);
-        console.log("Customizations:", productData.customizations);
       } catch (err) {
         console.error('Error fetching product:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProduct();
+  }, [productId]);   // ✅ re-run whenever productId changes
+
+  // Fetch reviews for this product
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/api/reviews/product/${productId}`);
+        setReview(res.data);
+      } catch (err) {
+        console.error('Error loading reviews:', err);
+      }
+    };
+
+    fetchReviews();
   }, [productId]);
 
 
@@ -88,16 +102,16 @@ const ProductDetail = () => {
 
   const productImages = [product?.image_url1, product?.image_url2, product?.image_url3].filter(Boolean);
 
-  const [likeproudct, setLikeProducs] = useState([])
+  const [likedProducts, setLikedProducts] = useState([]);
 
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get('http://localhost:8080/product/Allproducts');
-        setLikeProducs(res.data);
+        setLikedProducts(res.data);
 
-        console.log(likeproudct)
+        console.log(res.data)
       } catch (err) {
         console.error('Error loading products:', err);
       }
@@ -106,19 +120,19 @@ const ProductDetail = () => {
   }, []);
 
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const res = await axios.get(`http://localhost:8080/api/reviews/product/${productId}`);
-        setReview(res.data);
+  // useEffect(() => {
+  //   const fetchReviews = async () => {
+  //     try {
+  //       const res = await axios.get(`http://localhost:8080/api/reviews/product/${productId}`);
+  //       setReview(res.data);
 
-        console.log(res.data)
-      } catch (err) {
-        console.error('Error loading products:', err);
-      }
-    };
-    fetchReviews();
-  }, []);
+  //       console.log(res.data)
+  //     } catch (err) {
+  //       console.error('Error loading products:', err);
+  //     }
+  //   };
+  //   fetchReviews();
+  // }, [productId]);
 
   const handleCustomizeClick = () => {
     setOpenedViaCustomize(false);
@@ -260,7 +274,7 @@ const ProductDetail = () => {
     setOpenedViaCustomize(false);
     setCustomMaterial('');
     setTotalPrice(product.price);
-    
+
   };
 
 
@@ -286,33 +300,39 @@ const ProductDetail = () => {
 
 
 
-
-
+  if (loading) {
+    <WaveMirissaLoader />
+  }
 
   return (
     <div className="grid grid-cols-1 gap-10 p-8 mx-auto max-w-7xl lg:grid-cols-2">
       {/* Product Images */}
       <div className="pl-12 space-y-4">
-        <div className="flex gap-8">
-          <div className="flex flex-col gap-2">
-            {productImages.map((src, idx) => (
+        <div className="pl-12 space-y-4">
+          <div className="flex gap-8">
+            {/* Thumbnails */}
+            <div className="flex flex-col gap-2">
+              {productImages.map((src, idx) => (
+                <img
+                  key={idx}
+                  src={src}
+                  alt={`Thumbnail ${idx + 1}`}
+                  onClick={() => setMainImage(src)}
+                  className="w-20 h-20 object-cover rounded-lg cursor-pointer border-2 border-gray-200 hover:border-teal-500"
+                />
+              ))}
+            </div>
+
+            {/* Main Image */}
+            <div className="flex items-center justify-center w-96 h-96 shadow-md rounded-2xl overflow-hidden">
               <img
-                key={idx}
-                src={src}
-                alt={`Thumbnail ${idx + 1}`}
-                onClick={() => setMainImage(src)}
-                className="object-cover w-16 h-16 rounded-lg cursor-pointer"
+                src={mainImage}
+                alt="Main"
+                className="w-full h-full object-cover"
               />
-            ))}
+            </div>
           </div>
-
-          <img
-            src={mainImage}
-            alt="Main"
-            className="shadow-md w-96 rounded-2xl max-h-96"
-          />
         </div>
-
 
         <div className="max-w-2xl px-4 mx-auto text-gray-800">
           <h3 className="mb-2 text-xl font-semibold text-teal-700 mt-7">
@@ -406,7 +426,8 @@ const ProductDetail = () => {
           <div className="flex items-center gap-3">
             <SiShell className="text-xl text-black-600" />
             <p className="text-base">
-              <strong>Materials Used:</strong>        {product.material}
+              <strong>Materials Used:</strong>
+              {product.material}
             </p>
           </div>
 
@@ -561,24 +582,39 @@ const ProductDetail = () => {
       <div className="mt-10 lg:col-span-2">
         <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {likeproudct.map((p, i) => (
-            <motion.div
-              key={i}
-              className="p-3 transition border rounded-xl hover:shadow-lg"
-              whileHover={{ scale: 1.05 }}
+          {likedProducts.map((p) => (
+            <Link
+              to={`/shop/product/${p.product_id}`}
+              key={p.product_id}
+              className="block overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-lg transition"
             >
-              <img
-                src={p.image_url1}
-                alt={p.name}
-                className="object-cover w-full h-32 rounded-lg"
-              />
+              <div className="relative w-full h-48 md:h-56">
+                {/* Single Image */}
+                <img
+                  src={p.image_url1}
+                  alt={p.name}
+                  className="w-full h-full object-cover rounded-xl"
+                />
+              </div>
 
-            </motion.div>
+              {/* Product Info */}
+              <div className="px-3 py-2">
+                <h3 className="text-sm font-semibold text-gray-800 truncate">{p.name}</h3>
+                <p className="text-sm font-bold text-black mt-1">LKR {p.price}</p>
+                {p.available && (
+                  <span className="inline-block mt-1 bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full">
+                    In Stock
+                  </span>
+                )}
+              </div>
+            </Link>
           ))}
         </div>
+
+
       </div>
 
-      
+
 
       {/* Customization Modal */}
       <CustomizationModal

@@ -8,9 +8,6 @@ import { FaHandHoldingHeart } from "react-icons/fa";
 import { MdEco } from "react-icons/md";
 import { FaHeart } from "react-icons/fa6";
 import { FaGift } from 'react-icons/fa';
-import { FaBoxOpen } from 'react-icons/fa';
-import { FaPencilRuler } from 'react-icons/fa';
-import { FaPenFancy } from 'react-icons/fa';
 import { FaCogs } from 'react-icons/fa';
 import { FaLeaf } from 'react-icons/fa';
 import { FaTree } from 'react-icons/fa';
@@ -226,7 +223,7 @@ const HeroCarousel = () => {
                                         <motion.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
-                                            className="group relative overflow-hidden bg-gradient-to-r from-slate-900 to-blue-900 text-white px-8 py-4 rounded-full font-semibold text-sm uppercase tracking-wide shadow-xl hover:shadow-2xl transition-all duration-300"
+                                            className="group relative overflow-hidden bg-gradient-to-r from-[#1b4765] to-[#1b4769] text-white px-8 py-4 rounded-full font-semibold text-sm uppercase tracking-wide shadow-xl hover:shadow-2xl transition-all duration-300"
                                         >
                                             <span className="relative z-10">Shop Collection</span>
                                             <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-teal-800 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>

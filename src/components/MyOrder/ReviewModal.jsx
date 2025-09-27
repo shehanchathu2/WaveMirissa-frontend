@@ -3,7 +3,7 @@ import { X, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 
-const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
+const ReviewModal = ({ product, isOpen, onClose, onSubmit ,order}) => {
   const { user } = useAuth();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -20,12 +20,12 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
   // Fetch existing review for this user & product
   useEffect(() => {
     if (!userId || !productId) return;
-
+    console.log(order)
     const fetchReview = async () => {
       setLoading(true);
       try {
         const res = await axios.get(
-          `http://localhost:8080/api/reviews/user/${userId}/product/${productId}`
+          `http://localhost:8080/api/reviews/user/${userId}/product/${productId}/order/${order.order_id}`,
         );
         setReview(res.data);
         console.log(res.data);
@@ -55,8 +55,8 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
     if (rating === 0) return;
 
     // Use review?.id if updating an existing review
-    onSubmit(review.orderItem.id,rating, comment);
-    console.log("remodal",review.orderItem.id,rating, comment)
+    onSubmit(order.order_id, rating, comment);
+    console.log("remodal", order.order_id, rating, comment);
     onClose();
   };
 
@@ -87,7 +87,7 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit }) => {
           </div>
         </div>
 
-        {error && <p className="text-red-500 mb-4">Failed to load review.</p>}
+        {/* {error && <p className="text-red-500 mb-4">Failed to load review.</p>} */}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

@@ -6,7 +6,7 @@ import axios from "axios";
 import toast from 'react-hot-toast';
 
 
-const AddAddressModal = ({ onClose }) => {
+const AddAddressModal = ({ onClose,onAddressSaved  }) => {
   const [defaultShipping, setDefaultShipping] = useState(false);
   const { user } = useAuth();
   const [address, setAddress] = useState({
@@ -53,10 +53,10 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   setLoading(true);
 
-  const phoneRegex = /^[07][0-9]{9}$/; // Starts with 6,7,8,9 and 9 digits
+  const phoneRegex = /^[07][0-9]{9}$/;
   if (!phoneRegex.test(address.phone)) {
     toast.error("Please enter a valid Sri Lankan mobile number (9 digits, starts with 0 or 7)");
-    setLoading(false); // ✅ stop loading
+    setLoading(false);
     return;
   }
 
@@ -66,8 +66,13 @@ const handleSubmit = async (e) => {
       { ...address, defaultShipping }
     );
     toast.success("Address saved successfully!"); 
-    setAddress(res.data); // refresh state
-    onClose(); // close modal
+    
+    // ✅ send new address to parent
+    if (onAddressSaved) {
+      onAddressSaved(res.data);
+    }
+
+    onClose(); 
   } catch (err) {
     toast.error("Error saving address!");
     console.error(err);
@@ -75,6 +80,7 @@ const handleSubmit = async (e) => {
     setLoading(false);
   }
 };
+
 
 
   return (

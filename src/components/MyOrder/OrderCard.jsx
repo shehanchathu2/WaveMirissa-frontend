@@ -65,7 +65,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
 
   const handleReviewSubmit = (orderItemId, rating, comment) => {
     const productId = selectedProduct.product_id || selectedProduct.id;
-    onReviewSubmit(orderItemId, rating, comment, productId);
+    onReviewSubmit(order.order_id,orderItemId, rating, comment, productId);
     console.log(orderItemId, rating, comment, productId)
   };
 
@@ -262,6 +262,7 @@ const OrderCard = ({ order, onReviewSubmit }) => {
             setSelectedProduct(null);
           }}
           onSubmit={handleReviewSubmit}
+          order={order} 
         />
       )}
     </div>

@@ -40,6 +40,7 @@ import Myorders from './pages/Myorders';
 import SuspendPage from './pages/SuspendPage';
 import UserProfile from './pages/UserProfile';
 import WishlistPage from './pages/WishlistPage';
+import ScrollToTop from './components/ScrollToTop';
 
 
 
@@ -54,7 +55,7 @@ const App = () => {
       <Toaster position="top-center" reverseOrder={false} />
       {!isAdminRoute && <Navbar />}
       <main className={!isAdminRoute ? "pt-16" : ""}>
-
+        <ScrollToTop />
         <Routes>
 
 
@@ -75,14 +76,23 @@ const App = () => {
               </ProtectedUserRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/shop/product/:productId"
             element={
               <ProtectedUserRoute>
                 <ProductDetail />
               </ProtectedUserRoute>
             }
+          /> */}
+          <Route
+            path="/shop/product/:productId"
+            element={
+              <ProtectedUserRoute>
+                <ProductDetail key={window.location.pathname} />
+              </ProtectedUserRoute>
+            }
           />
+
           <Route
             path="/ai_suggetions"
             element={

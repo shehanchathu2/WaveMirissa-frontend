@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaMoneyCheckAlt } from 'react-icons/fa';
@@ -10,6 +10,7 @@ import Payment from '../components/Payment';
 import { useAuth } from '../context/AuthContext';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 
 const CheckoutPage = () => {
@@ -27,6 +28,7 @@ const CheckoutPage = () => {
   const [orderID, setOrderID] = useState(`ORD-${uuidv4().slice(0, 8).toUpperCase()}`);
 
   const [loading, setLoading] = useState(false);
+  const [address ,setAddress] = useState('')
 
   const shippingAmount = 299.99; // Fixed shipping amount
   // const totalAmount = totalPrice + shippingAmount; // Total amount including shipping
@@ -37,6 +39,21 @@ const CheckoutPage = () => {
   console.log(productIds);
 
   console.log("selected items", selectedItems);
+
+
+useEffect(() => {
+    const fetchAddress = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/api/address/${user.id}`);
+        setAddress(res.data)
+        console.log("address",res.data)
+      } catch (err) {
+        console.error('Error loading address:', err);
+      }
+    };
+
+    fetchAddress();
+  }, [user]);
 
 
 
@@ -136,7 +153,15 @@ const CheckoutPage = () => {
               >
                 + Add new address
               </button>
-              {showModal && <AddAddressModal onClose={() => setShowModal(false)} />}
+{showModal && (
+  <AddAddressModal
+    onClose={() => setShowModal(false)}
+    onAddressSaved={(newAddress) => {
+      setAddress(newAddress);   // ✅ update address immediately
+      setShowModal(false);
+    }}
+  />
+)}
             </div>
 
             {/* Payment Method */}
@@ -213,22 +238,24 @@ const CheckoutPage = () => {
               </div>
 
               <Payment
-                firstname="John"
-                lastname="Doe"
-                email="john@example.com"
-                paymentTitle="Order Payment"
-                amount={totalAmount}
-                setPaymentSuccess={handlePaymentSuccess}
-                setOrderID={setOrderID}
-                selectedItems={selectedItems}
-                disabled={isProcessing || loading}   // ✅ disable if saving to DB
-                className={`w-full py-3 rounded-xl font-medium transition-colors ${isProcessing || loading
-                  ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
-                  }`}
-              >
-                {isProcessing || loading ? 'Processing...' : 'Pay with PayHere'}
-              </Payment>
+  firstname="John"
+  lastname="Doe"
+  email="john@example.com"
+  paymentTitle="Order Payment"
+  amount={totalAmount}
+  setPaymentSuccess={handlePaymentSuccess}
+  setOrderID={setOrderID}
+  selectedItems={selectedItems}
+  address={address}                         // 👈 pass address here
+  onAddAddress={() => setShowModal(true)}   // 👈 tell Payment how to open modal
+  disabled={isProcessing || loading}
+  className={`w-full py-3 rounded-xl font-medium transition-colors ${
+    isProcessing || loading
+      ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+      : 'bg-blue-600 text-white hover:bg-blue-700'
+  }`}
+/>
+
 
               <p className="mt-4 text-xs leading-relaxed text-center text-gray-500">
                 By placing your order, you agree to our terms and conditions
@@ -237,6 +264,15 @@ const CheckoutPage = () => {
           </motion.div>
         </div>
       </div>
+      {showModal && (
+  <AddAddressModal
+    onClose={() => setShowModal(false)}
+    onAddressSaved={(newAddress) => {
+      setAddress(newAddress);    // ✅ update address immediately
+      setShowModal(false);       // close modal
+    }}
+  />
+)}
     </div>
   );
 };

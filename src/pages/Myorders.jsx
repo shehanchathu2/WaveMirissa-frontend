@@ -42,15 +42,19 @@ function Myorders() {
   }, [user]);
 
 
-  const handleReviewSubmit = async (orderItemId, rating, comment, productId) => {
+  const handleReviewSubmit = async (orderId,orderItemId, rating, comment, productId) => {
     try {
       const payload = {
+        orderId: Number(orderId),        
         orderItemId: Number(orderItemId),
         productId: Number(productId),
         userId: Number(user.id),
         rating,
         comment,
       };
+
+          console.log("Submitting review payload:", payload);
+
 
       const res = await axios.post(
         "http://localhost:8080/api/reviews/submit",

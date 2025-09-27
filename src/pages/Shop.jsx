@@ -226,28 +226,6 @@ const Shop = () => {
               </ul>
             </div>
 
-            {/* Material Filter */}
-            {/* <div>
-              <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Material</h2>
-              <ul className="space-y-1 text-sm text-gray-700">
-                {materials.map((m, index) => (
-                  <li key={index}>
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="material"
-                        value={m}
-                        checked={selectedMaterial === m}
-                        onChange={() => handleMaterials(m)}
-                        className="accent-[#1b4765]"
-                      />
-                      {m}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div> */}
-
             {/* Gender Filter */}
             <div>
               <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Gender</h2>
@@ -299,49 +277,69 @@ const Shop = () => {
           >
             {filteredProducts.map((product) => (
               <Link to={`/shop/product/${product.product_id}`} key={product.product_id}>
-                <motion.div
-                  className="bg-white rounded shadow hover:shadow-lg transition"
-                  variants={itemVariants}
-                >
-                  <div className="relative">
-                    <img
-                      src={product.image_url1}
-                      alt={product.name}
-                      className="w-full h-64 object-cover rounded"
-                    />
-                    <motion.button
-                      className="absolute top-2 right-2 bg-white rounded-full p-2 shadow z-50"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        toggleLike(product.product_id);
-                      }}
-                      whileTap={{ scale: 1.2 }}
-                    >
-                      {likedProducts.includes(product.product_id) ? (
-                        <AiFillHeart size={18} className="text-pink-600 transition-all duration-200" />
-                      ) : (
-                        <FiHeart size={18} className="text-gray-600 transition-all duration-200" />
-                      )}
-                    </motion.button>
-                  </div>
-                  <div className="pt-3 px-4 py-4">
-                    <h3 className="font-semibold text-gray-800 text-sm">{product.name.charAt(0).toUpperCase() + product.name.slice(1)}</h3>
-                    <div className="flex items-center text-yellow-400 text-xs">
-                      {[...Array(5)].map((_, i) => (
-                        <AiFillStar key={i} className={i < 4 ? '' : 'text-gray-300'} />
-                      ))}
-                      <span className="ml-1 text-gray-500">(12)</span>
-                    </div>
-                    <p className="text-sm font-bold text-[#1b4765] mt-1">LKR {product.price}</p>
-                    {product.available && (
-                      <span className="inline-block mt-1 bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full">
-                        In Stock
-                      </span>
-                    )}
-                  </div>
-                </motion.div>
-              </Link>
+  <motion.div
+    className="bg-white rounded shadow hover:shadow-lg transition relative overflow-hidden"
+    variants={itemVariants}
+  >
+    <div className="relative w-full h-64">
+      {/* First Image */}
+      <motion.img
+        src={product.image_url1}
+        alt={product.name}
+        className="w-full h-full object-cover rounded absolute top-0 left-0"
+        initial={{ opacity: 1 }}
+        whileHover={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      />
+
+      {/* Second Image */}
+      <motion.img
+        src={product.image_url2 || product.image_url1} // fallback to first image
+        alt={product.name}
+        className="w-full h-full object-cover rounded absolute top-0 left-0"
+        initial={{ opacity: 0, x: 50 }}
+        whileHover={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}
+      />
+
+      {/* Like Button */}
+      <motion.button
+        className="absolute top-2 right-2 bg-white rounded-full p-2 shadow z-50"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleLike(product.product_id);
+        }}
+        whileTap={{ scale: 1.2 }}
+      >
+        {likedProducts.includes(product.product_id) ? (
+          <AiFillHeart size={18} className="text-pink-600 transition-all duration-200" />
+        ) : (
+          <FiHeart size={18} className="text-gray-600 transition-all duration-200" />
+        )}
+      </motion.button>
+    </div>
+
+    <div className="pt-3 px-4 py-4">
+      <h3 className="font-semibold text-gray-800 text-sm">
+        {product.name.charAt(0).toUpperCase() + product.name.slice(1)}
+      </h3>
+      <div className="flex items-center text-yellow-400 text-xs">
+        {[...Array(5)].map((_, i) => (
+          <AiFillStar key={i} className={i < 4 ? '' : 'text-gray-300'} />
+        ))}
+        <span className="ml-1 text-gray-500">(12)</span>
+      </div>
+      <p className="text-sm font-bold text-[#1b4765] mt-1">LKR {product.price}</p>
+      {product.available && (
+        <span className="inline-block mt-1 bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full">
+          In Stock
+        </span>
+      )}
+    </div>
+  </motion.div>
+</Link>
+
             ))}
           </motion.div>
 
