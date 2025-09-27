@@ -121,6 +121,7 @@ const Cart = () => {
     const selectedItemsData = cart.items
       .filter(item => selectedItems[item.id]) 
       .map(item => ({
+        cartItemId: item.id, 
         productId: item.productId,   
         productName: item.productName,
         price: item.price,
