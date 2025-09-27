@@ -162,13 +162,27 @@ const ResultsStep = ({
           <span>Start New Journey</span>
         </button>
 
-        <button
+        {/* <button
           onClick={() => setShowSizeModal(true)}
           className="flex items-center justify-center space-x-2 px-8 py-3 bg-gradient-to-r from-teal-700 to-cyan-600 text-white rounded-xl font-semibold hover:from-teal-800 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
         >
           <Sparkles className="w-4 h-4" />
           <span>Buy this</span>
-        </button>
+        </button> */}
+
+      {/* Buy this → Product Details Page */}
+        {jewelry?.product_id && (
+          <Link
+            to={`/shop/product/${jewelry.product_id}`}
+            className="flex items-center justify-center space-x-2 px-8 py-3 bg-gradient-to-r from-teal-700 to-cyan-600 text-white rounded-xl font-semibold hover:from-teal-800 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>Buy this</span>
+          </Link>
+        )}
+
+
+
       </div>
     </div>
   );
