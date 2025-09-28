@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import HeroCarousel from '../components/HomePage/HeroCarousel';
 import { FaRobot, FaCamera, FaGem, FaShieldAlt, FaStar, FaHeart, FaRegHeart, FaClock } from 'react-icons/fa';
 import AIRecommendation from '../assets/AIRecommendation.jpg';
@@ -16,6 +16,8 @@ import StorySection from '../components/HomePage/StorySection';
 import BestsellersSection from '../components/HomePage/BestsellersSection';
 import VideoBanner from '../components/HomePage/VideoBanner';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import ActiveBanner from '../components/HomePage/ActiveBanner';
 
 
 
@@ -198,13 +200,18 @@ const Home = () => {
 
 
 
+
   return (
     <div>
       <HeroCarousel />
 
 
+
+
+
+
       {/* Features Section with better spacing */}
-     <section className="py-12 lg:py-20 relative overflow-hidden">
+      <section className="py-12 lg:py-20 relative overflow-hidden">
         {/* Background with subtle gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-50/50 via-white to-blue-50/30"></div>
 
@@ -317,6 +324,7 @@ const Home = () => {
 
 
 
+      <ActiveBanner />
 
 
       <BestsellersSection />
@@ -402,7 +410,7 @@ const Home = () => {
                       whileHover={{ scale: 1.1, rotate: 5 }}
                       transition={{ type: "spring", stiffness: 400, damping: 20 }}
                     >
-                      <div className="w-16 h-16 bg-gradient-to-br from-slate-900 to-blue-900 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                      <div className="w-16 h-16 bg-gradient-to-br from-[#1b4765] to-[#1b4769] rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-shadow duration-300">
                         {item.icon}
                       </div>
 
@@ -435,16 +443,17 @@ const Home = () => {
               <motion.div variants={itemVariants}>
                 <Link to="ai_suggetions">
                   <motion.button
-                    className="group relative overflow-hidden bg-gradient-to-r from-slate-900 to-blue-900 text-white px-8 py-4 rounded-full font-semibold text-sm uppercase tracking-wide shadow-xl hover:shadow-2xl transition-all duration-300"
+                    className="group relative overflow-hidden bg-gradient-to-r from-[#1b4765] to-[#1b4769] text-white px-8 py-4 rounded-full font-semibold text-sm uppercase tracking-wide shadow-xl hover:shadow-2xl transition-all duration-300"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     variants={itemVariants}
                   >
                     <span className="relative z-10">Try AI Assistant Now</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-teal-800 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#1b4765] to-[#1b4769] translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
                   </motion.button>
                 </Link>
               </motion.div>
+
             </motion.div>
 
             {/* Right Image with Overlay */}

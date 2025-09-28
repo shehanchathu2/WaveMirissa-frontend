@@ -97,7 +97,7 @@ export default function BestsellersSection({
                 {activeCategory === t && (
                   <motion.div
                     layoutId="activeCategory"
-                    className="absolute inset-0 bg-gradient-to-r from-slate-900 to-blue-900 rounded-xl"
+                    className="absolute inset-0 bg-gradient-to-r from-[#1b4765] to-[#1b4769] rounded-xl"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}

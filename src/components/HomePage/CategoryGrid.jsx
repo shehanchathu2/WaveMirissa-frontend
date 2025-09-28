@@ -45,7 +45,7 @@ const CategoryGrid = () => {
             <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-gradient-to-br from-teal-100/20 to-white/10 rounded-full blur-xl animate-pulse delay-500"></div>
 
             <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
-                
+
                 {/* Section Header */}
                 <div className="text-center mb-20">
                     {/* Decorative line */}
@@ -56,9 +56,9 @@ const CategoryGrid = () => {
                         transition={{ duration: 1, delay: 0.3 }}
                         className="h-px bg-gradient-to-r from-transparent via-slate-400 to-transparent mx-auto mb-8"
                     ></motion.div>
-                    
-                    <motion.h2 
-                        className="text-4xl lg:text-5xl font-light text-slate-900 mb-6" 
+
+                    <motion.h2
+                        className="text-4xl lg:text-5xl font-light text-slate-900 mb-6"
                         style={{ fontFamily: 'Cormorant Garamond, serif' }}
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -67,9 +67,9 @@ const CategoryGrid = () => {
                     >
                         Shop Our Collections
                     </motion.h2>
-                    
-                    <motion.p 
-                        className="text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed" 
+
+                    <motion.p
+                        className="text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed"
                         style={{ fontFamily: 'Inter, sans-serif' }}
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -129,7 +129,7 @@ const CategoryGrid = () => {
 
                             {/* Content Container */}
                             <div className="relative z-10 flex flex-col justify-between h-full p-8 lg:p-10">
-                                
+
                                 {/* Category Badge */}
                                 <div className="self-start">
                                     <span className="inline-block bg-white/90 backdrop-blur-sm text-slate-700 px-4 py-2 rounded-full text-xs font-medium tracking-wide uppercase border border-white/20 shadow-sm">
@@ -139,13 +139,13 @@ const CategoryGrid = () => {
 
                                 {/* Main Content */}
                                 <div className="transform group-hover:translate-y-0 translate-y-2 transition-transform duration-500">
-                                    <h3 
+                                    <h3
                                         className="text-2xl lg:text-3xl xl:text-4xl font-light text-white mb-4 leading-tight"
                                         style={{ fontFamily: 'Cormorant Garamond, serif' }}
                                     >
                                         {category.label}
                                     </h3>
-                                    <p 
+                                    <p
                                         className="text-white/90 text-base lg:text-lg mb-8 leading-relaxed"
                                         style={{ fontFamily: 'Inter, sans-serif' }}
                                     >
@@ -154,7 +154,7 @@ const CategoryGrid = () => {
 
                                     {/* CTA Section */}
                                     <div className="flex items-center justify-between">
-                                        <motion.button 
+                                        <motion.button
                                             className="bg-white/90 backdrop-blur-sm text-slate-900 px-6 py-3 rounded-full font-semibold text-sm hover:bg-white transition-all duration-300 shadow-lg border border-white/20"
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
@@ -163,7 +163,7 @@ const CategoryGrid = () => {
                                         </motion.button>
 
                                         {/* Arrow Icon */}
-                                        <motion.div 
+                                        <motion.div
                                             className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-white/30 transition-all duration-300 border border-white/10"
                                             whileHover={{ scale: 1.1, rotate: 5 }}
                                         >
@@ -195,7 +195,7 @@ const CategoryGrid = () => {
                 </div>
 
                 {/* Bottom Call-to-Action Section */}
-                <motion.div 
+                <motion.div
                     className="text-center"
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -208,22 +208,22 @@ const CategoryGrid = () => {
                         <div className="absolute -bottom-2 -left-2 w-12 h-12 bg-gradient-to-br from-slate-100/40 to-blue-100/40 rounded-full blur-lg animate-pulse delay-700"></div>
 
                         <div className="relative z-10">
-                            <h3 
+                            <h3
                                 className="text-2xl lg:text-3xl font-light text-slate-900 mb-4"
                                 style={{ fontFamily: 'Cormorant Garamond, serif' }}
                             >
                                 Can't find what you're looking for?
                             </h3>
-                            <p 
+                            <p
                                 className="text-slate-600 text-base lg:text-lg mb-8 leading-relaxed"
                                 style={{ fontFamily: 'Inter, sans-serif' }}
                             >
                                 Browse our complete product catalog for more exquisite pieces
                             </p>
-                            
+
                             <Link to="shop">
                                 <motion.button
-                                    className="group relative overflow-hidden bg-gradient-to-r from-slate-900 to-blue-900 text-white px-8 py-4 rounded-full font-semibold text-sm uppercase tracking-wide shadow-xl hover:shadow-2xl transition-all duration-300"
+                                    className="group relative overflow-hidden bg-gradient-to-r from-[#1b4765] to-[#1b4769] text-white px-8 py-4 rounded-full font-semibold text-sm uppercase tracking-wide shadow-xl hover:shadow-2xl transition-all duration-300"
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -20 }}
@@ -232,8 +232,9 @@ const CategoryGrid = () => {
                                     whileTap={{ scale: 0.95 }}
                                 >
                                     <span className="relative z-10">Shop Now</span>
-                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-teal-800 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-[#1b4765] to-[#1b4769] translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
                                 </motion.button>
+
                             </Link>
 
                             {/* Bottom accent line */}
