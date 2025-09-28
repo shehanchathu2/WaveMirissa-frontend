@@ -21,6 +21,8 @@ import CartModal from '../components/CartModal';
 import AISuggestionModal from '../components/ProductPreview/AISuggestionModal';
 import WaveMirissaLoader from '../components/WaveMirissaLoader';
 import ZoomImage from '../components/ZoomImage';
+import GlbUploader from '../3d view/GlbUploader';
+import GlbViewer from '../3d view/GlbViewer';
 
 const ProductDetail = () => {
   const { user } = useAuth();
@@ -44,6 +46,7 @@ const ProductDetail = () => {
   const [review, setReview] = useState([]);
 
   const [customMaterial, setCustomMaterial] = useState('');
+  const [url, setUrl] = useState('')
 
 
   const [totalPrice, setTotalPrice] = useState(product.price);
@@ -68,6 +71,9 @@ const ProductDetail = () => {
         const productData = res.data;
 
         setProduct(productData);
+        setUrl(productData.model_url)
+        console.log("product data:", productData)
+        console.log("url:", url)
 
         if (productData.customizations && Array.isArray(productData.customizations)) {
           setCustomizations(productData.customizations);
@@ -362,6 +368,7 @@ const ProductDetail = () => {
             All Reviews are from verified purchases
           </div>
 
+          {product.model_url && <GlbViewer url={product.model_url} />}
 
 
           {review.map((r, idx) => (
@@ -588,7 +595,7 @@ const ProductDetail = () => {
       <div className="mt-10 lg:col-span-2">
         <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {likedProducts.map((p) => (
+          {likedProducts.slice(0, 4).map((p) => (   // ✅ Only first 4 items
             <Link
               to={`/shop/product/${p.uuid}`}
               state={{ productId: p.product_id }}
@@ -596,7 +603,6 @@ const ProductDetail = () => {
               className="block overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-lg transition"
             >
               <div className="relative w-full h-48 md:h-56">
-                {/* Single Image */}
                 <img
                   src={p.image_url1}
                   alt={p.name}
@@ -604,7 +610,6 @@ const ProductDetail = () => {
                 />
               </div>
 
-              {/* Product Info */}
               <div className="px-3 py-2">
                 <h3 className="text-sm font-semibold text-gray-800 truncate">{p.name}</h3>
                 <p className="text-sm font-bold text-black mt-1">LKR {p.price}</p>
@@ -617,9 +622,8 @@ const ProductDetail = () => {
             </Link>
           ))}
         </div>
-
-
       </div>
+
 
 
 

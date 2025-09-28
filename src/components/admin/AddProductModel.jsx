@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
 const CLOUDINARY_CLOUD_NAME = 'dlvhmit8p';
@@ -28,10 +30,59 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
         customizations: [],
         faceShape: '',
         skinTone: '',
-        personalize: ''
+        personalize: '',
+        modelUrl: ''  // <-- add this
+
     });
 
     const [customizations, setCustomizations] = useState([]);
+    const [url, setUrl] = useState(null); // Initially no model
+    const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const fileInputRef = useRef();
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+    const handleUpload = async () => {
+        if (!file) {
+            toast.error('Please select a .glb file');
+            return;
+        }
+
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+        try {
+            const res = await axios.post(CLOUDINARY_API, formData);
+            const uploadedUrl = res.data.secure_url;
+            toast.success('GLB file uploaded successfully!');
+            setUrl(uploadedUrl); // Update viewer
+
+            // Add the uploaded URL to formData
+            setFormData((prev) => ({
+                ...prev,
+                modelUrl: uploadedUrl
+            }));
+
+            setFile(null);
+            if (fileInputRef.current) fileInputRef.current.value = null;
+        } catch (err) {
+            console.error(err);
+            toast.error('Upload failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+
+
+
+
 
     useEffect(() => {
         const fetchCustomizations = async () => {
@@ -101,6 +152,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
             personalize: formData.personalize || null,
             producttype: formData.producttype ? formData.producttype.toLowerCase() : null,
             price: parseFloat(formData.price),
+            model_url: formData.modelUrl,  // <-- must match @JsonProperty("model_url")
             customizations: customizations
                 .filter((c) => selectedIds.includes(c.id))
                 .map((c) => ({ item_id: c.id })),
@@ -239,7 +291,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         <option value="unisex">Unisex</option>
                     </select>
 
-                    
+
 
 
                     {/* Face Shape Dropdown */}
@@ -258,7 +310,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         <option value="Diamond">Diamond</option>
                     </select>
 
-                    
+
 
                     {/* Skin Tone Dropdown */}
                     <label className="block text-sm font-medium text-gray-700">Skin Tone</label>
@@ -276,11 +328,11 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         <option value="Cool">Cool</option>
                     </select>
 
-                    
+
 
                     <label className="block text-sm font-medium text-gray-700">Personalize</label>
                     <select
-                        name="personalize" 
+                        name="personalize"
                         value={formData.personalize}
                         onChange={handleChange}
                         className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
@@ -308,6 +360,75 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                             ))}
                         </div>
                     )}
+
+                    <div
+  style={{
+    padding: '20px',
+    maxWidth: '400px',
+    margin: '40px auto',
+    backgroundColor: '#fff',
+    borderRadius: '8px',
+    border: '1px solid #e5e7eb',
+    textAlign: 'center',
+  }}
+>
+  <h2 style={{ marginBottom: '16px', color: '#111827', fontSize: '1.25rem' }}>
+    Upload 3D Model
+  </h2>
+
+  <input
+    ref={fileInputRef}
+    type="file"
+    accept=".glb,model/gltf-binary"
+    onChange={handleFileChange}
+    style={{ display: 'none' }}
+    id="glbUpload"
+  />
+
+  <label
+    htmlFor="glbUpload"
+    style={{
+      display: 'inline-block',
+      padding: '10px 20px',
+      backgroundColor: '#2563eb',
+      color: 'white',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      fontWeight: '500',
+    }}
+  >
+    {fileInputRef.current && fileInputRef.current.files.length > 0
+      ? 'File Selected'
+      : 'Choose File'}
+  </label>
+
+  <div>
+    <button
+      onClick={handleUpload}
+      disabled={loading}
+      style={{
+        marginTop: '16px',
+        padding: '10px 24px',
+        backgroundColor: loading ? '#9ca3af' : '#10b981',
+        color: 'white',
+        border: 'none',
+        borderRadius: '6px',
+        cursor: loading ? 'not-allowed' : 'pointer',
+        fontWeight: '500',
+      }}
+    >
+      {loading ? 'Uploading...' : 'Upload'}
+    </button>
+  </div>
+
+  {url && (
+    <div style={{ marginTop: '24px' }}>
+      <h3 style={{ color: '#111827', fontSize: '1rem' }}>3D Model Viewer</h3>
+      {/* <GlbViewer url={url} /> */}
+    </div>
+  )}
+</div>
+
 
                     <div className="flex justify-end mt-6 space-x-3 pt-4 border-t">
                         <button className="bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400 transition" onClick={onClose}>Cancel</button>

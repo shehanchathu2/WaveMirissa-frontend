@@ -15,6 +15,8 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.1",
     "@mui/material": "^7.1.1",
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.3.0",
     "axios": "^1.9.0",
     "chart.js": "^4.4.9",
     "cloudinary": "^2.7.0",
@@ -37,6 +39,7 @@
     "react-spinners": "^0.17.0",
     "react-toastify": "^11.0.5",
     "tailwind-scrollbar-hide": "^4.0.0",
+    "three": "^0.180.0",
     "uuid": "^11.1.0",
     "xlsx": "^0.18.5"
   },
