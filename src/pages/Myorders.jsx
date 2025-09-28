@@ -43,52 +43,49 @@ function Myorders() {
   }, [user]);
 
 
-  const handleReviewSubmit = async (orderId,orderItemId, rating, comment, productId) => {
-    try {
-      const payload = {
-        orderId: Number(orderId),        
-        orderItemId: Number(orderItemId),
-        productId: Number(productId),
-        userId: Number(user.id),
-        rating,
-        comment,
-      };
+  const handleReviewSubmit = async (orderId, orderItemId, rating, comment, productId, images) => {
+  try {
+    const payload = {
+      orderId: Number(orderId),
+      orderItemId: Number(orderItemId),
+      productId: Number(productId),
+      userId: Number(user.id),
+      rating,
+      comment,
+      imageUrl1: images[0] || null,
+      imageUrl2: images[1] || null,
+      imageUrl3: images[2] || null,
+      imageUrl4: images[3] || null,
+      imageUrl5: images[4] || null
+    };
 
-          console.log("Submitting review payload:", payload);
+    console.log("Submitting review payload:", payload);
 
+    const res = await axios.post(
+      "http://localhost:8080/api/reviews/submit",
+      payload,
+      { withCredentials: true }
+    );
 
-      const res = await axios.post(
-        "http://localhost:8080/api/reviews/submit",
-        payload,
-        
-        {
-          withCredentials: true, // include cookie automatically
-        }
-      );
+    toast.success("Review submitted successfully!");
 
+    setOrders(prevOrders =>
+      prevOrders.map(order => ({
+        ...order,
+        items: order.items.map(item =>
+          item.id === orderItemId
+            ? { ...item, review: { rating, comment, images, date: new Date().toISOString().split("T")[0] } }
+            : item
+        ),
+      }))
+    );
 
-      toast.success("Review submitted successfully!");
+  } catch (err) {
+    console.error(err);
+    toast.error(err.response?.data?.message || "Failed to submit review");
+  }
+};
 
-      // patch local state so review appears immediately
-      setOrders(prevOrders =>
-        prevOrders.map(order => ({
-          ...order,
-          items: order.items.map(item =>
-            item.id === orderItemId
-              ? { ...item, review: { rating, comment, date: new Date().toISOString().split("T")[0] } }
-              : item
-          ),
-        }))
-      );
-
-
-    } catch (err) {
-
-
-      console.error(err);
-      toast.error(err.response?.data?.message || "Failed to submit review");
-    }
-  };
 
   const filteredOrders = orders.filter(order => {
     const status = order.orderStatus?.toLowerCase() || order.status?.toLowerCase();

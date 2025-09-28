@@ -92,6 +92,7 @@ const ProductDetail = () => {
       try {
         const res = await axios.get(`http://localhost:8080/api/reviews/product/${productId}`);
         setReview(res.data);
+        console.log(res.data)
       } catch (err) {
         console.error('Error loading reviews:', err);
       }
@@ -361,30 +362,17 @@ const ProductDetail = () => {
             All Reviews are from verified purchases
           </div>
 
-          <div className="grid grid-cols-4 gap-4 mb-4">
-            {[1, 2, 3, 4].map((_, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-center p-4 bg-black rounded-lg"
-              >
-                <img
-                  src="/placeholder-image.png"
-                  alt="review"
-                  className="w-10 h-10"
-                />
-              </div>
-            ))}
-          </div>
+
 
           {review.map((r, idx) => (
             <div key={idx} className="flex mb-6 space-x-4">
               <div className="mt-1 text-gray-400">
                 <FaRegUserCircle size={24} />
               </div>
-              <div>
+              <div className="flex-1">
                 <div className="flex items-center space-x-2 text-sm text-gray-700">
                   <p className="font-semibold">{r.userName}</p>
-                  <span className="text-gray-400">on May 29 2025</span>
+                  <span className="text-gray-400">2025/04/06</span>
                 </div>
 
                 {/* Stars */}
@@ -399,12 +387,26 @@ const ProductDetail = () => {
                 </div>
 
                 {/* Comment */}
-                <p className="mt-1 text-sm text-gray-600">
-                  {r.comment}
-                </p>
+                <p className="mt-1 text-sm text-gray-600">{r.comment}</p>
+
+                {/* Images */}
+                <div className="mt-2 flex space-x-2">
+                  {[r.imageUrl1, r.imageUrl2, r.imageUrl3, r.imageUrl4, r.imageUrl5].map(
+                    (imgUrl, i) =>
+                      imgUrl && (
+                        <img
+                          key={i}
+                          src={imgUrl}
+                          alt={`Review image ${i + 1}`}
+                          className="w-16 h-16 object-cover rounded border"
+                        />
+                      )
+                  )}
+                </div>
               </div>
             </div>
           ))}
+
 
         </div>
       </div>
