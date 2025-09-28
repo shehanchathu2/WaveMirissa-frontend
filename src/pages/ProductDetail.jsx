@@ -588,7 +588,8 @@ const ProductDetail = () => {
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {likedProducts.map((p) => (
             <Link
-              to={`/shop/product/${p.product_id}`}
+              to={`/shop/product/${p.uuid}`}
+              state={{ productId: p.product_id }}
               key={p.product_id}
               className="block overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-lg transition"
             >

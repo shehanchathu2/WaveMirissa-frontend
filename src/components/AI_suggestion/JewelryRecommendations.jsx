@@ -28,7 +28,9 @@ const JewelryRecommendations = ({ faceShape, skinTone, products }) => {
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {products.map((item) => (
-          <Link to={`/shop/product/${item.product_id}`} key={item.product_id}>
+          <Link to={`/shop/product/${item.uuid}`}
+            state={{ productId: item.product_id }}
+            key={item.product_id}>
             <div key={item.id} className="p-4 transition-shadow duration-200 bg-slate-50 rounded-xl hover:shadow-md">
               <div className="relative mb-4">
                 <img
@@ -54,8 +56,8 @@ const JewelryRecommendations = ({ faceShape, skinTone, products }) => {
                       <Star
                         key={i}
                         className={`w-4 h-4 ${i < Math.floor(item.rating)
-                            ? 'text-yellow-400 fill-current'
-                            : 'text-slate-300'
+                          ? 'text-yellow-400 fill-current'
+                          : 'text-slate-300'
                           }`}
                       />
                     ))}
