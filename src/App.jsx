@@ -85,7 +85,7 @@ const App = () => {
             }
           /> */}
           <Route
-            path="/shop/product/:productId"
+            path="/shop/product/:uuid"
             element={
               <ProtectedUserRoute>
                 <ProductDetail key={window.location.pathname} />

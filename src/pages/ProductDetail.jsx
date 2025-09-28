@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { FaHeart, FaTruck, FaMoneyBillWave, FaUndo, FaStar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { SiShell } from "react-icons/si";
@@ -24,7 +24,13 @@ import WaveMirissaLoader from '../components/WaveMirissaLoader';
 const ProductDetail = () => {
   const { user } = useAuth();
   const [product, setProduct] = useState([]);
-  const { productId } = useParams();
+  const { uuid } = useParams();
+  const location = useLocation();
+
+  const productId = location.state?.productId; console.log(productId, uuid)
+
+  console.log("UUID:", uuid);
+  console.log("Product ID from state:", productId);
   const [quantity, setQuantity] = useState(1);
 
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
