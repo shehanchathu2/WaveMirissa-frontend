@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 const QuickViewModal = ({ isOpen, onClose, product }) => {
   if (!isOpen || !product) return null;
 
+  console.log(product)
+
   return (
     <AnimatePresence>
       <motion.div
@@ -54,17 +56,18 @@ const QuickViewModal = ({ isOpen, onClose, product }) => {
             </div>
           </div>
           <div className="flex gap-4 mt-6">
-  {/* View Product Button */}
-  <Link
-    to={`/shop/product/${product.product_id}`}
-    key={product.product_id}
-    className="flex-1"
-  >
-    <button className="w-full bg-blue-600 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300">
-      View Product
-    </button>
-  </Link>
-</div>
+            {/* View Product Button */}
+            <Link
+              to={`/shop/product/${product.uuid}`}
+              state={{ productId: product.product_id }}
+              key={product.product_id}
+              className="flex-1"
+            >
+              <button className="w-full bg-blue-600 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300">
+                View Product
+              </button>
+            </Link>
+          </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>

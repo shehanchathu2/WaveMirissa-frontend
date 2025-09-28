@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import WaveMirissaLoader from '../components/WaveMirissaLoader';
 
 const mockOrders = [];
 
@@ -99,19 +100,8 @@ function Myorders() {
   });
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 py-8">
-          <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading your orders...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+      <WaveMirissaLoader />
+    }
 
   return (
     <div className="min-h-screen bg-gray-50">

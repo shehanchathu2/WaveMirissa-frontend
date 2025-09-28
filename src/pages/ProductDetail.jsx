@@ -20,6 +20,7 @@ import { useAuth } from '../context/AuthContext';
 import CartModal from '../components/CartModal';
 import AISuggestionModal from '../components/ProductPreview/AISuggestionModal';
 import WaveMirissaLoader from '../components/WaveMirissaLoader';
+import ZoomImage from '../components/ZoomImage';
 
 const ProductDetail = () => {
   const { user } = useAuth();
@@ -332,13 +333,8 @@ const ProductDetail = () => {
             </div>
 
             {/* Main Image */}
-            <div className="flex items-center justify-center w-96 h-96 shadow-md rounded-2xl overflow-hidden">
-              <img
-                src={mainImage}
-                alt="Main"
-                className="w-full h-full object-cover"
-              />
-            </div>
+            <ZoomImage src={mainImage} width={384} height={384} zoom={2} />
+
           </div>
         </div>
 
