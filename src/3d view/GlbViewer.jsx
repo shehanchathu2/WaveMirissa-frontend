@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF, Html } from "@react-three/drei";
+import { OrbitControls, useGLTF, Html, Environment, ContactShadows } from "@react-three/drei";
 
 function Model({ url }) {
   const { scene } = useGLTF(url);
@@ -17,8 +17,11 @@ const GlbViewer = ({ url }) => {
       className="bg-gradient-to-b from-gray-100 to-gray-300 rounded-xl shadow-xl overflow-hidden relative"
     >
       <Canvas camera={{ position: [0, 2, 5], fov: 60 }} className="w-full h-full">
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[5, 5, 5]} intensity={0.8} />
+        {/* Improved lighting setup */}
+        <ambientLight intensity={1} />
+        <directionalLight position={[5, 5, 5]} intensity={1} />
+        <directionalLight position={[-5, 5, -5]} intensity={0.5} />
+        <pointLight position={[0, 5, 0]} intensity={0.5} />
 
         <Suspense
           fallback={
@@ -30,6 +33,16 @@ const GlbViewer = ({ url }) => {
           }
         >
           <Model url={url} />
+          {/* Add environment and shadows */}
+          <Environment preset="studio" />
+          <ContactShadows
+            opacity={0.5}
+            scale={10}
+            blur={1}
+            far={10}
+            resolution={256}
+            color="#000000"
+          />
         </Suspense>
 
         <OrbitControls enablePan enableZoom enableRotate />
