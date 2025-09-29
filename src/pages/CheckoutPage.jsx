@@ -201,7 +201,7 @@ useEffect(() => {
                     <p className="text-gray-500 text-xs">Quantity: {item.quantity}</p>
                     <div className="flex items-center gap-4 mt-2">
                       <span className="text-green-600 text-sm font-medium">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        Rs.{(item.price * item.quantity).toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -227,12 +227,12 @@ useEffect(() => {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Shipping</span>
-                  <span className="font-semibold">LKR{shippingAmount.toFixed(2)}</span>
+                  <span className="font-semibold">Rs.{shippingAmount.toFixed(2)}</span>
                 </div>
                 <div className="pt-4 border-t border-gray-200">
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-bold text-gray-800">Total</span>
-                    <span className="text-xl font-bold text-blue-600">LKR{totalAmount.toFixed(2)}</span>
+                    <span className="text-xl font-bold text-blue-600">Rs.{totalAmount.toFixed(2)}</span>
                   </div>
                 </div>
               </div>

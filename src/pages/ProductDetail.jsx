@@ -593,36 +593,40 @@ const ProductDetail = () => {
 
       {/* You May Also Like Section */}
       <div className="mt-10 lg:col-span-2">
-        <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {likedProducts.slice(0, 4).map((p) => (   // ✅ Only first 4 items
-            <Link
-              to={`/shop/product/${p.uuid}`}
-              state={{ productId: p.product_id }}
-              key={p.product_id}
-              className="block overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-lg transition"
-            >
-              <div className="relative w-full h-48 md:h-56">
-                <img
-                  src={p.image_url1}
-                  alt={p.name}
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
+  <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
+  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+    {likedProducts
+      .sort(() => 0.5 - Math.random()) // 🔀 Shuffle the array randomly
+      .slice(0, 4) // ✅ Pick only 4 random items
+      .map((p) => (
+        <Link
+          to={`/shop/product/${p.uuid}`}
+          state={{ productId: p.product_id }}
+          key={p.product_id}
+          className="block overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-lg transition"
+        >
+          <div className="relative w-full h-48 md:h-56">
+            <img
+              src={p.image_url1}
+              alt={p.name}
+              className="w-full h-full object-cover rounded-xl"
+            />
+          </div>
 
-              <div className="px-3 py-2">
-                <h3 className="text-sm font-semibold text-gray-800 truncate">{p.name}</h3>
-                <p className="text-sm font-bold text-black mt-1">LKR {p.price}</p>
-                {p.available && (
-                  <span className="inline-block mt-1 bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full">
-                    In Stock
-                  </span>
-                )}
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
+          <div className="px-3 py-2">
+            <h3 className="text-sm font-semibold text-gray-800 truncate">{p.name}</h3>
+            <p className="text-sm font-bold text-black mt-1">LKR {p.price}</p>
+            {p.available && (
+              <span className="inline-block mt-1 bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full">
+                In Stock
+              </span>
+            )}
+          </div>
+        </Link>
+      ))}
+  </div>
+</div>
+
 
 
 

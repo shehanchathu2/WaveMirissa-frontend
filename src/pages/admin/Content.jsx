@@ -333,7 +333,7 @@ const Content = () => {
                   </td>
                 </tr>
               ))}
-              {allBanners.length === 0 && (
+              {/* {allBanners.length === 0 && (
                 <tr>
                   <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
                     <div className="flex flex-col items-center">
@@ -345,7 +345,7 @@ const Content = () => {
                     </div>
                   </td>
                 </tr>
-              )}
+              )} */}
             </tbody>
           </table>
         </div>

@@ -223,7 +223,7 @@ const Cart = () => {
 
                       <div className="text-right">
                         <div className="font-semibold text-gray-800">
-                          ${((item.price || 0) * (quantities[item.id] ?? item.quantity)).toFixed(2)}
+                          Rs.{((item.price || 0) * (quantities[item.id] ?? item.quantity)).toFixed(2)}
                         </div>
                       </div>
                     </div>

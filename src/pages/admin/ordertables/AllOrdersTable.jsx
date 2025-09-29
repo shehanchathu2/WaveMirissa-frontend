@@ -387,7 +387,7 @@ const AllOrdersTable = ({
                         <div className="text-sm font-semibold text-gray-900">
                             {order.amount || order.total}
                         </div>
-                        <div className="text-xs text-gray-500">Credit Card</div>
+                        <div className="text-xs text-gray-500">PayHere</div>
                     </td>
 
                     <td className="px-6 py-4">

@@ -120,7 +120,7 @@ const VirtualTryOn = () => {
         }
 
         const data = await res.json();
-
+        console.log(data)
         if (!data.imageUrl) {
           throw new Error("Image URL missing from response");
         }
@@ -129,6 +129,7 @@ const VirtualTryOn = () => {
 
         setJewelry({
           id: data.necklaceId,
+          uuid: data.uuid,
           name: data.name,
           type: "necklace",
           basePrice: data.price,
@@ -138,6 +139,8 @@ const VirtualTryOn = () => {
           imageUrl2: data.imageUrl2,
           imageUrl3: data.imageUrl3,
         });
+
+        
 
         setCurrentStep("results");
       } catch (err) {

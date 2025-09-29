@@ -41,12 +41,12 @@ const TrackingModal = ({ order, onClose, onSave }) => {
                 }
             );
 
-            alert("Tracking details saved successfully!");
+            toast.success("Tracking details saved successfully!");
             if (onSave) onSave();
             onClose();
         } catch (error) {
             console.error("Error saving tracking details:", error);
-            alert("Failed to save tracking details.");
+            toast.error("Failed to save tracking details.");
         }
     };
 
