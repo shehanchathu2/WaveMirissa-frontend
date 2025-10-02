@@ -1,6 +1,7 @@
 // src/pages/admin/Users.jsx
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import EditUserModal from '../../components/admin/EditUserModal';
 import WaveMirissaLoader from '../../components/WaveMirissaLoader';
 
@@ -8,23 +9,8 @@ const Users = () => {
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [users, setUsers] = useState([])
-  const [loading, setLoading] = useState(false)
-
-  // const getAllUsers = async () => {
-  //   setLoading(true)
-  //   try {
-  //     const res = await axios.get("http://localhost:8080/users");
-  //     const onlyUsers = res.data.filter((u) => u.role === "USER");
-  //     setUsers(res.data);
-  //     console.log(onlyUsers);
-  //   } catch (error) {
-  //     console.error('Error fetching users:', error);
-  //     alert('Failed to fetch users.');
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // };
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getAllUsers = async () => {
     setLoading(true);
@@ -32,12 +18,9 @@ const Users = () => {
       const res = await axios.get("http://localhost:8080/users");
       const onlyUsers = res.data.filter((u) => u.role === "USER" || u.role === "ADMIN");
 
-      // Preserve order by id (or any stable key)
       setUsers((prev) => {
         const prevOrder = prev.map((u) => u.id);
-        return onlyUsers.sort(
-          (a, b) => prevOrder.indexOf(a.id) - prevOrder.indexOf(b.id)
-        );
+        return onlyUsers.sort((a, b) => prevOrder.indexOf(a.id) - prevOrder.indexOf(b.id));
       });
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -62,13 +45,11 @@ const Users = () => {
       toast.success("User deleted successfully!");
     } catch (error) {
       toast.error("Failed to delete user!");
-      // alert("Failed to delete product.");
     }
   };
 
   if (loading) return <WaveMirissaLoader />;
 
-  // Calculate stats
   const totalUsers = users.length;
   const adminUsers = users.filter(u => u.role === "ADMIN").length;
   const regularUsers = users.filter(u => u.role === "USER").length;
@@ -95,16 +76,6 @@ const Users = () => {
                   <p className="mt-2 text-sm text-gray-600 max-w-2xl">
                     View and manage all registered users in your system. Monitor user accounts and update their information.
                   </p>
-                </div>
-              </div>
-            </div>
-            <div className="mt-4 lg:mt-0 lg:ml-4">
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-sm font-medium">System Active</span>
                 </div>
               </div>
             </div>
@@ -199,7 +170,7 @@ const Users = () => {
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">{u.username}</div>
-                          <div className="text-sm text-gray-500">ID: {u.id}</div>
+                          {/* <div className="text-sm text-gray-500">{u.id}</div> */}
                         </div>
                       </div>
                     </td>
@@ -209,9 +180,7 @@ const Users = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        u.role === 'ADMIN' 
-                          ? 'bg-amber-100 text-amber-800' 
-                          : 'bg-emerald-100 text-emerald-800'
+                        u.role === 'ADMIN' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
                       }`}>
                         <span className={`w-1.5 h-1.5 mr-1.5 rounded-full ${
                           u.role === 'ADMIN' ? 'bg-amber-400' : 'bg-emerald-400'
@@ -222,11 +191,16 @@ const Users = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
                         <button
-                          className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-150"
+                          className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-150 ${
+                            u.username.toLowerCase() === 'admin'
+                              ? 'bg-gray-400 text-white cursor-not-allowed'
+                              : 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500'
+                          }`}
                           onClick={() => {
                             setSelectedUser(u);
                             setShowEditModal(true);
                           }}
+                          disabled={u.username.toLowerCase() === 'admin'}
                         >
                           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -254,14 +228,14 @@ const Users = () => {
         </div>
       </div>
 
-      {/* Modal - Existing modal logic preserved */}
+      {/* Modal */}
       <EditUserModal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
         user={selectedUser}
         onUpdated={() => {
           setShowEditModal(false);
-          getAllUsers(); // 
+          getAllUsers();
         }}
       />
     </div>

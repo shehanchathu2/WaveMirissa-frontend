@@ -167,7 +167,7 @@ const Shop = () => {
         <p className="text-sm text-gray-600 mt-2">
           Discover our stunning jewelry collections. Browse and find your perfect piece.
         </p>
-        <p className="text-sm text-gray-700 mt-1">Home / Shop</p>
+        {/* <p className="text-sm text-gray-700 mt-1">Home / Shop</p> */}
       </div>
 
       <motion.div

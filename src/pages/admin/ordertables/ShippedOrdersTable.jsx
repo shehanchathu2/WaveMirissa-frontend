@@ -4,7 +4,7 @@ import WaveMirissaLoader from "../../../components/WaveMirissaLoader";
 import axios from "axios";
 import TrackingModal from "../../../components/admin/TrackingModal";
 import { Search, Filter, Download, Eye, Edit, Trash2, User, Package, CreditCard, Phone, Mail } from 'lucide-react';
-const ShippedOrdersTable = ({ setModalContent,  markAsDelivered }) => {
+const ShippedOrdersTable = ({ setModalContent, markAsDelivered }) => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('shipped');
@@ -78,7 +78,7 @@ const ShippedOrdersTable = ({ setModalContent,  markAsDelivered }) => {
                                 </div>
                                 <div className="text-sm text-gray-500 flex items-center">
                                     <Phone className="w-3 h-3 mr-1" />
-                                    +94 77 123 4567
+                                    {order.user.address.phone}
                                 </div>
                             </div>
                         </div>
@@ -119,8 +119,8 @@ const ShippedOrdersTable = ({ setModalContent,  markAsDelivered }) => {
                                                         <div className="space-y-2">
                                                             <p><strong>Name:</strong> {order.user.name}</p>
                                                             <p><strong>Email:</strong> {order.user.email}</p>
-                                                            <p><strong>Address:</strong> 123 Main Street, Colombo</p>
-                                                            <p><strong>Phone:</strong> +94 77 123 4567</p>
+                                                            <strong>Address:</strong>{" "}
+                                                            {order.user.address.street}, {order.user.address.city}, {order.user.address.state}                                                            <p><strong>Phone:</strong> {order.user.address.phone}</p>
                                                         </div>
                                                     </div>
                                                     {order.products.map((p, i) => (
@@ -162,7 +162,7 @@ const ShippedOrdersTable = ({ setModalContent,  markAsDelivered }) => {
                                     markAsDelivered(order.id);
                                 }}
                             >
-                                
+
                                 Mark Delivered
                             </button>
 

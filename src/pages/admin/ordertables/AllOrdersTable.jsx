@@ -20,6 +20,8 @@ const AllOrdersTable = ({
         setTrackingModalOrder(null);
     };
 
+    console.log(filteredOrders)
+
     const getStatusBadge = (status) => {
         const statusLower = status.toLowerCase();
         switch (statusLower) {
@@ -80,8 +82,8 @@ const AllOrdersTable = ({
                                                 <div className="space-y-2">
                                                     <p><strong>Name:</strong> {order.user.name}</p>
                                                     <p><strong>Email:</strong> {order.user.email}</p>
-                                                    <p><strong>Address:</strong> 123 Main Street, Colombo</p>
-                                                    <p><strong>Phone:</strong> +94 77 123 4567</p>
+                                                    <strong>Address:</strong>{order.user.address.street}, {order.user.address.city}, {order.user.address.state} <span>province</span>
+                                                    <p><strong>Phone:</strong>{order.user.address.phone}</p>
                                                 </div>
                                             </div>
 
@@ -136,8 +138,8 @@ const AllOrdersTable = ({
                                                 <div className="space-y-2">
                                                     <p><strong>Name:</strong> {order.user.name}</p>
                                                     <p><strong>Email:</strong> {order.user.email}</p>
-                                                    <p><strong>Address:</strong> 123 Main Street, Colombo</p>
-                                                    <p><strong>Phone:</strong> +94 77 123 4567</p>
+                                                    <p><strong>Address:</strong> {order.user.address.street}, {order.user.address.city}, {order.user.address.state} </p>
+                                                    <p><strong>Phone:</strong> {order.user.address.phone}</p>
                                                 </div>
                                             </div>
                                             {order.products.map((p, i) => (
@@ -186,8 +188,8 @@ const AllOrdersTable = ({
                                                 <div className="space-y-2">
                                                     <p><strong>Name:</strong> {order.user.name}</p>
                                                     <p><strong>Email:</strong> {order.user.email}</p>
-                                                    <p><strong>Address:</strong> 123 Main Street, Colombo</p>
-                                                    <p><strong>Phone:</strong> +94 77 123 4567</p>
+                                                    <p><strong>Address:</strong> {order.user.address.street}, {order.user.address.city}, {order.user.address.state} </p>
+                                                    <p><strong>Phone:</strong>{order.user.address.phone}</p>
                                                 </div>
                                             </div>
                                             {order.products.map((p, i) => (
@@ -254,8 +256,8 @@ const AllOrdersTable = ({
                                                 <div className="space-y-2">
                                                     <p><strong>Name:</strong> {order.user?.name || 'N/A'}</p>
                                                     <p><strong>Email:</strong> {order.user?.email || 'N/A'}</p>
-                                                    <p><strong>Address:</strong> 123 Main Street, Colombo</p>
-                                                    <p><strong>Phone:</strong> +94 77 123 4567</p>
+                                                    <p><strong>Address:</strong> {order.user.address.street}, {order.user.address.city}, {order.user.address.state} </p>
+                                                    <p><strong>Phone:</strong> {order.user.address.phone}</p>
                                                 </div>
                                             </div>
 
@@ -277,7 +279,7 @@ const AllOrdersTable = ({
                                     ),
                                 })
                             }
-                           className="px-4 py-1 bg-blue-600 text-white text-xs rounded-lg shadow hover:bg-blue-700 transition"
+                            className="px-4 py-1 bg-blue-600 text-white text-xs rounded-lg shadow hover:bg-blue-700 transition"
                             title="See info"
                         >
                             See info
@@ -365,7 +367,7 @@ const AllOrdersTable = ({
                                 </div>
                                 <div className="text-sm text-gray-500 flex items-center">
                                     <Phone className="w-3 h-3 mr-1" />
-                                    +94 77 123 4567
+                                    {order.user.address.phone}
                                 </div>
                             </div>
                         </div>

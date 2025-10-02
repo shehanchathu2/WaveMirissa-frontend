@@ -303,7 +303,7 @@ const Cart = () => {
         </div>
       </div>
 
-      <div className="pl-40 pr-40 mt-10 mb-20 lg:col-span-2">
+      {/* <div className="pl-40 pr-40 mt-10 mb-20 lg:col-span-2">
         <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {[...Array(8)].map((_, i) => (
@@ -317,7 +317,7 @@ const Cart = () => {
             </motion.div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Confirmation Modal */}
       <ConfirmationModal

@@ -424,13 +424,13 @@ const ProductDetail = () => {
         <h2 className="mb-2 text-xl text-gray-500">
           {product.description}
         </h2>
-        <div className="flex text-yellow-500">
+        {/* <div className="flex text-yellow-500">
           <FaStar />
           <FaStar />
           <FaStar />
           <FaStar />
           <FaStar />
-        </div>
+        </div> */}
         <p className="mt-4 mb-4 text-2xl font-semibold text-teal-600">
           LKR {product.price}
         </p>

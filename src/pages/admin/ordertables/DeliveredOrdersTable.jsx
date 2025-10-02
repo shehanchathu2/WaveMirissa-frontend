@@ -38,6 +38,8 @@ const DeliveredOrdersTable = ({ setModalContent }) => {
     (order) => order.orderStatus.toLowerCase() === activeTab.toLowerCase()
   );
 
+  console.log(filteredOrders)
+
   useEffect(() => {
     getPaidOrders();
   }, []);
@@ -74,7 +76,7 @@ const DeliveredOrdersTable = ({ setModalContent }) => {
                 </div>
                 <div className="text-sm text-gray-500 flex items-center">
                   <Phone className="w-3 h-3 mr-1" />
-                  +94 77 123 4567
+                  {order.user.address.phone}
                 </div>
               </div>
             </div>
@@ -85,13 +87,13 @@ const DeliveredOrdersTable = ({ setModalContent }) => {
               {order.products ? `${order.products.length} item(s)` : '1 item(s)'}
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              Diamond bracelet
+              {order.products.map(p => p.name).join(', ').substring(0, 50)}
             </div>
           </td>
 
           <td className="px-6 py-4">
             <div className="text-sm font-semibold text-gray-900">{order.total || `${order.amount}`}</div>
-            <div className="text-xs text-gray-500">Credit Card</div>
+            <div className="text-xs text-gray-500">Payhere</div>
           </td>
 
           <td className="px-6 py-4">
@@ -113,8 +115,8 @@ const DeliveredOrdersTable = ({ setModalContent }) => {
                           <div className="space-y-2">
                             <p><strong>Name:</strong> {order.user.name}</p>
                             <p><strong>Email:</strong> {order.user.email}</p>
-                            <p><strong>Address:</strong> 123 Main Street, Colombo</p>
-                            <p><strong>Phone:</strong> +94 77 123 4567</p>
+                            <strong>Address:</strong>{" "}
+                            {order.user.address.street}, {order.user.address.city}, {order.user.address.state}                            <p><strong>Phone:</strong> {order.user.address.phone}</p>
                           </div>
                         </div>
                         {order.products.map((p, i) => (

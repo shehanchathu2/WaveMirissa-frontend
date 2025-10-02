@@ -10,10 +10,10 @@ const PendingOrdersTable = ({ setModalContent, handleAccept }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('Pendding');
-  
+
   const loginUser = JSON.parse(localStorage.getItem("user"));
   const token = loginUser.jwt;
-  
+
   const getPaidOrders = async () => {
     setLoading(true);
     try {
@@ -41,9 +41,9 @@ const PendingOrdersTable = ({ setModalContent, handleAccept }) => {
     getPaidOrders();
   }, []);
 
-    
-      console.log("orders", orders);
-      console.log("filteredOrders", filteredOrders);
+
+  console.log("orders", orders);
+  console.log("filteredOrders", filteredOrders);
   if (loading) return <WaveMirissaLoader />;
 
   return (
@@ -63,7 +63,7 @@ const PendingOrdersTable = ({ setModalContent, handleAccept }) => {
               {new Date(order.createdAt).toLocaleDateString()}
             </div>
           </td>
-          
+
           <td className="px-6 py-4">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -77,7 +77,7 @@ const PendingOrdersTable = ({ setModalContent, handleAccept }) => {
                 </div>
                 <div className="text-sm text-gray-500 flex items-center">
                   <Phone className="w-3 h-3 mr-1" />
-                  +94 77 123 4567
+                  {order.user.address.phone}
                 </div>
               </div>
             </div>
@@ -107,7 +107,7 @@ const PendingOrdersTable = ({ setModalContent, handleAccept }) => {
             <div className="flex items-center space-x-2">
               <button
                 onClick={() =>
-                  setModalContent({ 
+                  setModalContent({
                     title: "Order Details",
                     content: (
                       <div className="space-y-4 ">
@@ -116,11 +116,11 @@ const PendingOrdersTable = ({ setModalContent, handleAccept }) => {
                           <div className="space-y-2">
                             <p><strong>Name:</strong> {order.user.name}</p>
                             <p><strong>Email:</strong> {order.user.email}</p>
-                            <p><strong>Address:</strong> 123 Main Street, Colombo</p>
-                            <p><strong>Phone:</strong> +94 77 123 4567</p>
+                            <strong>Address:</strong>{" "}
+                            {order.user.address.street}, {order.user.address.city}, {order.user.address.state}                            <p><strong>Phone:</strong> {order.user.address.phone}</p>
                           </div>
                         </div>
-                        
+
                         <div className="bg-gray-50 p-4 rounded-lg">
                           <h3 className="font-semibold text-gray-900 mb-3">Order Items</h3>
                           {order.products.map((p, i) => (
@@ -150,7 +150,7 @@ const PendingOrdersTable = ({ setModalContent, handleAccept }) => {
               >
                 <Eye className="w-4 h-4" />
               </button>
-              
+
               <button
                 className="inline-flex items-center px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-full transition-colors shadow-sm"
                 onClick={() => handleAccept(order.id)}
@@ -161,8 +161,8 @@ const PendingOrdersTable = ({ setModalContent, handleAccept }) => {
                 </svg>
                 Accept
               </button>
-              
-             
+
+
             </div>
           </td>
         </motion.tr>

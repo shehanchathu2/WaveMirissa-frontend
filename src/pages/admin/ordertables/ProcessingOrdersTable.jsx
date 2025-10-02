@@ -72,7 +72,7 @@ const ProcessingOrdersTable = ({ setModalContent, handleReadyToShipped }) => {
                                 </div>
                                 <div className="text-sm text-gray-500 flex items-center">
                                     <Phone className="w-3 h-3 mr-1" />
-                                    +94 77 123 4567
+                                    {order.user.address.phone}
                                 </div>
                             </div>
                         </div>
@@ -89,7 +89,7 @@ const ProcessingOrdersTable = ({ setModalContent, handleReadyToShipped }) => {
 
                     <td className="px-6 py-4">
                         <div className="text-sm font-semibold text-gray-900">{order.amount}</div>
-                        <div className="text-xs text-gray-500">Credit Card</div>
+                        <div className="text-xs text-gray-500">PayHere</div>
                     </td>
 
                     <td className="px-6 py-4">
@@ -111,8 +111,8 @@ const ProcessingOrdersTable = ({ setModalContent, handleReadyToShipped }) => {
                                                     <div className="space-y-2">
                                                         <p><strong>Name:</strong> {order.user.name}</p>
                                                         <p><strong>Email:</strong> {order.user.email}</p>
-                                                        <p><strong>Address:</strong> 123 Main Street, Colombo</p>
-                                                        <p><strong>Phone:</strong> +94 77 123 4567</p>
+                                                        <strong>Address:</strong>{" "}
+                                                        {order.user.address.street}, {order.user.address.city}, {order.user.address.state}                                                        <p><strong>Phone:</strong> {order.user.address.phone}</p>
                                                     </div>
                                                 </div>
                                                 {order.products.map((p, i) => (
@@ -143,11 +143,11 @@ const ProcessingOrdersTable = ({ setModalContent, handleReadyToShipped }) => {
                             </button>
 
                             <button
-                               className="inline-flex items-center px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-full transition-colors shadow-sm"
+                                className="inline-flex items-center px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-full transition-colors shadow-sm"
                                 onClick={() => handleReadyToShipped(order.id)}
                                 title="Mark as Ready to Ship"
                             >
-                                
+
                                 Ready to Ship
                             </button>
 
