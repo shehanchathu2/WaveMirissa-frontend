@@ -212,7 +212,7 @@ export default function EditProductModal({
               >
                 <option value="">Select Type</option>
                 <option value="ring">Ring</option>
-                <option value="neckless">Neckless</option>
+                <option value="neckless">Necklace</option>
                 <option value="wristband">Wristband</option>
                 <option value="earring">Earring</option>
                 <option value="bracelet">Bracelet</option>
