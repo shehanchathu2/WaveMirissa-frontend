@@ -7,6 +7,7 @@ import { FaThList } from 'react-icons/fa';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
+import ProductSkeleton from '../components/ProductSkeleton';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -35,10 +36,12 @@ const Shop = () => {
 
   const [gender, setGender] = useState([]);
   const [selectedGender, setSelectedGender] = useState('All');
+  const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
         const res = await axios.get('http://localhost:8080/product/AllproductsWithoutPersonality');
         setProducts(res.data);
@@ -58,6 +61,8 @@ const Shop = () => {
 
       } catch (err) {
         console.error('Error loading products:', err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProducts();
@@ -154,7 +159,7 @@ const Shop = () => {
       toast.error("Something went wrong");
     }
   };
-
+  if (loading) return <ProductSkeleton />;
 
   return (
     <div className="min-h-screen bg-gray-50">
