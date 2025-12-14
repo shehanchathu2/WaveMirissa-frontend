@@ -10,6 +10,8 @@ const Payment = ({
   setPaymentSuccess,
   setOrderID,
   selectedItems,
+  address,          // 👈 get address
+  onAddAddress,     // 👈 get modal opener
 }) => {
   const [payData, setPayData] = useState(null);
   const [scriptLoaded, setScriptLoaded] = useState(false);
@@ -25,7 +27,7 @@ const Payment = ({
   useEffect(() => {
     const fetchHash = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/api/payhere/hash', {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/payhere/hash`, {
           params: { amount: parseFloat(amount).toFixed(2) },
         });
         setPayData(res.data);
@@ -60,12 +62,12 @@ const Payment = ({
       return;
     }
 
-   const payment = {
+    const payment = {
       sandbox: true,
-      merchant_id: '1231066',
-      return_url: 'https://www.example.com/success',
-      cancel_url: 'https://www.example.com/cancel',
-      notify_url: 'https://e3e4-192-248-93-25.ngrok-free.app/auth/notify',
+      merchant_id: import.meta.env.VITE_PAYHERE_MERCHANT_ID,
+      return_url: import.meta.env.VITE_PAYHERE_RETURN_URL,
+      cancel_url: import.meta.env.VITE_PAYHERE_CANCEL_URL,
+      notify_url: import.meta.env.VITE_PAYHERE_NOTIFY_URL,
       order_id: payData.orderId,
       items: paymentTitle,
       amount: payData.amount,
@@ -75,24 +77,34 @@ const Payment = ({
       last_name: lastname,
       email: email,
       phone: '0765424122',
-      address: 'No.1, Galle Road',
-      city: 'Colombo',
-      country: 'Sri Lanka',
+      address: address?.street || 'N/A',   // 👈 use actual address
+      city: address?.city || 'N/A',
+      country: address?.country || 'Sri Lanka',
     };
 
     window.payhere.startPayment(payment);
   };
 
+  const handleClick = () => {
+    if (!address) {
+      // 👉 no address → open modal
+      onAddAddress?.();
+    } else {
+      // 👉 address exists → proceed with payment
+      pay();
+    }
+  };
+
   return (
     <button
-      onClick={pay}
+      onClick={handleClick}
       disabled={!payData || !scriptLoaded}
       className={`w-full py-3 rounded-xl font-medium transition-colors ${!payData || !scriptLoaded
-        ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-        : 'bg-blue-600 text-white hover:bg-blue-700'
+          ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+          : 'bg-blue-600 text-white hover:bg-blue-700'
         }`}
     >
-      Pay with PayHere
+      {!address ? 'Add Address to Pay' : 'Pay with PayHere'}
     </button>
   );
 };

@@ -9,9 +9,9 @@ export default function PayHereCheckout() {
     const payment = {
       sandbox: true,
       merchant_id: "1211149", // Sandbox only
-      return_url: "http://localhost:5173/payment-success",
-      cancel_url: "http://localhost:5173/payment-cancel",
-      notify_url: "http://localhost:8080/api/payments/notify",
+      return_url: `${import.meta.env.VITE_PAYHERE_RETURN_URL}`,
+      cancel_url: `${import.meta.env.VITE_PAYHERE_CANCEL_URL}`,
+      notify_url: `${import.meta.env.VITE_BACKEND_URL}/api/payments/notify`,
       order_id: "ORDER123",
       items: "Gold Necklace",
       amount: "1000.00",

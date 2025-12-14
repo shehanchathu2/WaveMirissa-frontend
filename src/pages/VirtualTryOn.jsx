@@ -1,158 +1,202 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import {
-  Sparkles,
-  ArrowLeft
-} from 'lucide-react';
-import QuestionStep from '../components/PersonalityVirtualTryon/QuestionStep';
-import ImageUploadStep from '../components/PersonalityVirtualTryon/ImageUploadStep';
-import ResultsStep from '../components/PersonalityVirtualTryon/ResultsStep';
-import ProgressBar from '../components/PersonalityVirtualTryon/ProgressBar';
-import sampleimg from '../assets/sampleProducts/CowrieShell-Black_01.jpeg';
-import {SizeSelectionModal} from '../components/ProductPreview/SizeSelectionModal';
-
-
-
+import React, { useState, useCallback, useEffect } from "react";
+import { Sparkles } from "lucide-react";
+import QuestionStep from "../components/PersonalityVirtualTryon/QuestionStep";
+import ImageUploadStep from "../components/PersonalityVirtualTryon/ImageUploadStep";
+import ResultsStep from "../components/PersonalityVirtualTryon/ResultsStep";
+import ProgressBar from "../components/PersonalityVirtualTryon/ProgressBar";
+import { SizeSelectionModal } from "../components/ProductPreview/SizeSelectionModal";
+import ErrorModal from "../components/PersonalityVirtualTryon/ErrorModal";
 
 const VirtualTryOn = () => {
-  const [currentStep, setCurrentStep] = useState('questionnaire');
+  const [currentStep, setCurrentStep] = useState("questionnaire");
   const [questionnaire, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
-  const [uploadedImage, setUploadedImage] = useState(null);
   const [personalityType, setPersonality] = useState(null);
   const [jewelry, setJewelry] = useState(null);
   const [processedImage, setProcessedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSizeModal, setShowSizeModal] = useState(false);
 
-  const isSizeModalOpen = showSizeModal; // Alias for clarity
+  // errors
+  const [errorMessage, setErrorMessage] = useState(null); // upload / processing errors
+  const [showPersonalityError, setShowPersonalityError] = useState(false); // "cannot find personality" popup
+
+  // key used to force remount of QuestionStep when needed
+  const [questionKey, setQuestionKey] = useState(0);
+
   const handleCloseSizeModal = () => setShowSizeModal(false);
   const handleCheckout = () => {
-    // Add your checkout logic here
     console.log("Proceed to checkout with:", jewelry);
     setShowSizeModal(false);
   };
 
-
+  const handleAnswerChange = (questionId, value) => {
+    setAnswers((prev) =>
+      prev.map((a) => (a.id === questionId ? { ...a, answer: value } : a))
+    );
+  };
 
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    const mockQuestions = [
-      {
-        id: '1',
-        text: 'Describe your ideal evening and what makes it perfect for you.',
-        type: 'text',
-        placeholder: 'Share what your perfect evening looks like...'
-      },
-      {
-        id: '2',
-        text: 'What draws you to jewelry and accessories? Explain your connection to them.',
-        type: 'text',
-        placeholder: 'Tell us about your relationship with jewelry...'
-      },
-      {
-        id: '3',
-        text: 'How important is it for you to stand out in a crowd? Describe your approach to being noticed.',
-        type: 'text',
-        placeholder: 'Share your thoughts on standing out...'
-      },
-      {
-        id: '4',
-        text: 'Describe your personal style and what influences your fashion choices.',
-        type: 'text',
-        placeholder: 'Tell us about your unique style...'
-      },
-      {
-        id: '5',
-        text: 'What role does tradition play in your life? How do you balance tradition with innovation?',
-        type: 'text',
-        placeholder: 'Share your perspective on tradition and change...'
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/virtual_try_on/api/questions`);
+      const data = await res.json();
+      if (data && data.questions) {
+        const formatted = data.questions.map((q, idx) => ({
+          id: String(idx + 1),
+          text: q,
+          type: "text",
+          placeholder: "Your answer here...",
+          answer: "",
+        }));
+        setQuestions(formatted);
+        setAnswers(formatted);
       }
-      
-    ];
-
-    setQuestions(mockQuestions);
+    } catch (err) {
+      console.error("Error fetching questions:", err);
+    }
     setIsLoading(false);
   }, []);
 
-  const submitAnswers = useCallback(async (answers) => {
+  const submitAnswers = useCallback(async () => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    setErrorMessage(null);
+    try {
+      const payload = answers.map((a) => ({
+        questionId: a.id,
+        questionText: a.text,
+        answer: a.answer?.trim() || "",
+      }));
 
-    const mockPersonality = {
-      personality: 'Open-Hearted & Creative',
-      
-      description: 'You are highly creative, curious, and open to new experiences. You appreciate beauty and artistic expression in all its forms, with a natural inclination toward meaningful connections and authentic self-expression.'
-    };
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/virtual_try_on/api/answers`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    setPersonality(mockPersonality);
-    setAnswers(answers);
-    setCurrentStep('upload');
+      const data = await res.json();
+
+      if (
+        data &&
+        data.personality &&
+        data.personality !== "Cannot find personality, please try again."
+      ) {
+        setPersonality({
+          personality: data.personality,
+          description: data.description,
+        });
+        setCurrentStep("upload");
+      } else {
+        // show the personality popup (full restart option)
+        setShowPersonalityError(true);
+      }
+    } catch (err) {
+      console.error("Error submitting answers:", err);
+      setShowPersonalityError(true);
+    }
     setIsLoading(false);
-  }, []);
+  }, [answers]);
 
- 
+  const processImage = useCallback(
+    async (file) => {
+      if (!personalityType) return;
 
-  const processImage = useCallback(async (imageData) => {
-    setIsLoading(true);
-    setUploadedImage(imageData);
-    await new Promise(resolve => setTimeout(resolve, 3000));
+      setIsLoading(true);
+      setErrorMessage(null);
 
-  const JewelryItem = {
-  id: 'classic-necklace',
-  name: 'Cowrie Shell Necklace with Black String',
-  basePrice: 800,
-  image: sampleimg,
-  description: 'Like you, this necklace embodies creativity and openness to the unknown. The moonstone reflects your intuitive nature and love for artistic beauty, while the rose gold speaks to your warm, agreeable personality. Each time light catches the stone, it mirrors your curious spirit exploring new possibilities. This piece perfectly complements your authentic self-expression and appreciation for meaningful beauty.',
-  materials: ['Black String', 'Sea-shells'],
-  type: 'necklace',
-  gender: 'women'
-  
-  
-};
+      try {
+        const form = new FormData();
+        form.append("userImage", file);
+        form.append("personality", personalityType.personality);
 
-    //const mockJewelry = {
-      //name: 'Celestial Dreams Necklace',
-    //   style: 'Modern Bohemian',
-    //   material: 'Rose Gold with Moonstone',
-    //   description: 'A delicate piece featuring ethereal moonstone gems that catch light beautifully, designed for those who appreciate subtle elegance with mystical undertones.',
-    //   imageUrl: 'https://images.pexels.com/photos/1454169/pexels-photo-1454169.jpeg?auto=compress&cs=tinysrgb&w=400',
-    //   personalizedStory: 'Like you, this necklace embodies creativity and openness to the unknown. The moonstone reflects your intuitive nature and love for artistic beauty, while the rose gold speaks to your warm, agreeable personality. Each time light catches the stone, it mirrors your curious spirit exploring new possibilities. This piece perfectly complements your authentic self-expression and appreciation for meaningful beauty.'
-    // };
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/virtual_try_on/api/tryon`, {
+          method: "POST",
+          body: form,
+        });
 
-    setJewelry(JewelryItem);
-    setProcessedImage(imageData);
-    setCurrentStep('results');
-    setIsLoading(false);
-  }, []);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || `Server returned ${res.status}`);
+        }
 
+        const data = await res.json();
+        console.log(data)
+        if (!data.imageUrl) {
+          throw new Error("Image URL missing from response");
+        }
+
+        setProcessedImage(data.imageUrl);
+
+        setJewelry({
+          id: data.necklaceId,
+          uuid: data.uuid,
+          name: data.name,
+          type: "necklace",
+          basePrice: data.price,
+          description: data.personalityDescription,
+          material: data.material,
+          imageUrl1: data.imageUrl1,
+          imageUrl2: data.imageUrl2,
+          imageUrl3: data.imageUrl3,
+        });
+
+        
+
+        setCurrentStep("results");
+      } catch (err) {
+        console.error("Virtual try-on error:", err);
+        setErrorMessage("We couldn't process your photo. Please try again.");
+        setCurrentStep("error");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [personalityType]
+  );
+
+  // Full restart: clears everything and forces QuestionStep remount
   const resetJourney = useCallback(() => {
-    setCurrentStep('questionnaire');
+    setCurrentStep("questionnaire");
     setAnswers([]);
-    setUploadedImage(null);
     setPersonality(null);
     setJewelry(null);
     setProcessedImage(null);
     setQuestions([]);
+    setErrorMessage(null);
+    setShowPersonalityError(false);
+    // increment key to force remount so internal QuestionStep index becomes 0
+    setQuestionKey((k) => k + 1);
   }, []);
 
-  const goToStep = useCallback((step) => {
-    setCurrentStep(step);
+  // Back to questionnaire from upload-error: keep answers but start from question 1
+  const backToQuestionsPreserveAnswers = useCallback(() => {
+    setCurrentStep("questionnaire");
+    // remount QuestionStep to reset its internal current-question index,
+    // but keep the existing answers array
+    setQuestionKey((k) => k + 1);
+    setErrorMessage(null);
   }, []);
+
+  const goToStep = useCallback((step) => setCurrentStep(step), []);
 
   useEffect(() => {
-    if (currentStep === 'questionnaire' && questionnaire.length === 0) {
+    if (currentStep === "questionnaire" && questionnaire.length === 0) {
       fetchQuestions();
     }
   }, [currentStep, questionnaire.length, fetchQuestions]);
 
   const getStepNumber = (step) => {
     switch (step) {
-      case 'questionnaire': return 1;
-      case 'upload': return 2;
-      case 'results': return 3;
-      default: return 1;
+      case "questionnaire":
+        return 1;
+      case "upload":
+        return 2;
+      case "results":
+        return 3;
+      case "error":
+        return 2;
+      default:
+        return 1;
     }
   };
 
@@ -174,66 +218,91 @@ const VirtualTryOn = () => {
         <ProgressBar currentStep={getStepNumber(currentStep)} totalSteps={3} />
 
         <div className="max-w-4xl mx-auto mt-8">
-          {currentStep === 'questionnaire' && (
+          {currentStep === "questionnaire" && (
+            // pass `key` so we can remount QuestionStep when needed
             <QuestionStep
-              questionnaire={questionnaire}
+              key={questionKey}
+              questionnaire={questionnaire.map((q, idx) => ({
+                ...q,
+                answer: answers[idx]?.answer || "",
+              }))}
               onSubmit={submitAnswers}
+              onAnswerChange={handleAnswerChange}
               isLoading={isLoading}
             />
           )}
 
-          {currentStep === 'upload' && (
+          {currentStep === "upload" && personalityType && (
             <ImageUploadStep
               onImageUpload={processImage}
-              onBack={() => goToStep('questionnaire')}
+              onBack={() => {
+                // If user clicks back from upload, we want to keep answers and start at Q1
+                backToQuestionsPreserveAnswers();
+              }}
               isLoading={isLoading}
               personalityType={personalityType}
             />
           )}
 
-          {currentStep === 'results' && personalityType && jewelry && (
+          {currentStep === "results" && personalityType && jewelry && processedImage && (
             <ResultsStep
               personalityType={personalityType}
               jewelry={jewelry}
-              setShowSizeModal={setShowSizeModal}
               processedImage={processedImage}
+              setShowSizeModal={setShowSizeModal}
               onReset={resetJourney}
-              
+              enableDownload={true}
+              goToStep={goToStep} // <-- add this line
             />
+          )}
+
+          {/* Upload / processing errors (image overlay/upload error) */}
+          {currentStep === "error" && errorMessage && (
+            <div className="max-w-2xl p-8 mx-auto bg-red-50 border border-red-400 text-red-700 rounded-xl text-center">
+              <p className="text-lg font-semibold mb-6">{errorMessage}</p>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => goToStep("upload")}
+                  className="px-6 py-3 bg-red-500 text-white rounded-xl font-semibold hover:bg-red-600"
+                >
+                  Re-upload Image
+                </button>
+
+                {/* Back to Questions: preserve previous answers, but force start at Q1 */}
+                <button
+                  onClick={() => backToQuestionsPreserveAnswers()}
+                  className="px-6 py-3 bg-gray-500 text-white rounded-xl font-semibold hover:bg-gray-600"
+                >
+                  Back to Questions
+                </button>
+              </div>
+            </div>
           )}
         </div>
 
-        {currentStep !== 'questionnaire' && currentStep !== 'results' && (
-          <div className="fixed transform -translate-x-1/2 bottom-8 left-1/2">
-            <div className="flex items-center px-6 py-3 space-x-4 bg-white rounded-full shadow-lg">
-              <button
-                onClick={() => {
-                  if (currentStep === 'upload') goToStep('questionnaire');
-                }}
-                className="flex items-center text-gray-600 transition-colors hover:text-teal-700"
-              >
-                <ArrowLeft className="w-4 h-4 mr-1" />
-                Back
-              </button>
-            </div>
-          </div>
+        {showSizeModal && (
+          <SizeSelectionModal
+            isOpen={showSizeModal}
+            onClose={handleCloseSizeModal}
+            jewelry={jewelry}
+            totalPrice={jewelry?.basePrice}
+            onCheckout={handleCheckout}
+          />
         )}
       </div>
-      {showSizeModal && (
-      <SizeSelectionModal
-              isOpen={isSizeModalOpen}
-              onClose={handleCloseSizeModal}
-              
-              jewelry={jewelry}
-              totalPrice={jewelry.basePrice}
-              onCheckout={handleCheckout}
-              
-               
-            />
+
+      {/* Personality analysis "cannot find" popup -> full restart */}
+      {showPersonalityError && (
+        <ErrorModal
+          message="Cannot find personality, please try again."
+          onConfirm={() => {
+            // full restart: clear answers & questions and remount QuestionStep
+            resetJourney();
+          }}
+        />
       )}
     </div>
-    
   );
-}
+};
 
 export default VirtualTryOn;

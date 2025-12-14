@@ -7,6 +7,7 @@ import { FaThList } from 'react-icons/fa';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
+import ProductSkeleton from '../components/ProductSkeleton';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -35,11 +36,14 @@ const Shop = () => {
 
   const [gender, setGender] = useState([]);
   const [selectedGender, setSelectedGender] = useState('All');
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
-        const res = await axios.get('http://localhost:8080/product/Allproducts');
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/product/AllproductsWithoutPersonality`);
         setProducts(res.data);
         console.log("shop", res.data)
         setFilteredProducts(res.data);
@@ -57,6 +61,8 @@ const Shop = () => {
 
       } catch (err) {
         console.error('Error loading products:', err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProducts();
@@ -113,7 +119,7 @@ const Shop = () => {
 
     const fetchWishlist = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/wishlist/${user.id}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/wishlist/${user.id}`);
         const ids = res.data.map((item) => item.productId);
         setLikedProducts(ids);
       } catch (err) {
@@ -136,13 +142,13 @@ const Shop = () => {
     try {
       if (isLiked) {
         setLikedProducts((prev) => prev.filter((id) => id !== productId));
-        await axios.delete('http://localhost:8080/wishlist/remove', {
+        await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/wishlist/remove`, {
           params: { userId: user.id, productId },
         });
         toast.success("Removed from wishlist");
       } else {
         setLikedProducts((prev) => [...prev, productId]);
-        await axios.post('http://localhost:8080/wishlist/add', {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/wishlist/add`, {
           userId: user.id,
           productId,
         });
@@ -153,7 +159,7 @@ const Shop = () => {
       toast.error("Something went wrong");
     }
   };
-
+  if (loading) return <ProductSkeleton />;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -166,7 +172,7 @@ const Shop = () => {
         <p className="text-sm text-gray-600 mt-2">
           Discover our stunning jewelry collections. Browse and find your perfect piece.
         </p>
-        <p className="text-sm text-gray-700 mt-1">Home / Shop</p>
+        {/* <p className="text-sm text-gray-700 mt-1">Home / Shop</p> */}
       </div>
 
       <motion.div
@@ -179,96 +185,139 @@ const Shop = () => {
 
 
 
-          <div className="space-y-6">
-            {/* Category Filter */}
-            <div>
-              <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Categories</h2>
-              <ul className="space-y-1 text-sm text-gray-700">
-                {categories.map((cat, index) => (
-                  <li key={index}>
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="category"
-                        value={cat}
-                        checked={selectedCategory === cat}
-                        onChange={() => handleCategoryChange(cat)}
-                        className="accent-[#1b4765]"
-                      />
-                      {cat}
-                    </label>
-                  </li>
-                ))}
-
-              </ul>
+          <div className="space-y-8">
+  {/* Category Filter */}
+  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-8 h-8 bg-gradient-to-br from-[#1b4765] to-[#2d5a7a] rounded-lg flex items-center justify-center">
+        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      </div>
+      <h2 className="text-lg font-bold text-gray-800">Categories</h2>
+    </div>
+    <ul className="space-y-3">
+      {categories.map((cat, index) => (
+        <li key={index}>
+          <label className="group flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-200">
+            <div className="relative">
+              <input
+                type="radio"
+                name="category"
+                value={cat}
+                checked={selectedCategory === cat}
+                onChange={() => handleCategoryChange(cat)}
+                className="sr-only"
+              />
+              <div className={`w-5 h-5 rounded-full border-2 transition-all duration-200 ${
+                selectedCategory === cat 
+                  ? 'bg-[#1b4765] border-[#1b4765]' 
+                  : 'border-gray-300 group-hover:border-[#1b4765]'
+              }`}>
+                {selectedCategory === cat && (
+                  <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                )}
+              </div>
             </div>
+            <span className={`text-sm font-medium transition-colors ${
+              selectedCategory === cat ? 'text-[#1b4765]' : 'text-gray-700 group-hover:text-[#1b4765]'
+            }`}>
+              {cat.charAt(0).toUpperCase() + cat.slice(1)}
+            </span>
+          </label>
+        </li>
+      ))}
+    </ul>
+  </div>
 
-            {/* Type Filter */}
-            <div>
-              <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Type</h2>
-              <ul className="space-y-1 text-sm text-gray-700">
-                {types.map((t, index) => (
-                  <li key={index}>
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="productType"
-                        value={t}
-                        checked={selectedType === t}
-                        onChange={() => handletypeChange(t)}
-                        className="accent-[#1b4765]"
-                      />
-                      {t}
-                    </label>
-                  </li>
-                ))}
-              </ul>
+  {/* Type Filter */}
+  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-8 h-8 bg-gradient-to-br from-[#2d5a7a] to-[#3e6b8a] rounded-lg flex items-center justify-center">
+        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+        </svg>
+      </div>
+      <h2 className="text-lg font-bold text-gray-800">Type</h2>
+    </div>
+    <ul className="space-y-3">
+      {types.map((t, index) => (
+        <li key={index}>
+          <label className="group flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-200">
+            <div className="relative">
+              <input
+                type="radio"
+                name="productType"
+                value={t}
+                checked={selectedType === t}
+                onChange={() => handletypeChange(t)}
+                className="sr-only"
+              />
+              <div className={`w-5 h-5 rounded-full border-2 transition-all duration-200 ${
+                selectedType === t 
+                  ? 'bg-[#1b4765] border-[#1b4765]' 
+                  : 'border-gray-300 group-hover:border-[#1b4765]'
+              }`}>
+                {selectedType === t && (
+                  <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                )}
+              </div>
             </div>
+            <span className={`text-sm font-medium transition-colors ${
+              selectedType === t ? 'text-[#1b4765]' : 'text-gray-700 group-hover:text-[#1b4765]'
+            }`}>
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+            </span>
+          </label>
+        </li>
+      ))}
+    </ul>
+  </div>
 
-            {/* Material Filter */}
-            {/* <div>
-              <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Material</h2>
-              <ul className="space-y-1 text-sm text-gray-700">
-                {materials.map((m, index) => (
-                  <li key={index}>
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="material"
-                        value={m}
-                        checked={selectedMaterial === m}
-                        onChange={() => handleMaterials(m)}
-                        className="accent-[#1b4765]"
-                      />
-                      {m}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div> */}
-
-            {/* Gender Filter */}
-            <div>
-              <h2 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Gender</h2>
-              <ul className="space-y-1 text-sm text-gray-700">
-                {gender.map((g, index) => (
-                  <li key={index}>
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="gender"
-                        value={g}
-                        checked={selectedGender === g}
-                        onChange={() => handleGenderChange(g)}
-                        className="accent-[#1b4765]"
-                      />
-                      {g}
-                    </label>
-                  </li>
-                ))}
-              </ul>
+  {/* Gender Filter */}
+  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-8 h-8 bg-gradient-to-br from-[#3e6b8a] to-[#4a7a9a] rounded-lg flex items-center justify-center">
+        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      </div>
+      <h2 className="text-lg font-bold text-gray-800">Gender</h2>
+    </div>
+    <ul className="space-y-3">
+      {gender.map((g, index) => (
+        <li key={index}>
+          <label className="group flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-200">
+            <div className="relative">
+              <input
+                type="radio"
+                name="gender"
+                value={g}
+                checked={selectedGender === g}
+                onChange={() => handleGenderChange(g)}
+                className="sr-only"
+              />
+              <div className={`w-5 h-5 rounded-full border-2 transition-all duration-200 ${
+                selectedGender === g 
+                  ? 'bg-[#1b4765] border-[#1b4765]' 
+                  : 'border-gray-300 group-hover:border-[#1b4765]'
+              }`}>
+                {selectedGender === g && (
+                  <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                )}
+              </div>
             </div>
-          </div>
+            <span className={`text-sm font-medium transition-colors ${
+              selectedGender === g ? 'text-[#1b4765]' : 'text-gray-700 group-hover:text-[#1b4765]'
+            }`}>
+              {g.charAt(0).toUpperCase() + g.slice(1)}
+            </span>
+          </label>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
 
         </motion.div>
 
@@ -297,17 +346,35 @@ const Shop = () => {
             animate="visible"
           >
             {filteredProducts.map((product) => (
-              <Link to={`/shop/product/${product.product_id}`} key={product.product_id}>
+              <Link to={`/shop/product/${product.uuid}`}
+                state={{ productId: product.product_id }}
+                key={product.product_id}>
                 <motion.div
-                  className="bg-white rounded shadow hover:shadow-lg transition"
+                  className="bg-white rounded shadow hover:shadow-lg transition relative overflow-hidden"
                   variants={itemVariants}
                 >
-                  <div className="relative">
-                    <img
+                  <div className="relative w-full h-64">
+                    {/* First Image */}
+                    <motion.img
                       src={product.image_url1}
                       alt={product.name}
-                      className="w-full h-64 object-cover rounded"
+                      className="w-full h-full object-cover rounded absolute top-0 left-0"
+                      initial={{ opacity: 1 }}
+                      whileHover={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
                     />
+
+                    {/* Second Image */}
+                    <motion.img
+                      src={product.image_url2 || product.image_url1} // fallback to first image
+                      alt={product.name}
+                      className="w-full h-full object-cover rounded absolute top-0 left-0"
+                      initial={{ opacity: 0, x: 50 }}
+                      whileHover={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3 }}
+                    />
+
+                    {/* Like Button */}
                     <motion.button
                       className="absolute top-2 right-2 bg-white rounded-full p-2 shadow z-50"
                       onClick={(e) => {
@@ -324,8 +391,11 @@ const Shop = () => {
                       )}
                     </motion.button>
                   </div>
+
                   <div className="pt-3 px-4 py-4">
-                    <h3 className="font-semibold text-gray-800 text-sm">{product.name}</h3>
+                    <h3 className="font-semibold text-gray-800 text-sm">
+                      {product.name.charAt(0).toUpperCase() + product.name.slice(1)}
+                    </h3>
                     <div className="flex items-center text-yellow-400 text-xs">
                       {[...Array(5)].map((_, i) => (
                         <AiFillStar key={i} className={i < 4 ? '' : 'text-gray-300'} />
@@ -341,6 +411,7 @@ const Shop = () => {
                   </div>
                 </motion.div>
               </Link>
+
             ))}
           </motion.div>
 

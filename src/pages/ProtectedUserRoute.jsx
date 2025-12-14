@@ -10,7 +10,7 @@ const ProtectedUserRoute = ({ children }) => {
 
   if (initializing) return <WaveMirissaLoader />;
 
-  if (user?.role === 'suspend' && location.pathname !== '/suspend') {
+  if (user?.role === 'SUSPEND' && location.pathname !== '/suspend') {
     return <Navigate to="/suspend" replace />;
   }
 

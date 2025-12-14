@@ -9,7 +9,7 @@ export const CustomizationModal = ({
   onCheckout,
   openedViaCustomize,
   setCustomMaterial,
-  customizationOptions = [] // 👈 dynamic customizations from backend
+  customizationOptions = [] // dynamic customizations from backend
 }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
 
@@ -28,9 +28,9 @@ export const CustomizationModal = ({
         : [...prev, optionId]
     );
   };
-  
 
-  
+
+
 
   const calculateTotalPrice = () => {
     const addOnPrice = selectedOptions.reduce((total, optionId) => {
@@ -85,43 +85,59 @@ export const CustomizationModal = ({
           </div>
 
           {/* Customization Options */}
-          <div className="p-6">
-            <h4 className="text-xl font-semibold text-[#1b4965] mb-6">
-              Available Customizations
-            </h4>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {customizationOptions.map((option) => (
-                <div
-                  key={option.item_id}
-                  className={`relative rounded-xl border-2 transition-all duration-300 cursor-pointer group ${
-                    selectedOptions.includes(option.item_id)
+          {customizationOptions.length > 0 ? (
+            <div className="p-6">
+              <h4 className="text-xl font-semibold text-[#1b4965] mb-6">
+                Available Customizations
+              </h4>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {customizationOptions.map((option) => (
+                  <div
+                    key={option.item_id}
+                    className={`relative rounded-xl border-2 transition-all duration-300 cursor-pointer group ${selectedOptions.includes(option.item_id)
                       ? 'border-teal-500 bg-teal-50 shadow-lg transform scale-105'
                       : 'border-gray-200 bg-white hover:border-[#1b4965] hover:shadow-md'
-                  }`}
-                  onClick={() => handleOptionToggle(option.item_id)}
-                >
-                  <div className="p-4">
-                    <div className="relative mb-3">
-                      <img src={option.imageUrl} alt={option.name} className="object-cover w-full h-24 rounded-lg" />
-                      <div className="absolute top-2 right-2">
-                        <div
-                          className={`w-6 h-6 rounded-full border-2 transition-all duration-200 flex items-center justify-center ${
-                            selectedOptions.includes(option.item_id)
+                      }`}
+                    onClick={() => handleOptionToggle(option.item_id)}
+                  >
+                    <div className="p-4">
+                      <div className="relative mb-3">
+                        <img src={option.imageUrl} alt={option.name} className="object-cover w-full h-24 rounded-lg" />
+                        <div className="absolute top-2 right-2">
+                          <div
+                            className={`w-6 h-6 rounded-full border-2 transition-all duration-200 flex items-center justify-center ${selectedOptions.includes(option.item_id)
                               ? 'bg-teal-500 border-teal-500'
                               : 'bg-white border-gray-300 group-hover:border-[#1b4965]'
-                          }`}
-                        >
-                          {selectedOptions.includes(option.item_id) && <Check size={16} className="text-white" />}
+                              }`}
+                          >
+                            {selectedOptions.includes(option.item_id) && <Check size={16} className="text-white" />}
+                          </div>
                         </div>
                       </div>
+                      <h5 className="font-semibold text-[#1b4965] mb-1">{option.name}</h5>
+                      <p className="text-sm text-gray-600">LKR {option.price}</p>
                     </div>
-                    <h5 className="font-semibold text-[#1b4965] mb-1">{option.name}</h5>
-                    <p className="text-sm text-gray-600">LKR {option.price}</p>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          ) : (
+            // JSX to render if false
+            <div className="flex flex-col items-center justify-center p-10 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-12 h-12 mb-4 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <p className="text-gray-500 text-lg font-medium">No customization options available</p>
+              <p className="text-gray-400 text-sm mt-1">Please check back later or contact support for custom options.</p>
+            </div>
+          )}
+
         </div>
 
         {/* Footer */}
@@ -135,12 +151,19 @@ export const CustomizationModal = ({
               <button
                 className="flex items-center space-x-2 px-8 py-3 rounded-xl font-semibold transition duration-300 shadow-lg bg-[#1b4965] hover:bg-[#1b4965]/90 text-white hover:shadow-xl transform hover:scale-105"
                 onClick={() => {
-                  const selectedMaterialString = selectedOptions
-                    .map((id) => customizationOptions.find((opt) => opt.item_id === id)?.name)
+                  const materialString = selectedOptions
+                    .map((id) => {
+                      const opt = customizationOptions.find((opt) => opt.item_id === id);
+                      return opt?.name;
+                    })
                     .filter(Boolean)
-                    .join(', ');
-                  setCustomMaterial(selectedMaterialString);
-                  onCheckout(selectedMaterialString, calculateTotalPrice());
+                    .join(', '); // "Gold, Diamond, Pearl"
+
+                  setCustomMaterial(materialString); // save string to state
+
+                  const priceToSend = selectedOptions.length > 0 ? calculateTotalPrice() : jewelry.price;
+
+                  onCheckout(materialString, priceToSend);
                 }}
               >
                 <ShoppingCart size={20} />
@@ -154,6 +177,7 @@ export const CustomizationModal = ({
                 Next
               </button>
             )}
+
           </div>
         </div>
       </div>

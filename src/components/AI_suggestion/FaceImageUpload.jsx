@@ -1,7 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Upload, Camera, CheckCircle, AlertTriangle, User, Palette, Eye, Sparkles, Play } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import toast from 'react-hot-toast';
+
 
 const FaceImageUpload = ({ onImageUpload }) => {
+    const { user } = useAuth();
   const fileInputRef = useRef(null);
   const [dragActive, setDragActive] = useState(false);
   const [demoStep, setDemoStep] = useState(0);
@@ -56,6 +60,11 @@ const FaceImageUpload = ({ onImageUpload }) => {
   };
 
   const openFileDialog = () => {
+     if (!user) {
+      toast.error("Please log in first.");
+      return;
+    }
+
     fileInputRef.current?.click();
   };
 

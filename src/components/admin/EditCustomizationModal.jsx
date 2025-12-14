@@ -11,6 +11,8 @@ const CLOUDINARY_API = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}
 export default function EditCustomizationModal({ isOpen, onClose, customization, onUpdate }) {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
+    const [faceShape, setFaceShape] = useState("");
+    const [skinTone, setSkinTone] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const [isUploading, setIsUploading] = useState(false);
 
@@ -18,6 +20,8 @@ export default function EditCustomizationModal({ isOpen, onClose, customization,
         if (customization) {
             setName(customization.name);
             setPrice(customization.price);
+            setFaceShape(customization.faceShapeTags || "");
+            setSkinTone(customization.skinToneTags || "");
             setImageUrl(customization.imageUrl);
         }
     }, [customization]);
@@ -58,6 +62,8 @@ export default function EditCustomizationModal({ isOpen, onClose, customization,
                 item_id: customization.item_id,
                 name: name.trim(),
                 price: parseFloat(price),
+                faceShapeTags: faceShape,
+                skinToneTags: skinTone,
                 imageUrl: imageUrl
             };
 
@@ -68,7 +74,7 @@ export default function EditCustomizationModal({ isOpen, onClose, customization,
             ));
 
             const res = await axios.put(
-                `http://localhost:8080/Customizations/${customization.item_id}`,
+                `${import.meta.env.VITE_BACKEND_URL}/Customizations/${customization.item_id}`,
                 formData,
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
@@ -113,6 +119,49 @@ export default function EditCustomizationModal({ isOpen, onClose, customization,
                             onChange={(e) => setPrice(e.target.value)}
                         />
                     </div>
+
+
+
+
+                    <div>
+                        {/* Face Shape Dropdown */}
+                        <label className="block text-sm font-medium text-gray-700 ">Face Shape</label>
+                        <select
+                            name="faceShape"
+                            className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
+                            value={faceShape}
+                            onChange={(e) => setFaceShape(e.target.value)}
+                        >
+                            <option value="">Select Face Shape</option>
+                            <option value="Oval">Oval</option>
+                            <option value="Round">Round</option>
+                            <option value="Heart">Heart</option>
+                            <option value="Square">Square</option>
+                            <option value="Diamond">Diamond</option>
+                        </select>
+
+                    </div>
+
+                    {/* Skin Tone Dropdown */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Skin Tone</label>
+                        <select
+                            name="skinTone"
+                            className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
+                            value={skinTone}
+                            onChange={(e) => setSkinTone(e.target.value)}
+                        >
+                            <option value="">Select Skin Tone</option>
+                            <option value="Fair">Fair</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Deep">Deep</option>
+                            <option value="Warm">Warm</option>
+                            <option value="Cool">Cool</option>
+                        </select>
+                    </div>
+
+
+
 
                     <div>
                         <label className="block text-sm font-medium mb-1">Image</label>

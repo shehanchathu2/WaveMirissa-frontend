@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { User, Edit3, Save, X, Mail, Phone, MapPin, Calendar, Shield, ArrowLeft } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 
 const UserProfile = ({ onBack }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -8,7 +10,7 @@ const UserProfile = ({ onBack }) => {
     lastName: 'Doe',
     email: 'john.doe@example.com',
     phone: '+1 (555) 123-4567',
-    
+
     address: {
       street: '123 Main Street',
       city: 'San Francisco',
@@ -16,10 +18,9 @@ const UserProfile = ({ onBack }) => {
       zipCode: '94102',
       country: 'United States'
     },
-    
+
   });
 
-  const [editData, setEditData] = useState(userData);
 
   const handleEdit = () => {
     setEditData(userData);
@@ -53,6 +54,82 @@ const UserProfile = ({ onBack }) => {
       }));
     }
   };
+
+
+
+
+
+
+
+  const { user } = useAuth();
+  console.log(user.username)
+  const [address, setAddress] = useState({
+    street: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    phone: "",
+    country: "Sri Lanka",
+    username: user.username // fixed value
+  });
+
+
+  const [loading, setLoading] = useState(false);
+
+  // ✅ Fetch existing address when page loads
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/address/${user.id}`)
+      .then((res) => {
+        if (res.data) {
+          setAddress(res.data);
+          console.log(address.street);        
+          console.log(address.city);          
+          console.log(address.country);       
+          console.log(address.phone);         
+
+          // Nested user info
+          console.log(address.user.email);    
+          console.log(address.user.username);
+        }
+
+      })
+      .catch((err) => {
+        console.log("No address yet:", err.response?.data || err.message);
+      });
+  }, [user.id]);
+
+  // ✅ Handle form change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAddress((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // ✅ Submit form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/address/${user.id}`,
+        address
+      );
+      alert("Address saved successfully!");
+      setAddress(res.data);
+    } catch (err) {
+      alert("Error saving address!");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  
+  const [editData, setEditData] = useState(address);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50  to-gray-100">
@@ -93,7 +170,7 @@ const UserProfile = ({ onBack }) => {
           </div>
         </div>
       </div>
-     {/* Main Content with Fixed Sidebar */}
+      {/* Main Content with Fixed Sidebar */}
       <div className="px-4 py-8 mx-auto max-w-7xl">
         <div className="flex gap-8">
           {/* Fixed Profile Summary Sidebar */}
@@ -104,10 +181,10 @@ const UserProfile = ({ onBack }) => {
                   <User className="text-white" size={32} />
                 </div>
                 <h2 className="mb-1 text-xl font-bold text-gray-900">
-                  {userData.firstName} {userData.lastName}
+                  {user.username} {user.username}
                 </h2>
-                <p className="mb-4 text-gray-600">{userData.email}</p>
-                
+                <p className="mb- 4 text-gray-600">{user.email}</p>
+
               </div>
             </div>
           </div>
@@ -120,75 +197,75 @@ const UserProfile = ({ onBack }) => {
                 <User className="text-[#1b4965]" size={20} />
                 Personal Information
               </h3>
-              
+
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-700">First Name</label>
                   {isEditing ? (
                     <input
                       type="text"
-                      value={editData.firstName}
+                      value={address.user.username}
                       onChange={(e) => handleInputChange('firstName', e.target.value)}
                       className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#1b4965] focus:border-transparent"
                     />
                   ) : (
                     <p className="px-3 py-2 text-gray-900 border rounded-lg bg-stone-50 border-stone-200">
-                      {userData.firstName}
+                      {user.username}
                     </p>
                   )}
                 </div>
-                
+
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-700">Last Name</label>
                   {isEditing ? (
                     <input
                       type="text"
-                      value={editData.lastName}
+                      value={address.user.username}
                       onChange={(e) => handleInputChange('lastName', e.target.value)}
                       className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#1b4965] focus:border-transparent"
                     />
                   ) : (
                     <p className="px-3 py-2 text-gray-900 border rounded-lg bg-stone-50 border-stone-200">
-                      {userData.lastName}
+                      {user.username}
                     </p>
                   )}
                 </div>
-                
+
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-700">Email</label>
                   {isEditing ? (
                     <input
                       type="email"
-                      value={editData.email}
+                      value={user.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
                       className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#1b4965] focus:border-transparent"
                     />
                   ) : (
                     <p className="flex items-center gap-2 px-3 py-2 text-gray-900 border rounded-lg bg-stone-50 border-stone-200">
                       <Mail size={16} className="text-[#1b4965]" />
-                      {userData.email}
+                      {user.email}
                     </p>
                   )}
                 </div>
-                
+
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-700">Phone</label>
                   {isEditing ? (
                     <input
                       type="tel"
-                      value={editData.phone}
+                      value={address.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
                       className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#1b4965] focus:border-transparent"
                     />
                   ) : (
                     <p className="flex items-center gap-2 px-3 py-2 text-gray-900 border rounded-lg bg-stone-50 border-stone-200">
                       <Phone size={16} className="text-[#1b4965]" />
-                      {userData.phone}
+                      {address.phone}
                     </p>
                   )}
                 </div>
-                
-                
+
+
               </div>
             </div>
 
@@ -198,56 +275,56 @@ const UserProfile = ({ onBack }) => {
                 <MapPin className="text-[#1b4965]" size={20} />
                 Address Information
               </h3>
-              
+
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="md:col-span-2">
                   <label className="block mb-2 text-sm font-medium text-gray-700">Street Address</label>
                   {isEditing ? (
                     <input
                       type="text"
-                      value={editData.address.street}
+                      value={address.street}
                       onChange={(e) => handleInputChange('address.street', e.target.value)}
                       className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#1b4965] focus:border-transparent"
                     />
                   ) : (
                     <p className="px-3 py-2 text-gray-900 border rounded-lg bg-stone-50 border-stone-200">
-                      {userData.address.street}
+                      {address.street}
                     </p>
                   )}
                 </div>
-                
+
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-700">City</label>
                   {isEditing ? (
                     <input
                       type="text"
-                      value={editData.address.city}
+                      value={address.city}
                       onChange={(e) => handleInputChange('address.city', e.target.value)}
                       className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#1b4965] focus:border-transparent"
                     />
                   ) : (
                     <p className="px-3 py-2 text-gray-900 border rounded-lg bg-stone-50 border-stone-200">
-                      {userData.address.city}
+                      {address.city}
                     </p>
                   )}
                 </div>
-                
+
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-700">State</label>
                   {isEditing ? (
                     <input
                       type="text"
-                      value={editData.address.state}
+                      value={address.state}
                       onChange={(e) => handleInputChange('address.state', e.target.value)}
                       className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#1b4965] focus:border-transparent"
                     />
                   ) : (
                     <p className="px-3 py-2 text-gray-900 border rounded-lg bg-stone-50 border-stone-200">
-                      {userData.address.state}
+                      {address.state}
                     </p>
                   )}
                 </div>
-                
+
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-700">ZIP Code</label>
                   {isEditing ? (
@@ -259,30 +336,30 @@ const UserProfile = ({ onBack }) => {
                     />
                   ) : (
                     <p className="px-3 py-2 text-gray-900 border rounded-lg bg-stone-50 border-stone-200">
-                      {userData.address.zipCode}
+                      {address.zipCode}
                     </p>
                   )}
                 </div>
-                
+
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-700">Country</label>
-                  {isEditing ? (
+             
                     <input
                       type="text"
-                      value={editData.address.country}
+                      value={address.country}
                       onChange={(e) => handleInputChange('address.country', e.target.value)}
                       className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#1b4965] focus:border-transparent"
                     />
-                  ) : (
+
                     <p className="px-3 py-2 text-gray-900 border rounded-lg bg-stone-50 border-stone-200">
-                      {userData.address.country}
+                      {address.country}
                     </p>
-                  )}
+     
                 </div>
               </div>
             </div>
 
-            
+
 
             {/* Account Security Section */}
             <div className="p-6 bg-white border shadow-sm rounded-xl border-stone-200">
@@ -290,7 +367,7 @@ const UserProfile = ({ onBack }) => {
                 <Shield className="text-[#1b4965]" size={20} />
                 Account Security
               </h3>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-3 border rounded-lg bg-stone-50 border-stone-200">
                   <div>
@@ -301,8 +378,8 @@ const UserProfile = ({ onBack }) => {
                     Change Password
                   </button>
                 </div>
-                
-                
+
+
               </div>
             </div>
           </div>

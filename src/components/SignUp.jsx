@@ -59,7 +59,7 @@ const SignUp = ({ open, onClose, onSwitchToLogin }) => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/register', {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/register`, {
         username: form.name,
         email: form.email,
         password: form.password,

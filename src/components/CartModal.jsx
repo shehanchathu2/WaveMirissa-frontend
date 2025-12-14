@@ -12,7 +12,7 @@ const CartModal = ({onClose }) => {
     const fetchCart = async () => {
       try {
         if (user) {
-          const res = await axios.get(`http://localhost:8080/cart/${user.id}`);
+          const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/cart/${user.id}`);
           setCart(res.data);
         }
       } catch (err) {

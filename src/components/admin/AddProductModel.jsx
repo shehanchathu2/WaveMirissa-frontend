@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
-const CLOUDINARY_CLOUD_NAME = 'dlvhmit8p';
-const CLOUDINARY_API = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_API = import.meta.env.VITE_CLOUDINARY_API;
+
 
 const AddProductModal = ({ onClose, onProductAdded }) => {
     const [formData, setFormData] = useState({
@@ -26,14 +29,66 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
         image_url3: '',
         previewUrls: [],
         customizations: [],
+        faceShape: '',
+        skinTone: '',
+        personalize: '',
+        modelUrl: ''  // <-- add this
+
     });
 
     const [customizations, setCustomizations] = useState([]);
+    const [url, setUrl] = useState(null); // Initially no model
+    const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const fileInputRef = useRef();
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+    const handleUpload = async () => {
+        if (!file) {
+            toast.error('Please select a .glb file');
+            return;
+        }
+
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+        try {
+            const res = await axios.post(CLOUDINARY_API, formData);
+            const uploadedUrl = res.data.secure_url;
+            toast.success('GLB file uploaded successfully!');
+            setUrl(uploadedUrl); // Update viewer
+
+            // Add the uploaded URL to formData
+            setFormData((prev) => ({
+                ...prev,
+                modelUrl: uploadedUrl
+            }));
+
+            setFile(null);
+            if (fileInputRef.current) fileInputRef.current.value = null;
+        } catch (err) {
+            console.error(err);
+            toast.error('Upload failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+
+
+
+
 
     useEffect(() => {
         const fetchCustomizations = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/customizations');
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customizations`);
                 setCustomizations(response.data);
             } catch (error) {
                 console.error('Error fetching customizations:', error);
@@ -93,8 +148,12 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
 
         const payload = {
             ...formData,
+            faceShapeTags: formData.faceShape || null,  // Map to backend field
+            skinToneTags: formData.skinTone || null,    // Map to backend field
+            personalize: formData.personalize || null,
             producttype: formData.producttype ? formData.producttype.toLowerCase() : null,
             price: parseFloat(formData.price),
+            model_url: formData.modelUrl,  // <-- must match @JsonProperty("model_url")
             customizations: customizations
                 .filter((c) => selectedIds.includes(c.id))
                 .map((c) => ({ item_id: c.id })),
@@ -103,13 +162,13 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
         console.log('Submitting payload:', payload);
 
         try {
-            const res = await axios.post('http://localhost:8080/product/addproducts', payload, {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/product/addproducts`, payload, {
                 headers: { 'Content-Type': 'application/json' },
             });
 
             onProductAdded(res.data);
             onClose();
-            toast.success('Product added successfully!');
+            // toast.success('Product added successfully!');
         } catch (err) {
             console.error(err);
             toast.error('Failed to add product.');
@@ -143,13 +202,13 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
 
                 <div className="overflow-y-auto px-6 py-6 space-y-5 scrollbar-hide">
                     <label className="block text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" name="name" placeholder="Name" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.name} onChange={handleChange} />
+                    <input type="text" name="name" placeholder="Name" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.name} onChange={handleChange} />
 
                     <label className="block text-sm font-medium text-gray-700">Material</label>
-                    <input type="text" name="material" placeholder="Material" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.material} onChange={handleChange} />
+                    <input type="text" name="material" placeholder="Material" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.material} onChange={handleChange} />
 
                     <label className="block text-sm font-medium text-gray-700">Type</label>
-                    <select name="producttype" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.producttype} onChange={handleChange}>
+                    <select name="producttype" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.producttype} onChange={handleChange}>
                         <option value="">Select Type</option>
                         <option value="ring">Ring</option>
                         <option value="neckless">Neckless</option>
@@ -160,12 +219,12 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                     </select>
 
                     <label className="block text-sm font-medium text-gray-700">Price</label>
-                    <input type="number" name="price" placeholder="Price" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.price} onChange={handleChange} />
+                    <input type="number" name="price" placeholder="Price" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.price} onChange={handleChange} />
 
-                    <label className="block text-sm font-medium text-gray-700">Category</label>
+                    <label className="block text-sm font-medium text-gray-700 ">Category</label>
                     <select
                         name="category"
-                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md"
+                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
                         value={formData.category}
                         onChange={handleChange}
                     >
@@ -176,7 +235,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                     </select>
 
                     <label className="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea name="description" placeholder="Description" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.description} onChange={handleChange}></textarea>
+                    <textarea name="description" placeholder="Description" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.description} onChange={handleChange}></textarea>
 
                     <label className="block text-sm font-medium text-gray-700 mb-2">Customizations</label>
                     <div className="space-y-2">
@@ -189,7 +248,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                                         updated[index] = e.target.value;
                                         setFormData((prev) => ({ ...prev, customizations: updated }));
                                     }}
-                                    className="border border-gray-300 p-2 rounded-md w-full"
+                                    className="border border-gray-300 p-2 rounded-md w-full focus:outline-none"
                                 >
                                     <option value="">Select a Customization</option>
                                     {customizations.map((item) => (
@@ -225,12 +284,66 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                         </button>
                     </div>
 
-                    <label className="block text-sm font-medium text-gray-700">Gender</label>
-                    <select name="gender" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md" value={formData.gender} onChange={handleChange}>
+                    <label className="block text-sm font-medium text-gray-700 ">Gender</label>
+                    <select name="gender" className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none" value={formData.gender} onChange={handleChange}>
                         <option value="">Select Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="unisex">Unisex</option>
+                    </select>
+
+
+
+
+                    {/* Face Shape Dropdown */}
+                    <label className="block text-sm font-medium text-gray-700 ">Face Shape</label>
+                    <select
+                        name="faceShape"
+                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
+                        value={formData.faceShape}
+                        onChange={handleChange}
+                    >
+                        <option value="">Select Face Shape</option>
+                        <option value="Oval">Oval</option>
+                        <option value="Round">Round</option>
+                        <option value="Heart">Heart</option>
+                        <option value="Square">Square</option>
+                        <option value="Diamond">Diamond</option>
+                    </select>
+
+
+
+                    {/* Skin Tone Dropdown */}
+                    <label className="block text-sm font-medium text-gray-700">Skin Tone</label>
+                    <select
+                        name="skinTone"
+                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
+                        value={formData.skinTone}
+                        onChange={handleChange}
+                    >
+                        <option value="">Select Skin Tone</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Deep">Deep</option>
+                        <option value="Warm">Warm</option>
+                        <option value="Cool">Cool</option>
+                    </select>
+
+
+
+                    <label className="block text-sm font-medium text-gray-700">Personalize</label>
+                    <select
+                        name="personalize"
+                        value={formData.personalize}
+                        onChange={handleChange}
+                        className="border border-gray-300 focus:ring-2 focus:ring-blue-500 p-2 w-full rounded-md focus:outline-none"
+                    >
+                        <option value="none">None</option>
+                        <option value="Agreeableness">Agreeableness</option>
+                        <option value="Conscientiousness">Conscientiousness</option>
+                        <option value="Extraversion">Extraversion</option>
+                        <option value="Neuroticism">Neuroticism</option>
+                        <option value="Openness">Openness</option>
                     </select>
 
                     <label htmlFor="image-upload" className="flex items-center justify-center gap-2 w-full p-4 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-100 transition">
@@ -248,6 +361,75 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                             ))}
                         </div>
                     )}
+
+                    <div
+                        style={{
+                            padding: '20px',
+                            maxWidth: '400px',
+                            margin: '40px auto',
+                            backgroundColor: '#fff',
+                            borderRadius: '8px',
+                            border: '1px solid #e5e7eb',
+                            textAlign: 'center',
+                        }}
+                    >
+                        <h2 style={{ marginBottom: '16px', color: '#111827', fontSize: '1.25rem' }}>
+                            Upload 3D Model
+                        </h2>
+
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept=".glb,model/gltf-binary"
+                            onChange={handleFileChange}
+                            style={{ display: 'none' }}
+                            id="glbUpload"
+                        />
+
+                        <label
+                            htmlFor="glbUpload"
+                            style={{
+                                display: 'inline-block',
+                                padding: '10px 20px',
+                                backgroundColor: '#2563eb',
+                                color: 'white',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontWeight: '500',
+                            }}
+                        >
+                            {fileInputRef.current && fileInputRef.current.files.length > 0
+                                ? 'File Selected'
+                                : 'Choose File'}
+                        </label>
+
+                        <div>
+                            <button
+                                onClick={handleUpload}
+                                disabled={loading}
+                                style={{
+                                    marginTop: '16px',
+                                    padding: '10px 24px',
+                                    backgroundColor: loading ? '#9ca3af' : '#10b981',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: loading ? 'not-allowed' : 'pointer',
+                                    fontWeight: '500',
+                                }}
+                            >
+                                {loading ? 'Uploading...' : 'Upload'}
+                            </button>
+                        </div>
+
+                        {url && (
+                            <div style={{ marginTop: '24px' }}>
+                                <h3 style={{ color: '#111827', fontSize: '1rem' }}>3D Model Viewer</h3>
+                                {/* <GlbViewer url={url} /> */}
+                            </div>
+                        )}
+                    </div>
+
 
                     <div className="flex justify-end mt-6 space-x-3 pt-4 border-t">
                         <button className="bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400 transition" onClick={onClose}>Cancel</button>

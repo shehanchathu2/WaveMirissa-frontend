@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 const EditUserModal = ({ isOpen, onClose, user, onUpdated }) => {
   const [role, setRole] = useState("");
+  // const [newRole, setNewRole] = useState(user.role);
 
   useEffect(() => {
     if (user) {
@@ -12,16 +13,41 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdated }) => {
     }
   }, [user]);
 
-  const handleSubmit = async () => {
-    try {
-      await axios.put(`http://localhost:8080/user/${user.id}`, { role });
-      toast.success("User role updated!");
-      onUpdated(); // refresh + close
-    } catch (error) {
-      console.error("Error updating user:", error);
-      toast.error("Failed to update user role.");
-    }
+  const handleClose = () => {
+    setRole(""); // reset role when closing
+    onClose();   // call parent close
   };
+
+
+  console.log(role)
+
+  const loginUser = JSON.parse(localStorage.getItem("user"));
+  const token = loginUser.jwt;
+
+  const newRole = loginUser.role;
+
+ const handleSubmit = async () => {
+  try {
+    const res = await axios.put(
+      `${import.meta.env.VITE_BACKEND_URL}/user/${user.id}`,
+     { role: role.toUpperCase() },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      }
+    );
+
+    console.log(res.data);
+    toast.success("User role updated!");
+    onUpdated(); // refresh table + close modal
+  } catch (error) {
+    console.error("Error updating user:", error);
+    toast.error("Failed to update user role.");
+  }
+};
 
   if (!isOpen || !user) return null;
 
@@ -45,17 +71,23 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdated }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Role</label>
-            <select className="w-full border p-2 rounded" value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-              <option value="suspend">suspend</option>
+            <select
+              className="w-full border p-2 rounded"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="USER">User</option>
+              <option value="ADMIN">Admin</option>
+              <option value="SUSPEND">Suspend</option>
             </select>
           </div>
         </div>
 
         <div className="flex justify-end gap-2 mt-6">
-          <button className="px-4 py-2 border rounded" onClick={onClose}>Cancel</button>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded" onClick={handleSubmit}>Save</button>
+          <div className="flex justify-end gap-2 mt-6">
+            <button className="px-4 py-2 border rounded" onClick={handleClose}>Cancel</button>
+            <button className="px-4 py-2 bg-blue-600 text-white rounded" onClick={handleSubmit}>Save</button>
+          </div>
         </div>
       </div>
     </div>

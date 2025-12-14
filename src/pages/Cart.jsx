@@ -34,7 +34,7 @@ const Cart = () => {
   const fetchCart = async (user, setCart, setQuantities, setSize, setCustomization, setSelectedItems) => {
     try {
       if (user) {
-        const res = await axios.get(`http://localhost:8080/cart/${user.id}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/cart/${user.id}`);
         setCart(res.data);
 
         const initialQuantities = {};
@@ -43,6 +43,8 @@ const Cart = () => {
           initialQuantities[item.id] = item.quantity;
           initialSelected[item.id] = true;
         });
+
+        console.log(res.data);
 
         setQuantities(initialQuantities);
         setSelectedItems(initialSelected);
@@ -63,7 +65,7 @@ const Cart = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/cart/item/${itemToDelete}`);
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/cart/item/${itemToDelete}`);
       fetchCart(user, setCart, setQuantities, setSize, setCustomization, setSelectedItems);
       toast.success("Item removed from cart!");
     } catch (err) {
@@ -117,14 +119,19 @@ const Cart = () => {
     if (!cart?.items) return;
 
     const selectedItemsData = cart.items
-      .filter(item => selectedItems[item.id])
+      .filter(item => selectedItems[item.id]) 
       .map(item => ({
-        ...item,
+        cartItemId: item.id, 
+        productId: item.productId,   
+        productName: item.productName,
+        price: item.price,
+        imageUrl: item.imageUrl,
         quantity: quantities[item.id] ?? item.quantity,
         size: item.size,
         customMaterial: item.customMaterial,
       }));
 
+    console.log("selected ids", selectedItemsData.map(item => item.productId));
     navigate('/checkout', {
       state: {
         selectedItems: selectedItemsData,
@@ -216,7 +223,7 @@ const Cart = () => {
 
                       <div className="text-right">
                         <div className="font-semibold text-gray-800">
-                          ${((item.price || 0) * (quantities[item.id] ?? item.quantity)).toFixed(2)}
+                          Rs.{((item.price || 0) * (quantities[item.id] ?? item.quantity)).toFixed(2)}
                         </div>
                       </div>
                     </div>
@@ -249,7 +256,7 @@ const Cart = () => {
             <div className="mb-6 space-y-4">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Subtotal</span>
-                <span className="text-gray-800">${totalPrice.toFixed(2)}</span>
+                <span className="text-gray-800">Rs.{totalPrice.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Shipping</span>
@@ -258,7 +265,7 @@ const Cart = () => {
               <div className="pt-4 border-t">
                 <div className="flex justify-between">
                   <span className="font-medium text-gray-800">Total</span>
-                  <span className="text-xl font-semibold text-gray-800">${totalPrice.toFixed(2)}</span>
+                  <span className="text-xl font-semibold text-gray-800">Rs.{totalPrice.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -296,7 +303,7 @@ const Cart = () => {
         </div>
       </div>
 
-      <div className="pl-40 pr-40 mt-10 mb-20 lg:col-span-2">
+      {/* <div className="pl-40 pr-40 mt-10 mb-20 lg:col-span-2">
         <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {[...Array(8)].map((_, i) => (
@@ -310,7 +317,7 @@ const Cart = () => {
             </motion.div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Confirmation Modal */}
       <ConfirmationModal

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { FaHeart, FaTruck, FaMoneyBillWave, FaUndo, FaStar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { SiShell } from "react-icons/si";
@@ -18,36 +18,35 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import CartModal from '../components/CartModal';
-
-
-const JewelryItem = {
-  id: 'classic-necklace',
-  name: 'Cowrie Shell Necklace with Black String',
-  price: 800,
-  image1: sampleimg1,
-  image2: sampleimg2,
-  image3: sampleimg3,
-  description: 'Bohemian and Beach Style Choker Necklace',
-  materials: ['Black String', 'Sea-shells'],
-  producttype: 'neckless',
-  gender: 'women',
-
-};
+import AISuggestionModal from '../components/ProductPreview/AISuggestionModal';
+import WaveMirissaLoader from '../components/WaveMirissaLoader';
+import ZoomImage from '../components/ZoomImage';
+import GlbUploader from '../3d view/GlbUploader';
+import GlbViewer from '../3d view/GlbViewer';
 
 const ProductDetail = () => {
   const { user } = useAuth();
   const [product, setProduct] = useState([]);
-  const { productId } = useParams();
+  const { uuid } = useParams();
+  const location = useLocation();
+
+  const productId = location.state?.productId; console.log(productId, uuid)
+
+  console.log("UUID:", uuid);
+  console.log("Product ID from state:", productId);
   const [quantity, setQuantity] = useState(1);
 
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
+  const [isAISuggestionModalOpen, setAISuggestionModalOpen] = useState(false);
   const [isSizeModalOpen, setIsSizeModalOpen] = useState(false);
   const [openedViaCustomize, setOpenedViaCustomize] = useState(false);
   const [openedViaAddtoCart, setOpenedViaAddtoCart] = useState(false);
   const [custemiztionOptions, setCustomizationOptions] = useState([]);
   const [cartModalOpen, setCartModalOpen] = useState(false);
+  const [review, setReview] = useState([]);
 
   const [customMaterial, setCustomMaterial] = useState('');
+  const [url, setUrl] = useState('')
 
 
   const [totalPrice, setTotalPrice] = useState(product.price);
@@ -59,34 +58,53 @@ const ProductDetail = () => {
   ];
   const [mainImage, setMainImage] = useState(ProductImages[0]);
   const [customizations, setCustomizations] = useState([]);
+  const [loading, setLoading] = useState(false);
 
 
 
   useEffect(() => {
     const fetchProduct = async () => {
+
       try {
-        const res = await axios.get(`http://localhost:8080/product/${productId}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/product/${productId}`);
+        setLoading(true);
         const productData = res.data;
 
         setProduct(productData);
+        setUrl(productData.model_url)
+        console.log("product data:", productData)
+        console.log("url:", url)
 
-        // Store customization array
         if (productData.customizations && Array.isArray(productData.customizations)) {
           setCustomizations(productData.customizations);
         }
-        console.log("customizations", customizations);
 
-        // Set default image
         const defaultImg =
           productData.image_url1 || productData.image_url2 || productData.image_url3;
         setMainImage(defaultImg);
-        console.log("Customizations:", productData.customizations);
       } catch (err) {
         console.error('Error fetching product:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProduct();
+  }, [productId]);   // ✅ re-run whenever productId changes
+
+  // Fetch reviews for this product
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/product/${productId}`);
+        setReview(res.data);
+        console.log(res.data)
+      } catch (err) {
+        console.error('Error loading reviews:', err);
+      }
+    };
+
+    fetchReviews();
   }, [productId]);
 
 
@@ -98,16 +116,19 @@ const ProductDetail = () => {
 
   const productImages = [product?.image_url1, product?.image_url2, product?.image_url3].filter(Boolean);
 
-  const [likeproudct, setLikeProducs] = useState([])
+  const [likedProducts, setLikedProducts] = useState([]);
 
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/product/Allproducts');
-        setLikeProducs(res.data);
 
-        console.log(likeproudct)
+
+
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/product/AllproductsWithoutPersonality`);
+        setLikedProducts(res.data);
+
+        console.log(res.data)
       } catch (err) {
         console.error('Error loading products:', err);
       }
@@ -116,20 +137,29 @@ const ProductDetail = () => {
   }, []);
 
 
+  // useEffect(() => {
+  //   const fetchReviews = async () => {
+  //     try {
+  //       const res = await axios.get(`http://localhost:8080/api/reviews/product/${productId}`);
+  //       setReview(res.data);
 
-
-
-
-
-
-
-
-
-
+  //       console.log(res.data)
+  //     } catch (err) {
+  //       console.error('Error loading products:', err);
+  //     }
+  //   };
+  //   fetchReviews();
+  // }, [productId]);
 
   const handleCustomizeClick = () => {
     setOpenedViaCustomize(false);
     setIsCustomizeOpen(true);
+  };
+
+  const handleAICustomizationClick = () => {
+    setIsCustomizeOpen(false);
+    setCartModalOpen(false);
+    setAISuggestionModalOpen(true);
   };
 
   const handleBuyNowClick = () => {
@@ -151,6 +181,10 @@ const ProductDetail = () => {
     setIsCustomizeOpen(false);
     setCustomMaterial('');
     setTotalPrice(product.price);
+  };
+
+  const handleCloseAISuggetion = () => {
+    setAISuggestionModalOpen(false);
   };
 
 
@@ -190,7 +224,7 @@ const ProductDetail = () => {
         price
       });
 
-      await axios.post('http://localhost:8080/cart/add', {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/cart/add`, {
         userId,
         productId,
         quantity,
@@ -225,7 +259,7 @@ const ProductDetail = () => {
 
 
   const handleAddToCart = () => {
-     if (!user) {
+    if (!user) {
       toast.error("Please log in to add to cart.");
       return;
     }
@@ -246,6 +280,7 @@ const ProductDetail = () => {
       setTotalPrice(product.price);
       setOpenedViaAddtoCart(true);
       setIsSizeModalOpen(true);
+      setCustomizations('')
       return;
     }
 
@@ -256,6 +291,7 @@ const ProductDetail = () => {
     setOpenedViaCustomize(false);
     setCustomMaterial('');
     setTotalPrice(product.price);
+
   };
 
 
@@ -281,33 +317,34 @@ const ProductDetail = () => {
 
 
 
-
-
+  if (loading) {
+    <WaveMirissaLoader />
+  }
 
   return (
     <div className="grid grid-cols-1 gap-10 p-8 mx-auto max-w-7xl lg:grid-cols-2">
       {/* Product Images */}
       <div className="pl-12 space-y-4">
-        <div className="flex gap-8">
-          <div className="flex flex-col gap-2">
-            {productImages.map((src, idx) => (
-              <img
-                key={idx}
-                src={src}
-                alt={`Thumbnail ${idx + 1}`}
-                onClick={() => setMainImage(src)}
-                className="object-cover w-16 h-16 rounded-lg cursor-pointer"
-              />
-            ))}
+        <div className="pl-12 space-y-4">
+          <div className="flex gap-8">
+            {/* Thumbnails */}
+            <div className="flex flex-col gap-2">
+              {productImages.map((src, idx) => (
+                <img
+                  key={idx}
+                  src={src}
+                  alt={`Thumbnail ${idx + 1}`}
+                  onClick={() => setMainImage(src)}
+                  className="w-20 h-20 object-cover rounded-lg cursor-pointer border-2 border-gray-200 hover:border-teal-500"
+                />
+              ))}
+            </div>
+
+            {/* Main Image */}
+            <ZoomImage src={mainImage} width={384} height={384} zoom={2} />
+
           </div>
-
-          <img
-            src={mainImage}
-            alt="Main"
-            className="shadow-md w-96 rounded-2xl"
-          />
         </div>
-
 
         <div className="max-w-2xl px-4 mx-auto text-gray-800">
           <h3 className="mb-2 text-xl font-semibold text-teal-700 mt-7">
@@ -332,48 +369,53 @@ const ProductDetail = () => {
             All Reviews are from verified purchases
           </div>
 
-          <div className="grid grid-cols-4 gap-4 mb-4">
-            {[1, 2, 3, 4].map((_, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-center p-4 bg-black rounded-lg"
-              >
-                <img
-                  src="/placeholder-image.png"
-                  alt="review"
-                  className="w-10 h-10"
-                />
-              </div>
-            ))}
-          </div>
+          {product.model_url && <GlbViewer url={product.model_url} />}
 
-          {[1, 2, 3].map((review, idx) => (
+
+          {review.map((r, idx) => (
             <div key={idx} className="flex mb-6 space-x-4">
               <div className="mt-1 text-gray-400">
                 <FaRegUserCircle size={24} />
               </div>
-              <div>
+              <div className="flex-1">
                 <div className="flex items-center space-x-2 text-sm text-gray-700">
-                  <p className="font-semibold">shehan chathuranga</p>
-                  <span className="text-gray-400">on May 29 2025</span>
+                  <p className="font-semibold">{r.userName}</p>
+                  <span className="text-gray-400">2025/04/06</span>
                 </div>
-                <p className="mt-1 text-sm text-gray-600">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Donec eget ullamcorper purus. Morbi vel purus purus. Nullam
-                  venenatis dui ac facilisis rhoncus. Quisque sed elit
-                  facilisis, posuere lectus id, venenatis turpis. Integer nec
-                  ante dui.
-                </p>
-                <div className="mt-1">
-                  <img
-                    src="/placeholder-image-icon.png"
-                    alt="attachment"
-                    className="inline-block w-5 h-5"
-                  />
+
+                {/* Stars */}
+                <div className="flex mt-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                      key={star}
+                      size={16}
+                      className={star <= r.rating ? "text-yellow-400" : "text-gray-300"}
+                    />
+                  ))}
+                </div>
+
+                {/* Comment */}
+                <p className="mt-1 text-sm text-gray-600">{r.comment}</p>
+
+                {/* Images */}
+                <div className="mt-2 flex space-x-2">
+                  {[r.imageUrl1, r.imageUrl2, r.imageUrl3, r.imageUrl4, r.imageUrl5].map(
+                    (imgUrl, i) =>
+                      imgUrl && (
+                        <img
+                          key={i}
+                          src={imgUrl}
+                          alt={`Review image ${i + 1}`}
+                          className="w-16 h-16 object-cover rounded border"
+                        />
+                      )
+                  )}
                 </div>
               </div>
             </div>
           ))}
+
+
         </div>
       </div>
 
@@ -383,13 +425,13 @@ const ProductDetail = () => {
         <h2 className="mb-2 text-xl text-gray-500">
           {product.description}
         </h2>
-        <div className="flex text-yellow-500">
+        {/* <div className="flex text-yellow-500">
           <FaStar />
           <FaStar />
           <FaStar />
           <FaStar />
           <FaStar />
-        </div>
+        </div> */}
         <p className="mt-4 mb-4 text-2xl font-semibold text-teal-600">
           LKR {product.price}
         </p>
@@ -398,7 +440,8 @@ const ProductDetail = () => {
           <div className="flex items-center gap-3">
             <SiShell className="text-xl text-black-600" />
             <p className="text-base">
-              <strong>Materials Used:</strong>        {product.material}
+              <strong>Materials Used:</strong>
+              {product.material}
             </p>
           </div>
 
@@ -476,14 +519,26 @@ const ProductDetail = () => {
             </button>
           </div>
 
-          <div className="w-full max-w-md">
+          {/* <div className="w-full max-w-md">
             <button
               onClick={handleBuyNowClick}
               className="w-full bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300"
             >
               Buy Now
             </button>
+          </div> */}
+
+
+          <div className="w-full max-w-md mt-1">
+            <button
+              onClick={handleAICustomizationClick}
+              className="w-full bg-[#1b4965]/90 text-white text-lg px-6 py-2 rounded-lg shadow hover:bg-[#1b4965] transition duration-300"
+            >
+              AI Customization
+            </button>
           </div>
+
+
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow text-[#1B4D3E]">
@@ -539,30 +594,43 @@ const ProductDetail = () => {
 
       {/* You May Also Like Section */}
       <div className="mt-10 lg:col-span-2">
-        <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+  <h3 className="mb-4 text-2xl font-bold">You may also like</h3>
+  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+    {likedProducts
+      .sort(() => 0.5 - Math.random()) // 🔀 Shuffle the array randomly
+      .slice(0, 4) // ✅ Pick only 4 random items
+      .map((p) => (
+        <Link
+          to={`/shop/product/${p.uuid}`}
+          state={{ productId: p.product_id }}
+          key={p.product_id}
+          className="block overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-lg transition"
+        >
+          <div className="relative w-full h-48 md:h-56">
+            <img
+              src={p.image_url1}
+              alt={p.name}
+              className="w-full h-full object-cover rounded-xl"
+            />
+          </div>
+
+          <div className="px-3 py-2">
+            <h3 className="text-sm font-semibold text-gray-800 truncate">{p.name}</h3>
+            <p className="text-sm font-bold text-black mt-1">LKR {p.price}</p>
+            {p.available && (
+              <span className="inline-block mt-1 bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full">
+                In Stock
+              </span>
+            )}
+          </div>
+        </Link>
+      ))}
+  </div>
+</div>
 
 
 
 
-
-
-          {likeproudct.map((p, i) => (
-            <motion.div
-              key={i}
-              className="p-3 transition border rounded-xl hover:shadow-lg"
-              whileHover={{ scale: 1.05 }}
-            >
-              <img
-                src={p.image_url1}
-                alt={p.name}
-                className="object-cover w-full h-32 rounded-lg"
-              />
-
-            </motion.div>
-          ))}
-        </div>
-      </div>
 
       {/* Customization Modal */}
       <CustomizationModal
@@ -574,6 +642,17 @@ const ProductDetail = () => {
         openedViaCustomize={openedViaCustomize}
         setCustomMaterial={setCustomMaterial}
         customizationOptions={customizations}
+      />
+
+      <AISuggestionModal
+        isOpen={isAISuggestionModalOpen}
+        onClose={handleCloseAISuggetion}
+        jewelry={product}
+        onNext={(intersectionCustomizations) => {
+          setCustomizations(intersectionCustomizations);
+          setAISuggestionModalOpen(false);
+          setIsCustomizeOpen(true);
+        }}
       />
 
       {/* Size Selection Modal */}
