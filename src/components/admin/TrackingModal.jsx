@@ -29,7 +29,7 @@ const TrackingModal = ({ order, onClose, onSave }) => {
 
         try {
             await axios.put(
-                `http://localhost:8080/api/admin/orders/${order.id}/tracking`,
+                `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/${order.id}/tracking`,
                 {
                     trackingNumber,
                     estimateDate,

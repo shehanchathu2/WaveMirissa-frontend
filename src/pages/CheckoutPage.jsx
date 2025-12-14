@@ -44,7 +44,7 @@ const CheckoutPage = () => {
 useEffect(() => {
     const fetchAddress = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/address/${user.id}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/address/${user.id}`);
         setAddress(res.data)
         console.log("address",res.data)
       } catch (err) {
@@ -98,7 +98,7 @@ useEffect(() => {
 
 
       // ✅ After saving order, remove items from cart
-      await api.delete(`http://localhost:8080/cart/clear/ordered/${user.id}`, {
+      await api.delete(`${import.meta.env.VITE_BACKEND_URL}/cart/clear/ordered/${user.id}`, {
         data: selectedItems.map(item => item.cartItemId) // or the actual CartItem id
 
       });

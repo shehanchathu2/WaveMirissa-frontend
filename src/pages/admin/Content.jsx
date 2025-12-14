@@ -14,7 +14,7 @@ const Content = () => {
   // ✅ Fetch banners from backend
   const fetchBanners = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/banners");
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/banners`);
       setAllBanners(response.data);
     } catch (error) {
       console.error("Failed to fetch banners:", error);
@@ -65,7 +65,7 @@ const Content = () => {
           title: b.title,
           imageUrl: b.imageUrl,
         };
-        await axios.post("http://localhost:8080/api/banners", payload);
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/banners`, payload);
       }
       toast.success("All banners submitted successfully!");
       setBanners([]); // clear form
@@ -79,7 +79,7 @@ const Content = () => {
   // ✅ Delete banner
   const handleDelete = async (id) => {
   try {
-    await axios.delete(`http://localhost:8080/api/banners/${id}`);
+    await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/banners/${id}`);
     // Remove from local allBanners without re-fetching
     const updatedBanners = allBanners.filter(b => b.id !== id);
     setAllBanners(updatedBanners);
@@ -98,7 +98,7 @@ const Content = () => {
 
   const handleSaveEdit = async (banner, index) => {
     try {
-      const response = await axios.put(`http://localhost:8080/api/banners/${banner.id}`, banner);
+      const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/banners/${banner.id}`, banner);
       // Update local allBanners by index to maintain order
       const updatedBanners = [...allBanners];
       updatedBanners[index] = response.data;
@@ -115,7 +115,7 @@ const Content = () => {
   //Activate a banner (only one active at a time)
   const handleActivate = async (id) => {
     try {
-      const response = await axios.put(`http://localhost:8080/api/banners/${id}/activate`);
+      const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/banners/${id}/activate`);
       // Update local allBanners
       const updatedBanners = allBanners.map(b => ({
         ...b,

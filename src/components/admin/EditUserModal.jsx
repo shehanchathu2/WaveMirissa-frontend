@@ -29,7 +29,7 @@ const EditUserModal = ({ isOpen, onClose, user, onUpdated }) => {
  const handleSubmit = async () => {
   try {
     const res = await axios.put(
-      `http://localhost:8080/user/${user.id}`,
+      `${import.meta.env.VITE_BACKEND_URL}/user/${user.id}`,
      { role: role.toUpperCase() },
       {
         headers: {

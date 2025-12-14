@@ -4,9 +4,9 @@ import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
-const CLOUDINARY_CLOUD_NAME = 'dlvhmit8p';
-const CLOUDINARY_API = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_API = import.meta.env.VITE_CLOUDINARY_API;
 
 const ReviewModal = ({ product, isOpen, onClose, onSubmit, order }) => {
   const { user } = useAuth();
@@ -31,7 +31,7 @@ const ReviewModal = ({ product, isOpen, onClose, onSubmit, order }) => {
       setLoading(true);
       try {
         const res = await axios.get(
-          `http://localhost:8080/api/reviews/user/${userId}/product/${productId}/order/${order.order_id}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/reviews/user/${userId}/product/${productId}/order/${order.order_id}`
         );
         setReview(res.data);
         if (res.data?.images) setPreviewUrls(res.data.images);

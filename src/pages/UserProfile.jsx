@@ -79,7 +79,7 @@ const UserProfile = ({ onBack }) => {
   // ✅ Fetch existing address when page loads
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/address/${user.id}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/address/${user.id}`)
       .then((res) => {
         if (res.data) {
           setAddress(res.data);
@@ -115,7 +115,7 @@ const UserProfile = ({ onBack }) => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8080/api/address/${user.id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/address/${user.id}`,
         address
       );
       alert("Address saved successfully!");

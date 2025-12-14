@@ -17,7 +17,7 @@ const WishlistPage = () => {
         const fetchWishlist = async () => {
             try {
                 if (!user?.id) return;
-                const res = await axios.get(`http://localhost:8080/wishlist/${user.id}/products`);
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/wishlist/${user.id}/products`);
                 setWishlist(res.data);
             } catch (err) {
                 console.error("Failed to fetch wishlist", err);
@@ -35,7 +35,7 @@ const WishlistPage = () => {
 
    const handleRemove = async () => {
     try {
-      await axios.delete("http://localhost:8080/wishlist/remove", {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/wishlist/remove`, {
         params: { userId: user.id, productId: pendingDeleteId },
       });
       setWishlist((prev) => prev.filter((item) => item.product_id !== pendingDeleteId));

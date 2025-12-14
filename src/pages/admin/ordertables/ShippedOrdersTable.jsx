@@ -21,7 +21,7 @@ const ShippedOrdersTable = ({ setModalContent, markAsDelivered }) => {
     const getPaidOrders = async () => {
         setLoading(true);
         try {
-            const res = await axios.get("http://localhost:8080/api/admin/orders/paid", {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/paid`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",

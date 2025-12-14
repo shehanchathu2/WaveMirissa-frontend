@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post('http://localhost:8080/authentication', {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/authentication`, {
         email,
         password,
       });

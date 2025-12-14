@@ -20,7 +20,7 @@ export const CartProvider = ({ children }) => {
     const fetchCart = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`http://localhost:8080/cart/${user.id}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/cart/${user.id}`);
           setCart(res.data);
       } catch (err) {
         console.error("Failed to fetch cart:", err);

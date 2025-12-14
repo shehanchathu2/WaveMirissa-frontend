@@ -34,7 +34,7 @@ const Cart = () => {
   const fetchCart = async (user, setCart, setQuantities, setSize, setCustomization, setSelectedItems) => {
     try {
       if (user) {
-        const res = await axios.get(`http://localhost:8080/cart/${user.id}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/cart/${user.id}`);
         setCart(res.data);
 
         const initialQuantities = {};
@@ -65,7 +65,7 @@ const Cart = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/cart/item/${itemToDelete}`);
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/cart/item/${itemToDelete}`);
       fetchCart(user, setCart, setQuantities, setSize, setCustomization, setSelectedItems);
       toast.success("Item removed from cart!");
     } catch (err) {

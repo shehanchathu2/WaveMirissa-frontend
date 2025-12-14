@@ -9,7 +9,7 @@ const ActiveBanner = () => {
     // Fetch active banner from backend
     const fetchActiveBanner = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/api/banners/active");
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/banners/active`);
             setActiveBanner(response.data);
         } catch (error) {
             console.error("Failed to fetch active banner:", error);

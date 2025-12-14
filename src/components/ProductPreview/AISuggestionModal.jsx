@@ -61,7 +61,7 @@ const AISuggestionModal = ({ isOpen, onClose, jewelry, onNext }) => {
       formData.append("image", imageFile);
 
       const response = await axios.post(
-        "http://localhost:8080/api/recommendations/analyze/customization",
+        `${import.meta.env.VITE_BACKEND_URL}/api/recommendations/analyze/customization`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

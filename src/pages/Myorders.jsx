@@ -26,7 +26,7 @@ function Myorders() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:8080/api/user/orders/my-orders/${user.id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/user/orders/my-orders/${user.id}`,
           { withCredentials: true }
         );
         setOrders(response.data);
@@ -62,7 +62,7 @@ function Myorders() {
     console.log("Submitting review payload:", payload);
 
     const res = await axios.post(
-      "http://localhost:8080/api/reviews/submit",
+      `${import.meta.env.VITE_BACKEND_URL}/api/reviews/submit`,
       payload,
       { withCredentials: true }
     );

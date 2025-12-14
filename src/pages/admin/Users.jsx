@@ -15,7 +15,7 @@ const Users = () => {
   const getAllUsers = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:8080/users");
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/users`);
       const onlyUsers = res.data.filter((u) => u.role === "USER" || u.role === "ADMIN");
 
       setUsers((prev) => {
@@ -39,7 +39,7 @@ const Users = () => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:8080/user/${id}`);
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/user/${id}`);
       setUsers((prev) => prev.filter((u) => u.id !== id));
       getAllUsers();
       toast.success("User deleted successfully!");

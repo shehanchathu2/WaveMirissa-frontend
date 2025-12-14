@@ -11,7 +11,7 @@ const PayPage = () => {
 
       <Payhere
         selector="#payhere-modal"
-        embedURL="https://app.payhere.co/your-merchant-slug/your-plan-id"
+        embedURL={import.meta.env.VITE_PAYHERE_URL}
         open={showPayhere}
         amountInCents={1000} // Optional: pass dynamic amount
         customerName="John Doe"

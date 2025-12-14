@@ -39,7 +39,7 @@ const VirtualTryOn = () => {
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:8080/virtual_try_on/api/questions");
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/virtual_try_on/api/questions`);
       const data = await res.json();
       if (data && data.questions) {
         const formatted = data.questions.map((q, idx) => ({
@@ -68,7 +68,7 @@ const VirtualTryOn = () => {
         answer: a.answer?.trim() || "",
       }));
 
-      const res = await fetch("http://localhost:8080/virtual_try_on/api/answers", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/virtual_try_on/api/answers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -109,7 +109,7 @@ const VirtualTryOn = () => {
         form.append("userImage", file);
         form.append("personality", personalityType.personality);
 
-        const res = await fetch("http://localhost:8080/virtual_try_on/api/tryon", {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/virtual_try_on/api/tryon`, {
           method: "POST",
           body: form,
         });

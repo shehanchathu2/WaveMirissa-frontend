@@ -5,9 +5,9 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
-const CLOUDINARY_UPLOAD_PRESET = "ml_default";
-const CLOUDINARY_CLOUD_NAME = "dlvhmit8p";
-const CLOUDINARY_API = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_API = import.meta.env.VITE_CLOUDINARY_API;
 
 export default function EditProductModal({
   isOpen,
@@ -42,7 +42,7 @@ export default function EditProductModal({
     const fetchCustomizations = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/customizations`
+          `${import.meta.env.VITE_BACKEND_URL}/customizations`
         );
         setCustomizations(response.data);
         console.log(response.data);
@@ -133,7 +133,7 @@ export default function EditProductModal({
     try {
       console.log("Payload to update:", payload); // debug: check payload
       await axios.put(
-        `http://localhost:8080/product/update/${formData.product_id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/product/update/${formData.product_id}`,
         payload
       );
       toast.success("Product updated!");

@@ -66,7 +66,7 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
 
       try {
-        const res = await axios.get(`http://localhost:8080/product/${productId}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/product/${productId}`);
         setLoading(true);
         const productData = res.data;
 
@@ -96,7 +96,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/reviews/product/${productId}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/product/${productId}`);
         setReview(res.data);
         console.log(res.data)
       } catch (err) {
@@ -124,7 +124,8 @@ const ProductDetail = () => {
       try {
 
 
-        const res = await axios.get('http://localhost:8080/product/AllproductsWithoutPersonality');
+
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/product/AllproductsWithoutPersonality`);
         setLikedProducts(res.data);
 
         console.log(res.data)
@@ -223,7 +224,7 @@ const ProductDetail = () => {
         price
       });
 
-      await axios.post('http://localhost:8080/cart/add', {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/cart/add`, {
         userId,
         productId,
         quantity,

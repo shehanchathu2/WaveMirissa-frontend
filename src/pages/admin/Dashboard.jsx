@@ -143,7 +143,7 @@ const Dashboard = () => {
     const fetchRevenueTrends = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/admin/orders/revenue-trends",
+          `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/revenue-trends`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -231,7 +231,7 @@ const Dashboard = () => {
     const fetchMonthlyRevenue = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/admin/orders/monthly-revenue",
+          `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/monthly-revenue`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -278,11 +278,11 @@ const Dashboard = () => {
     const fetchProductStats = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/product/producttype-overview"
+          `${import.meta.env.VITE_BACKEND_URL}/product/producttype-overview`
         );
 
         const response1 = await axios.get(
-          "http://localhost:8080/product/total-products"
+          `${import.meta.env.VITE_BACKEND_URL}/product/total-products`
         );
 
 
@@ -326,7 +326,7 @@ const Dashboard = () => {
   const getPaidOrders = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:8080/api/admin/orders/paid", {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/paid`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -361,7 +361,7 @@ const Dashboard = () => {
     const fetchTotalUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/total-users",
+          `${import.meta.env.VITE_BACKEND_URL}/total-users`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

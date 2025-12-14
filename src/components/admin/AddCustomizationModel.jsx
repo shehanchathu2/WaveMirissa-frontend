@@ -3,9 +3,9 @@ import { AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const CLOUDINARY_UPLOAD_PRESET = "ml_default";
-const CLOUDINARY_CLOUD_NAME = "dlvhmit8p";
-const CLOUDINARY_API = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+const  _PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_API = import.meta.env.VITE_CLOUDINARY_API;
 
 export default function AddCustomizationModal({ isOpen, onClose, onSubmit }) {
   const [name, setName] = useState("");
@@ -52,7 +52,7 @@ export default function AddCustomizationModal({ isOpen, onClose, onSubmit }) {
     };
 
     try {
-      await axios.post("http://localhost:8080/AddCustomizations", payload, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/AddCustomizations`, payload, {
         headers: {
           "Content-Type": "application/json",
         },

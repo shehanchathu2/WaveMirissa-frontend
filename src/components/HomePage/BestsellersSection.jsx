@@ -23,7 +23,7 @@ export default function BestsellersSection({
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/product/AllproductsWithoutPersonality');
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/product/AllproductsWithoutPersonality`);
         setProducts(res.data);
         console.log(res.data);
         const uniqueType = ['All', ...new Set(res.data.map(p => p.producttype))];

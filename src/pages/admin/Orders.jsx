@@ -72,7 +72,7 @@ const Orders = () => {
   const getPaidOrders = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:8080/api/admin/orders/paid", {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/paid`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ const Orders = () => {
   const handleAccept = async (orderId) => {
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/admin/orders/${orderId}/status?status=PROCESSING`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/${orderId}/status?status=PROCESSING`,
         {},
         {
           headers: {
@@ -130,7 +130,7 @@ const Orders = () => {
   const handleReadyToShipped = async (orderId) => {
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/admin/orders/${orderId}/status?status=SHIPPED`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/${orderId}/status?status=SHIPPED`,
         {},
         {
           headers: {
@@ -159,7 +159,7 @@ const Orders = () => {
   const markAsDelivered = async (orderId) => {
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/admin/orders/${orderId}/status?status=DELIVERED`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/${orderId}/status?status=DELIVERED`,
         {},
         {
           headers: {

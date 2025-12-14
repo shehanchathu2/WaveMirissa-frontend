@@ -26,7 +26,7 @@ const AddAddressModal = ({ onClose,onAddressSaved  }) => {
   // ✅ Fetch address if exists
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/address/${userId}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/address/${userId}`)
       .then((res) => {
         if (res.data) {
           setAddress(res.data); // pre-fill form
@@ -62,7 +62,7 @@ const handleSubmit = async (e) => {
 
   try {
     const res = await axios.post(
-      `http://localhost:8080/api/address/${userId}`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/address/${userId}`,
       { ...address, defaultShipping }
     );
     toast.success("Address saved successfully!"); 

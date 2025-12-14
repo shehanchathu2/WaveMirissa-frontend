@@ -18,7 +18,7 @@ const Products = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:8080/product/Allproducts');
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/product/Allproducts`);
       setProducts(res.data);
       console.log(res.data);
     } catch (error) {
@@ -49,7 +49,7 @@ const Products = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:8080/product/delete/${itemToDelete}`);
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/product/delete/${itemToDelete}`);
       fetchProducts();
       toast.success('Product deleted successfully!');
     } catch (error) {

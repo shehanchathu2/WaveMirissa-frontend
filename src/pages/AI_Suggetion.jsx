@@ -31,7 +31,7 @@ function AI_Suggestion() {
       formData.append('image', imageFile);
 
       const response = await axios.post(
-        'http://localhost:8080/api/recommendations/analyze',
+        `${import.meta.env.VITE_BACKEND_URL}/api/recommendations/analyze`,
         formData,
         {
           headers: {

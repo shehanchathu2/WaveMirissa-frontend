@@ -6,9 +6,10 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
-const CLOUDINARY_CLOUD_NAME = 'dlvhmit8p';
-const CLOUDINARY_API = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_API = import.meta.env.VITE_CLOUDINARY_API;
+
 
 const AddProductModal = ({ onClose, onProductAdded }) => {
     const [formData, setFormData] = useState({
@@ -87,7 +88,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
     useEffect(() => {
         const fetchCustomizations = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/customizations');
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customizations`);
                 setCustomizations(response.data);
             } catch (error) {
                 console.error('Error fetching customizations:', error);
@@ -161,7 +162,7 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
         console.log('Submitting payload:', payload);
 
         try {
-            const res = await axios.post('http://localhost:8080/product/addproducts', payload, {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/product/addproducts`, payload, {
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -362,72 +363,72 @@ const AddProductModal = ({ onClose, onProductAdded }) => {
                     )}
 
                     <div
-  style={{
-    padding: '20px',
-    maxWidth: '400px',
-    margin: '40px auto',
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    border: '1px solid #e5e7eb',
-    textAlign: 'center',
-  }}
->
-  <h2 style={{ marginBottom: '16px', color: '#111827', fontSize: '1.25rem' }}>
-    Upload 3D Model
-  </h2>
+                        style={{
+                            padding: '20px',
+                            maxWidth: '400px',
+                            margin: '40px auto',
+                            backgroundColor: '#fff',
+                            borderRadius: '8px',
+                            border: '1px solid #e5e7eb',
+                            textAlign: 'center',
+                        }}
+                    >
+                        <h2 style={{ marginBottom: '16px', color: '#111827', fontSize: '1.25rem' }}>
+                            Upload 3D Model
+                        </h2>
 
-  <input
-    ref={fileInputRef}
-    type="file"
-    accept=".glb,model/gltf-binary"
-    onChange={handleFileChange}
-    style={{ display: 'none' }}
-    id="glbUpload"
-  />
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept=".glb,model/gltf-binary"
+                            onChange={handleFileChange}
+                            style={{ display: 'none' }}
+                            id="glbUpload"
+                        />
 
-  <label
-    htmlFor="glbUpload"
-    style={{
-      display: 'inline-block',
-      padding: '10px 20px',
-      backgroundColor: '#2563eb',
-      color: 'white',
-      borderRadius: '6px',
-      cursor: 'pointer',
-      fontWeight: '500',
-    }}
-  >
-    {fileInputRef.current && fileInputRef.current.files.length > 0
-      ? 'File Selected'
-      : 'Choose File'}
-  </label>
+                        <label
+                            htmlFor="glbUpload"
+                            style={{
+                                display: 'inline-block',
+                                padding: '10px 20px',
+                                backgroundColor: '#2563eb',
+                                color: 'white',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                fontWeight: '500',
+                            }}
+                        >
+                            {fileInputRef.current && fileInputRef.current.files.length > 0
+                                ? 'File Selected'
+                                : 'Choose File'}
+                        </label>
 
-  <div>
-    <button
-      onClick={handleUpload}
-      disabled={loading}
-      style={{
-        marginTop: '16px',
-        padding: '10px 24px',
-        backgroundColor: loading ? '#9ca3af' : '#10b981',
-        color: 'white',
-        border: 'none',
-        borderRadius: '6px',
-        cursor: loading ? 'not-allowed' : 'pointer',
-        fontWeight: '500',
-      }}
-    >
-      {loading ? 'Uploading...' : 'Upload'}
-    </button>
-  </div>
+                        <div>
+                            <button
+                                onClick={handleUpload}
+                                disabled={loading}
+                                style={{
+                                    marginTop: '16px',
+                                    padding: '10px 24px',
+                                    backgroundColor: loading ? '#9ca3af' : '#10b981',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: loading ? 'not-allowed' : 'pointer',
+                                    fontWeight: '500',
+                                }}
+                            >
+                                {loading ? 'Uploading...' : 'Upload'}
+                            </button>
+                        </div>
 
-  {url && (
-    <div style={{ marginTop: '24px' }}>
-      <h3 style={{ color: '#111827', fontSize: '1rem' }}>3D Model Viewer</h3>
-      {/* <GlbViewer url={url} /> */}
-    </div>
-  )}
-</div>
+                        {url && (
+                            <div style={{ marginTop: '24px' }}>
+                                <h3 style={{ color: '#111827', fontSize: '1rem' }}>3D Model Viewer</h3>
+                                {/* <GlbViewer url={url} /> */}
+                            </div>
+                        )}
+                    </div>
 
 
                     <div className="flex justify-end mt-6 space-x-3 pt-4 border-t">

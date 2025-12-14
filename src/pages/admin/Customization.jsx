@@ -20,7 +20,7 @@ const Customization = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:8080/AllCustomizations");
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/AllCustomizations`);
       setData(res.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -60,7 +60,7 @@ const Customization = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/Customizations/delete/${deleteId}`);
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/Customizations/delete/${deleteId}`);
       fetchData();
       toast.success("Customization deleted successfully.");
     } catch (error) {

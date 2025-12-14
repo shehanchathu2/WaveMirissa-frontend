@@ -74,7 +74,7 @@ export default function EditCustomizationModal({ isOpen, onClose, customization,
             ));
 
             const res = await axios.put(
-                `http://localhost:8080/Customizations/${customization.item_id}`,
+                `${import.meta.env.VITE_BACKEND_URL}/Customizations/${customization.item_id}`,
                 formData,
                 { headers: { "Content-Type": "multipart/form-data" } }
             );

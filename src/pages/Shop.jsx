@@ -43,7 +43,7 @@ const Shop = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const res = await axios.get('http://localhost:8080/product/AllproductsWithoutPersonality');
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/product/AllproductsWithoutPersonality`);
         setProducts(res.data);
         console.log("shop", res.data)
         setFilteredProducts(res.data);
@@ -119,7 +119,7 @@ const Shop = () => {
 
     const fetchWishlist = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/wishlist/${user.id}`);
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/wishlist/${user.id}`);
         const ids = res.data.map((item) => item.productId);
         setLikedProducts(ids);
       } catch (err) {
@@ -142,13 +142,13 @@ const Shop = () => {
     try {
       if (isLiked) {
         setLikedProducts((prev) => prev.filter((id) => id !== productId));
-        await axios.delete('http://localhost:8080/wishlist/remove', {
+        await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/wishlist/remove`, {
           params: { userId: user.id, productId },
         });
         toast.success("Removed from wishlist");
       } else {
         setLikedProducts((prev) => [...prev, productId]);
-        await axios.post('http://localhost:8080/wishlist/add', {
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/wishlist/add`, {
           userId: user.id,
           productId,
         });

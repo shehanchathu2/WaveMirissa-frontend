@@ -41,7 +41,7 @@ const Reports = () => {
     const fetchMonthlyRevenue = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8080/api/admin/orders/monthly-revenue",
+          `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/monthly-revenue`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -5,9 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import GlbViewer from './GlbViewer';
 // import GlbViewer from './GlbViewer';
 
-const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
-const CLOUDINARY_CLOUD_NAME = 'dlvhmit8p';
-const CLOUDINARY_API = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/raw/upload`;
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_API = import.meta.env.VITE_CLOUDINARY_API;
 
 const GlbUploader = () => {
   const [url, setUrl] = useState(null); // Initially no model
